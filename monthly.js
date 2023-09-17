@@ -53,7 +53,6 @@ xhr.onload = function() {
             var link = catdata[i].link;
 
             var date = new Date(catdata[i].pubDate);
-            date.setHours(date.getHours() + 9);
             var year = date.getFullYear();
             var month = (date.getMonth() + 1).toString().padStart(2, '0');
             var day = date.getDate().toString().padStart(2, '0');
