@@ -25,7 +25,10 @@ xhr.onload = function () {
             }
 
             speakers = Array.from(new Set(speakers));
+            const index = speakers.indexOf("");
+            speakers.splice(index, 1);
             // console.log(speakers);
+
             document.getElementById(category).innerHTML = speakers.join(", ");
             document.getElementById("n" + category).innerHTML = "<b>" + (speakers.length).toString() + "</b>";
 
