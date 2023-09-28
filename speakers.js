@@ -36,6 +36,7 @@ xhr.onload = function () {
         }
         allSpeakers = Array.from(new Set(allSpeakers));
         document.getElementById("number").innerHTML = "<b>" + (allSpeakers.length).toString() + "</b>";
+        document.getElementById("all").innerHTML = allSpeakers.join(", ");
     }
     else {
         console.log('Error: ' + xhr.status);
