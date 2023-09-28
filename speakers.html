@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>朝ポキ非公式 出演者一覧</title>
+	<link href="./speakers.css" rel="stylesheet" type="text/css" media="all">
+	<meta charset="UTF-8" />
+</head>
+
+<body>
+    <div>
+        総出演者数: <span id="number"></span> 人
+    </div>
+    
+    <div>元データ: <a href="https://docs.google.com/spreadsheets/d/1CvRyWLQb7YyonGyRSNKtc_liRrgtiWE5yDGI3R48Xfk/edit">Google Spreadsheet</a></div>
+    <div onclick="obj=document.getElementById('genba').style; obj.display=(obj.display=='none')?'block':'none';">
+        <p>ニュースの現場から: <span id="ngenba"></span> 人</p>
+        <p><a style="cursor:pointer;">▼ 出演者一覧 クリックで展開</a></p>
+    </div>
+    <div id="genba" style="display:none;clear:both;" class='list'></div>
+
+    <div onclick="obj=document.getElementById('media').style; obj.display=(obj.display=='none')?'block':'none';">
+        <p>MEDIA TALK: <span id="nmedia"></span> 人</p>
+        <p><a style="cursor:pointer;">▼ 出演者一覧 クリックで展開</a></p>
+    </div>
+    <div id="media" style="display:none;clear:both;" class='list'></div>
+
+    <div onclick="obj=document.getElementById('sdgs').style; obj.display=(obj.display=='none')?'block':'none';">
+        <p>新聞1面じゃなくても大事なこと -SDGsを話そう-: <span id="nsdgs"></span> 人</p>
+        <p><a style="cursor:pointer;">▼ 出演者一覧 クリックで展開</a></p>
+    </div>
+    <div id="sdgs" style="display:none;clear:both;" class='list'></div>
+
+	<script src="./speakers.js" type="module"></script>
+</body>
+
+</html>
