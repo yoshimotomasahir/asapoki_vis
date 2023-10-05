@@ -1,17 +1,28 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8"/>
-        <title>朝ポキ出演者相関図 (デバッグ用)</title>
-        <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
-        <script type="text/javascript" src="network.js"></script>
-        <meta name="robots" content="noindex,nofollow,noarchive" />
-    </head>
-    <body onload="draw()"><!-- bodyが読み込まれてから実行 -->
-        <p>
-            2023年9月14日までにまとめたリストから、20回以上MC・出演者として登場した方を表示<br>
-            同じ番組で出演された方同士を線で結んでいます。誤りを見つけたら朝ポキコミュで報告をお願いします
-        </p>
-        <div id="mynetwork"></div>
-    </body>
+<html lang="ja">
+
+<head>
+    <meta charset="utf-8" />
+    <title>朝ポキ 非公式 出演者相関図 (デバッグ用)</title>
+    <script type="text/javascript" src="./network.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+</head>
+
+<body onload="draw()"><!-- bodyが読み込まれてから実行 -->
+    <style type="text/css">
+        #mynetwork {
+            width: 100%;
+            height: 85vh;
+            background-color: #ffffff;
+            border: 1px solid lightgray;
+            position: relative;
+            float: left;
+        }
+    </style>
+    <div id="mynetwork"></div>
+    <p>
+        2023年9月14日までにまとめたリストから、20回以上MC・出演者として登場した方を表示しています。同じ番組で出演された方同士を線で結んでいます。
+    </p>
+</body>
+
 </html>
