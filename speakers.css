@@ -10,12 +10,40 @@ body {
     text-size-adjust: 100%;
 }
 
-div {
-    margin: 20px 0 10px 20px;
+h2{
+    margin: 0px;
 }
 
-div.list {
+.outer {
+    margin: 20px;
+}
+
+.list {
     font-size: 12px;
     font-size: 1.2rem;
-    margin: 20px 20px 10px 20px;
+}
+
+.container {
+    display: flex;
+}
+
+.left {
+    flex: 1.5;
+    background-color: #f0f0f0;
+    padding: 20px;
+    max-height: 100vh;
+    overflow-y: scroll;
+}
+
+.right {
+    flex: 1;
+    background-color: #e0e0e0;
+    padding: 20px;
+    max-height: 100vh;
+    overflow-y: scroll;
+}
+
+.clicked {
+    font-weight: bold;
+    cursor: pointer;
 }

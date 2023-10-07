@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="utf-8" />
+    <title>朝ポキ 非公式 出演者一覧</title>
+    <meta name="robots" content="noindex,nofollow,noarchive" />
+    <link href="./speakers.css" rel="stylesheet" type="text/css" media="all">
+</head>
+
+<body>
+    <div class="container">
+        <div class="left">
+            <h2>出演者一覧</h2>
+            <div
+                onclick="obj=document.getElementById('genba').style; obj.display=(obj.display=='none')?'block':'none';">
+                <p>・ニュースの現場から: <span id="ngenba"></span> 人</p>
+                <p><a style="cursor:pointer;">▼ 出演者一覧 クリックで展開</a></p>
+            </div>
+            <div id="genba" style="display:none;clear:both;" class='list'></div>
+
+            <div
+                onclick="obj=document.getElementById('media').style; obj.display=(obj.display=='none')?'block':'none';">
+                <p>・MEDIA TALK: <span id="nmedia"></span> 人</p>
+                <p><a style="cursor:pointer;">▼ 出演者一覧 クリックで展開</a></p>
+            </div>
+            <div id="media" style="display:none;clear:both;" class='list'></div>
+
+            <div onclick="obj=document.getElementById('sdgs').style; obj.display=(obj.display=='none')?'block':'none';">
+                <p>・新聞1面じゃなくても大事なこと -SDGsを話そう-: <span id="nsdgs"></span> 人</p>
+                <p><a style="cursor:pointer;">▼ 出演者一覧 クリックで展開</a></p>
+            </div>
+            <div id="sdgs" style="display:none;clear:both;" class='list'></div>
+        </div>
+        <div class="right">
+            <h2>タイトル一覧</h2>
+            <p>ニュースの現場から: <span id="ngenba_title"></span> 本</p>
+            <div id="genba_title" class='list'></div>
+            <p>MEDIA TALK: <span id="nmedia_title"></span> 本</p>
+            <div id="media_title" class='list'></div>
+            <p>新聞1面じゃなくても大事なこと -SDGsを話そう-: <span id="nsdgs_title"></span> 本</p>
+            <div id="sdgs_title" class='list'></div>
+        </div>
+    </div>
+    <script src="./speakers2.js" type="module"></script>
+</body>
+
+</html>
