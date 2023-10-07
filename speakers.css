@@ -19,8 +19,8 @@ h2{
 }
 
 .list {
-    font-size: 12px;
-    font-size: 1.2rem;
+    font-size: 13px;
+    font-size: 1.3rem;
 }
 
 .container {
@@ -30,16 +30,16 @@ h2{
 .left {
     flex: 1.5;
     background-color: #f0f0f0;
-    padding: 20px;
-    max-height: 100vh;
+    padding: 1.7vh;
+    max-height: 95vh;
     overflow-y: scroll;
 }
 
 .right {
     flex: 1;
     background-color: #e0e0e0;
-    padding: 20px;
-    max-height: 100vh;
+    padding: 1.7vh;
+    max-height: 95vh;
     overflow-y: scroll;
 }
 
