@@ -6,6 +6,7 @@ xhr.open('GET', 'https://script.google.com/macros/s/AKfycby1G_qqb8xBJh8adQBuvLsA
 xhr.onload = function () {
     if (xhr.status === 200) {
         var data = JSON.parse(xhr.responseText);
+        var allSpeakers = [];
         for (var cat = 0; cat < 3; cat++) {
             if (cat == 0) {
                 var catdata = data.genba;
@@ -40,7 +41,12 @@ xhr.onload = function () {
 
             document.getElementById("n" + category).innerHTML = "<b>" + (speakers.length).toString() + "</b>";
             document.getElementById(category).innerHTML = '<span class="name">' + speakers.join('</span>, <span class="name">') + '</span>';
+
+            allSpeakers = allSpeakers.concat(speakers);
         }
+        allSpeakers = Array.from(new Set(allSpeakers));
+        document.getElementById("number").innerHTML = "<b>" + (allSpeakers.length).toString() + "</b>";
+        document.getElementById("all").innerHTML = '<span class="name">' + allSpeakers.join('</span>, <span class="name">') + '</span>';
     }
     else {
         console.log('Error: ' + xhr.status);
