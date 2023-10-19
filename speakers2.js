@@ -1,4 +1,6 @@
 var speakers2title = { "genba": {}, "media": {}, "sdgs": {} }
+var allTitles = { "genba": [], "media": [], "sdgs": [] }
+var allSpeakers = [];
 
 var xhr = new XMLHttpRequest();
 xhr.open('GET', 'https://script.google.com/macros/s/AKfycby1G_qqb8xBJh8adQBuvLsA5wOcnqYu59W22hs1jMlj4IT2DlqnJA7uaUG16GXJHDKU/exec', false);
@@ -6,7 +8,6 @@ xhr.open('GET', 'https://script.google.com/macros/s/AKfycby1G_qqb8xBJh8adQBuvLsA
 xhr.onload = function () {
     if (xhr.status === 200) {
         var data = JSON.parse(xhr.responseText);
-        var allSpeakers = [];
         for (var cat = 0; cat < 3; cat++) {
             if (cat == 0) {
                 var catdata = data.genba;
@@ -31,7 +32,7 @@ xhr.onload = function () {
                     }
                     speakers2title[category][combined[j]].push('<a href="' + catdata[i].link + '">' + catdata[i].title + '</a>');
                 }
-
+                allTitles[category].push('<a href="' + catdata[i].link + '">' + catdata[i].title + '</a>')
             }
 
             speakers = Array.from(new Set(speakers));
@@ -55,14 +56,73 @@ xhr.onload = function () {
 xhr.send();
 
 var selectedName = null;
-var nameElements = document.querySelectorAll(".name");
-nameElements.forEach(function (element) {
-    element.addEventListener("click", function () {
-        if (selectedName !== null) {
-            selectedName.classList.remove("clicked");
+addSelectNameListener();
+
+function addSelectNameListener() {
+    var nameElements = document.querySelectorAll(".name");
+    //名前をクリックしたときのイベントリスナーを付与
+    nameElements.forEach(function (element) {
+        element.addEventListener("click", function () {
+            if (selectedName !== null) {
+                selectedName.classList.remove("clicked");
+            }
+            selectedName = this;
+            this.classList.add("clicked");
+            for (var cat = 0; cat < 3; cat++) {
+                if (cat == 0) {
+                    var category = "genba";
+                }
+                else if (cat == 1) {
+                    var category = "media";
+                }
+                else if (cat == 2) {
+                    var category = "sdgs";
+                }
+                var titleDisplay = document.getElementById(category + "_title");
+                console.log(selectedName.textContent);
+                if (typeof speakers2title[category][selectedName.textContent] === "undefined") {
+                    titleDisplay.innerHTML = "";
+                    document.getElementById("n" + category + "_title").innerHTML = "<b>0</b>";
+                }
+                else {
+                    titleDisplay.innerHTML = speakers2title[category][selectedName.textContent].join("<br>");
+                    var n = speakers2title[category][selectedName.textContent].length;
+                    document.getElementById("n" + category + "_title").innerHTML = "<b>" + n + "</b>";
+                }
+            }
+        });
+    });
+}
+
+function search(searchString, text) {
+    //ワード検索
+    searchString = searchString.replace(/\u3000/g, " ");
+    var searchStrings = searchString.split(" ");
+    for (var i = 0; i < searchStrings.length; i++) {
+        if (!text.includes(searchStrings[i])) {
+            return false;
         }
-        selectedName = this;
-        this.classList.add("clicked");
+    }
+    return true;
+}
+
+function searchSpeaker() {
+    var searchInput = document.getElementById("search-speaker-input").value;
+    if (searchInput === "") { }
+    else {
+        var filteredSpeakers = allSpeakers.filter(function (speaker) {
+            return search(searchInput, speaker);
+        });
+        document.getElementById("searched").innerHTML = filteredSpeakers.length + ' 名: ' + '<span class="name">' + filteredSpeakers.join('</span>, <span class="name">') + '</span>';
+        addSelectNameListener();
+    }
+}
+window.searchSpeaker = searchSpeaker;
+
+function searchTitle() {
+    var searchInput = document.getElementById("search-title-input").value;
+    if (searchInput === "") { }
+    else {
         for (var cat = 0; cat < 3; cat++) {
             if (cat == 0) {
                 var category = "genba";
@@ -73,18 +133,37 @@ nameElements.forEach(function (element) {
             else if (cat == 2) {
                 var category = "sdgs";
             }
+            var filteredTitles = allTitles[category].filter(function (title) {
+                return search(searchInput, title);
+            });
             var titleDisplay = document.getElementById(category + "_title");
-            console.log(selectedName.textContent);
-            if (typeof speakers2title[category][selectedName.textContent] === "undefined") {
+            if (filteredTitles.length === 0) {
                 titleDisplay.innerHTML = "";
                 document.getElementById("n" + category + "_title").innerHTML = "<b>0</b>";
             }
             else {
-                titleDisplay.innerHTML = speakers2title[category][selectedName.textContent].join("<br>");
-                var n = speakers2title[category][selectedName.textContent].length;
+                titleDisplay.innerHTML = filteredTitles.join("<br>");
+                var n = filteredTitles.length;
                 document.getElementById("n" + category + "_title").innerHTML = "<b>" + n + "</b>";
             }
-
         }
-    });
-});
+        var nameElements = document.querySelectorAll(".name");
+        for (var i = 0; i < nameElements.length; i++) {
+            nameElements[i].classList.remove("clicked");
+        }
+    }
+}
+window.searchTitle = searchTitle;
+
+function checkEnter(event) {
+    //エンターキーイベント
+    if (event.key === "Enter") {
+        if (event.target.id === "search-speaker-input") {
+            searchSpeaker();
+        }
+        else if (event.target.id === "search-title-input") {
+            searchTitle();
+        }
+    }
+}
+window.checkEnter = checkEnter;

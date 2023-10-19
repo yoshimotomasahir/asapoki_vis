@@ -12,6 +12,12 @@
     <div class="container">
         <div class="left">
             <h2>出演者一覧</h2>
+            <div id="search-speaker" class="search-box">
+                <input type="text" id="search-speaker-input" placeholder="出演者名..." onkeydown="checkEnter(event)" />
+                <button onclick="searchSpeaker()">出演者検索</button>
+            </div>
+            <div id="searched" style="clear:both;" class='list'></div>
+
             <div onclick="obj=document.getElementById('all').style; obj.display=(obj.display=='none')?'block':'none';">
                 <p style="cursor:pointer;">◆ 3番組の 出演者一覧 <span id="number"></span> 名 ▼クリックで展開</p>
             </div>
@@ -34,6 +40,10 @@
         </div>
         <div class="right">
             <h2>タイトル一覧</h2>
+            <div id="search-title" class="search-box">
+                <input type="text" id="search-title-input" placeholder="タイトル..." onkeydown="checkEnter(event)" />
+                <button onclick="searchTitle()">タイトル検索</button>
+            </div>
             <p>ニュースの現場から: <span id="ngenba_title"></span> 本</p>
             <div id="genba_title" class='list'></div>
             <p>MEDIA TALK: <span id="nmedia_title"></span> 本</p>

@@ -47,3 +47,7 @@ h2{
     font-weight: bold;
     cursor: pointer;
 }
+.search-box {
+    padding: 4px;
+    width: 300px;
+}
