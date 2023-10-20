@@ -56,10 +56,11 @@ xhr.onload = function () {
 xhr.send();
 
 var selectedName = null;
-addSelectNameListener();
+addSelectNameListener(".name");
+getQuerySpeaker();
 
-function addSelectNameListener() {
-    var nameElements = document.querySelectorAll(".name");
+function addSelectNameListener(classname) {
+    var nameElements = document.querySelectorAll(classname);
     //名前をクリックしたときのイベントリスナーを付与
     nameElements.forEach(function (element) {
         element.addEventListener("click", function () {
@@ -79,7 +80,6 @@ function addSelectNameListener() {
                     var category = "sdgs";
                 }
                 var titleDisplay = document.getElementById(category + "_title");
-                console.log(selectedName.textContent);
                 if (typeof speakers2title[category][selectedName.textContent] === "undefined") {
                     titleDisplay.innerHTML = "";
                     document.getElementById("n" + category + "_title").innerHTML = "<b>0</b>";
@@ -90,8 +90,25 @@ function addSelectNameListener() {
                     document.getElementById("n" + category + "_title").innerHTML = "<b>" + n + "</b>";
                 }
             }
+            var newQueryString = 'speaker=' + selectedName.textContent;
+            var newState = { page: 'newPage' };
+            window.history.pushState(newState, '', '?' + newQueryString);
         });
     });
+}
+
+function getQuerySpeaker() {
+    var queryString = window.location.search;
+    var params = new URLSearchParams(queryString);
+    var queryParameters = {};
+    params.forEach(function (value, key) {
+        queryParameters[key] = value;
+    });
+    if (queryParameters.hasOwnProperty("speaker")) {
+        document.getElementById("search-speaker-input").value = queryParameters.speaker;
+        searchSpeaker();
+        document.querySelectorAll(".name-search")[0].click();
+    }
 }
 
 function search(searchString, text) {
@@ -113,8 +130,8 @@ function searchSpeaker() {
         var filteredSpeakers = allSpeakers.filter(function (speaker) {
             return search(searchInput, speaker);
         });
-        document.getElementById("searched").innerHTML = filteredSpeakers.length + ' 名: ' + '<span class="name">' + filteredSpeakers.join('</span>, <span class="name">') + '</span>';
-        addSelectNameListener();
+        document.getElementById("searched").innerHTML = filteredSpeakers.length + ' 名: ' + '<span class="name-search">' + filteredSpeakers.join('</span>, <span class="name-search">') + '</span>';
+        addSelectNameListener(".name-search");
     }
 }
 window.searchSpeaker = searchSpeaker;
