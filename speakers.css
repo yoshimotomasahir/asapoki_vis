@@ -7,14 +7,7 @@ body {
     font-size: 1.6rem;
     font-family: "Noto Sans JP", Meiryo, メイリオ, Verdana, "Hiragino Kaku Gothic ProN", "ヒラギノ角ゴ ProN W3", sans-serif;
     font-weight: 100;
-    text-size-adjust: 100%;
-}
-
-@media (max-width: 768px) {
-    body {
-        font-size: 20px;
-        font-size: 2.0rem;
-    }
+    text-size-adjust: 180%;
 }
 
 h2 {
@@ -28,13 +21,6 @@ h2 {
 .list {
     font-size: 13px;
     font-size: 1.3rem;
-}
-
-@media (max-width: 768px) {
-    .list {
-        font-size: 16px;
-        font-size: 1.6rem;
-    }
 }
 
 .container {
