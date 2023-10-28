@@ -10,6 +10,13 @@ body {
     text-size-adjust: 100%;
 }
 
+@media (max-width: 768px) {
+    body {
+        font-size: 20px;
+        font-size: 2.0rem;
+    }
+}
+
 h2 {
     margin: 0px;
 }
@@ -21,6 +28,13 @@ h2 {
 .list {
     font-size: 13px;
     font-size: 1.3rem;
+}
+
+@media (max-width: 768px) {
+    .list {
+        font-size: 16px;
+        font-size: 1.6rem;
+    }
 }
 
 .container {
@@ -56,17 +70,4 @@ h2 {
 ul li {
     padding-top: 10px;
     padding-bottom: 10px;
-}
-
-
-.homepage {
-    font-size: 16px;
-    font-size: 1.6rem;
-}
-
-@media (max-width: 768px) {
-    .homepage {
-        font-size: 24px;
-        font-size: 2.4rem;
-    }
 }
