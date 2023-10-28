@@ -1,11 +1,12 @@
-html{
+html {
   /* font-size: 62.5%; */
   font-size: 55%;
 }
+
 body {
   font-size: 16px;
   font-size: 1.6rem;
-  font-family: arial;
+  font-family: "メイリオ", Meiryo, sans-serif;
   font-weight: 100;
   --grey-050: #f1f4f7;
   --grey-100: #e4e9f0;
@@ -56,7 +57,7 @@ li {
   width: 80px;
 }
 
-.calendar-month-header-selectors > * {
+.calendar-month-header-selectors>* {
   cursor: pointer;
 }
 
@@ -75,7 +76,7 @@ li {
   grid-template-columns: repeat(7, 1fr);
 }
 
-.day-of-week > * {
+.day-of-week>* {
   text-align: right;
   padding-right: 5px;
 }
@@ -98,7 +99,7 @@ li {
   padding: 5px;
 }
 
-.calendar-day > span {
+.calendar-day>span {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -117,20 +118,20 @@ li {
   padding-top: 4px;
 }
 
-.calendar-day--today > span {
+.calendar-day--today>span {
   color: #fff;
   border-radius: 9999px;
   background-color: var(--grey-800);
 }
 
-.calendar-day > div {
+.calendar-day>div {
   display: flex;
   background-color: var(--grey-050);
   /* display: inline; */
   border-radius: 5px 5px 5px 5px;
 }
 
-.calendar-day--not-current > div {
+.calendar-day--not-current>div {
   display: flex;
   background-color: var(--grey-200);
   color: var(--grey-300);
