@@ -52,3 +52,8 @@ h2 {
     padding: 4px;
     width: 300px;
 }
+
+ul li {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
