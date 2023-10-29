@@ -32,6 +32,7 @@ var titles = {};
 
 var xhr = new XMLHttpRequest();
 xhr.open('GET', 'https://script.google.com/macros/s/AKfycby1G_qqb8xBJh8adQBuvLsA5wOcnqYu59W22hs1jMlj4IT2DlqnJA7uaUG16GXJHDKU/exec', false);
+// xhr.open('GET', 'echo.json', false);
 xhr.onload = function() {
   if (xhr.status === 200) {
     var data = JSON.parse(xhr.responseText);
@@ -98,6 +99,9 @@ WEEKDAYS.forEach((weekday) => {
 createCalendar();
 initMonthSelectors();
 
+const targetElement = document.getElementById("calendar-day--today");
+targetElement.scrollIntoView();
+
 function createCalendar(year = INITIAL_YEAR, month = INITIAL_MONTH) {
   const calendarDaysElement = document.getElementById("calendar-days");
 
@@ -163,6 +167,7 @@ function appendDay(day, calendarDaysElement) {
 
   if (day.date === TODAY) {
     dayElementClassList.add("calendar-day--today");
+    dayElement.id = "calendar-day--today"
   }
 }
 
