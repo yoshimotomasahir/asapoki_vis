@@ -3,23 +3,24 @@ dayjs.extend(dayjs_plugin_weekOfYear);
 
 document.getElementById("app").innerHTML = `
 <div class="calendar-month">
-  <section class="calendar-month-header">
-    <div
-      id="selected-month"
-      class="calendar-month-header-selected-month"
-    ></div>
-    <section class="calendar-month-header-selectors">
-      <span id="previous-month-selector"><</span>
-      <span id="present-month-selector">今日</span>
-      <span id="next-month-selector">></span>
+  <div id="top-navigation">
+    <section class="calendar-month-header">
+      <div
+        id="selected-month"
+        class="calendar-month-header-selected-month"
+      ></div>
+      <section class="calendar-month-header-selectors">
+        <span id="previous-month-selector"><</span>
+        <span id="present-month-selector">今日</span>
+        <span id="next-month-selector">></span>
+      </section>
     </section>
-  </section>
 
-  <ol
-    id="days-of-week"
-    class="day-of-week"
-  /></ol>
-
+    <ol
+      id="days-of-week"
+      class="day-of-week"
+    /></ol>
+  </div>
   <ol
     id="calendar-days"
     class="days-grid"

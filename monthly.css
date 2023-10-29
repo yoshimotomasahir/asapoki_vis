@@ -149,3 +149,15 @@ li {
 .day-space {
   margin: 10px 0 10px 0;
 }
+
+#app {
+  position: relative;
+}
+
+#top-navigation {
+  position: sticky;
+  top: 0;
+  background-color: #fff;
+  z-index: 1;
+  opacity: 0.9;
+}
