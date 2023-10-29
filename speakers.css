@@ -8,6 +8,7 @@ body {
     font-family: "Noto Sans JP", Meiryo, メイリオ, Verdana, "Hiragino Kaku Gothic ProN", "ヒラギノ角ゴ ProN W3", sans-serif;
     font-weight: 100;
     text-size-adjust: 180%;
+    -webkit-text-size-adjust: 180%;
 }
 
 h2 {
