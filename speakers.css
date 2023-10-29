@@ -61,4 +61,5 @@ ul li {
 
 button {
     white-space: nowrap;
+    min-width: 5em;
 }
