@@ -6,13 +6,18 @@ body {
     font-size: 16px;
     font-size: 1.6rem;
     font-family: "Noto Sans JP", Meiryo, メイリオ, Verdana, "Hiragino Kaku Gothic ProN", "ヒラギノ角ゴ ProN W3", sans-serif;
-    font-weight: 100;
+    font-weight: 400;
+    color: #2a2a2a;
     text-size-adjust: 180%;
     -webkit-text-size-adjust: 180%;
 }
 
 h2 {
     margin: 0px;
+}
+
+a {
+    text-decoration: none;
 }
 
 .outer {
@@ -22,6 +27,7 @@ h2 {
 .list {
     font-size: 13px;
     font-size: 1.3rem;
+    line-height: 1.6;
 }
 
 .container {
@@ -45,7 +51,7 @@ h2 {
 }
 
 .clicked {
-    font-weight: bold;
+    font-weight: 600;
     cursor: pointer;
 }
 
@@ -62,4 +68,16 @@ ul li {
 button {
     white-space: nowrap;
     min-width: 5em;
+}
+
+.article-title {
+    color: #2a2a2a;
+    font-weight: 500;
+}
+
+.article-date {
+    color: #787871;
+    font-size: 12px;
+    font-size: 1.2rem;
+    font-weight: 400;
 }

@@ -26,13 +26,19 @@ xhr.onload = function () {
                 speakers = speakers.concat(catdata[i].mc);
                 speakers = speakers.concat(catdata[i].speakers);
                 var combined = catdata[i].mc.concat(catdata[i].speakers);
+                var date = new Date(catdata[i].pubDate);
+                var year = date.getFullYear();
+                var month = (date.getMonth() + 1).toString().padStart(2, '0');
+                var day = date.getDate().toString().padStart(2, '0');
+                var date = year + '/' + month + '/' + day;
+                let text = '<a href="' + catdata[i].link + '"><span class="article-title">' + catdata[i].title + '</span> <span class="article-date">' + date + '</span></a>';
                 for (var j = 0; j < combined.length; j++) {
                     if (typeof speakers2title[category][combined[j]] === "undefined") {
                         speakers2title[category][combined[j]] = [];
                     }
-                    speakers2title[category][combined[j]].push('<a href="' + catdata[i].link + '">' + catdata[i].title + '</a>');
+                    speakers2title[category][combined[j]].push(text);
                 }
-                allTitles[category].push('<a href="' + catdata[i].link + '">' + catdata[i].title + '</a>')
+                allTitles[category].push(text);
             }
 
             speakers = Array.from(new Set(speakers));
