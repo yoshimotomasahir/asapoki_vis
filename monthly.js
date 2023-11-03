@@ -147,6 +147,8 @@ function appendDay(day, calendarDaysElement) {
     for (var i = 0; i < titles[day["date"]].length; i++) {
       const podcastElement = document.createElement("div");
       const linkElement = document.createElement("a");
+      linkElement.setAttribute("rel", "nofollow");
+      linkElement.setAttribute("target", "_blank");
       var title = titles[day["date"]][i][0];
       var link = titles[day["date"]][i][1];
       var category = titles[day["date"]][i][2];

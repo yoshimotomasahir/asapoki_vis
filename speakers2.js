@@ -31,7 +31,7 @@ xhr.onload = function () {
                 var month = (date.getMonth() + 1).toString().padStart(2, '0');
                 var day = date.getDate().toString().padStart(2, '0');
                 var date = year + '/' + month + '/' + day;
-                let text = '<a href="' + catdata[i].link + '"><span class="article-title">' + catdata[i].title + '</span> <span class="article-date">' + date + '</span></a>';
+                let text = '<a href="' + catdata[i].link + '" rel="nofollow" target="_blank"><span class="article-title">' + catdata[i].title + '</span> <span class="article-date">' + date + '</span></a>';
                 for (var j = 0; j < combined.length; j++) {
                     if (typeof speakers2title[category][combined[j]] === "undefined") {
                         speakers2title[category][combined[j]] = [];
