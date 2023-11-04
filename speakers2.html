@@ -47,11 +47,47 @@
                 <input type="text" id="search-title-input" placeholder="タイトル..." onkeydown="checkEnter(event)" />
                 <button onclick="searchTitle()">検索</button>
             </div>
-            <p>ニュースの現場から: <span id="ngenba_title"></span> 本</p>
+            <form>
+                <div class="form">
+                    <label><input type="radio" name="year" value="2020" onchange="handleYearSelection(this)">2020年</label>
+                    <label><input type="radio" name="year" value="2021" onchange="handleYearSelection(this)">2021年</label>
+                    <label><input type="radio" name="year" value="2022" onchange="handleYearSelection(this)">2022年</label>
+                    <label><input type="radio" name="year" value="2023" onchange="handleYearSelection(this)" checked>2023年</label>
+                    <label><input type="radio" name="year" value="all" onchange="handleYearSelection(this)">全ての年</label>
+                </div>
+            </form>
+            <form>
+                <div class="form">
+                    <label><input type="radio" name="month" value="01" onchange="handleMonthSelection(this)">1月</label>
+                    <label><input type="radio" name="month" value="02" onchange="handleMonthSelection(this)">2月</label>
+                    <label><input type="radio" name="month" value="03" onchange="handleMonthSelection(this)">3月</label>
+                    <label><input type="radio" name="month" value="04" onchange="handleMonthSelection(this)">4月</label>
+                    <label><input type="radio" name="month" value="05" onchange="handleMonthSelection(this)">5月</label>
+                    <label><input type="radio" name="month" value="06" onchange="handleMonthSelection(this)">6月</label>
+                    <label><input type="radio" name="month" value="07" onchange="handleMonthSelection(this)">7月</label>
+                    <label><input type="radio" name="month" value="08" onchange="handleMonthSelection(this)">8月</label>
+                    <label><input type="radio" name="month" value="09" onchange="handleMonthSelection(this)">9月</label>
+                    <label><input type="radio" name="month" value="10" onchange="handleMonthSelection(this)">10月</label>
+                    <label><input type="radio" name="month" value="11" onchange="handleMonthSelection(this)">11月</label>
+                    <label><input type="radio" name="month" value="12" onchange="handleMonthSelection(this)">12月</label>
+                    <label><input type="radio" name="month" value="all" onchange="handleMonthSelection(this)" checked>全ての月</label>
+                </div>
+            </form>
+            <div class="form">
+                <label>
+                出演者絞り込み: <input type="checkbox" id="check-selected-speaker" onchange="handleCheckSelectedSpeakerChange()" checked />
+                <span id="selected-speaker"><span class="not-selected">未選択</span></span></label>
+            </div>
+            <div class="form">
+                <label>
+                タイトル絞り込み: <input type="checkbox" id="check-selected-title" onchange="handleCheckSelectedTitleChange()" checked />
+                <span id="selected-title"><span class="not-selected">未選択</span></span></label>
+            </div>
+            <p>▶ ニュースの現場から: <span id="ngenba_title"></span> 本</p>
             <div id="genba_title" class='list'></div>
-            <p>MEDIA TALK: <span id="nmedia_title"></span> 本</p>
+            <p>▶ MEDIA TALK: <span id="nmedia_title"></span> 本</p>
             <div id="media_title" class='list'></div>
-            <p>新聞1面じゃなくても大事なこと -SDGsを話そう-: <span id="nsdgs_title"></span> 本</p>
+            <p>▶ 新聞1面じゃなくても大事なこと -SDGsを話そう-: <span id="nsdgs_title"></span> 本</p>
             <div id="sdgs_title" class='list'></div>
         </div>
     </div>

@@ -1,56 +1,53 @@
-var speakers2title = { "genba": {}, "media": {}, "sdgs": {} }
-var allTitles = { "genba": [], "media": [], "sdgs": [] }
-var allSpeakers = [];
+let allTitles = { "genba": [], "media": [], "sdgs": [] }
+let allSpeakers = [];
+let categories = ["genba", "media", "sdgs"];
+let speakerQ = "";
+let titleQ = "";
+let selectedMonth = "";
+let selectedYear = "2023";
+let selectedSpeaker = null;
 
-var xhr = new XMLHttpRequest();
+let xhr = new XMLHttpRequest();
 xhr.open('GET', 'https://script.google.com/macros/s/AKfycby1G_qqb8xBJh8adQBuvLsA5wOcnqYu59W22hs1jMlj4IT2DlqnJA7uaUG16GXJHDKU/exec', false);
 // xhr.open('GET', 'echo.json', false);
 xhr.onload = function () {
     if (xhr.status === 200) {
-        var data = JSON.parse(xhr.responseText);
-        for (var cat = 0; cat < 3; cat++) {
-            if (cat == 0) {
-                var catdata = data.genba;
-                var category = "genba";
-            }
-            else if (cat == 1) {
-                var catdata = data.media;
-                var category = "media";
-            }
-            else if (cat == 2) {
-                var catdata = data.sdgs;
-                var category = "sdgs";
-            }
-            var speakers = [];
-            for (var i = 0; i < catdata.length; i++) {
+        let data = JSON.parse(xhr.responseText);
+        for (let cat = 0; cat < 3; cat++) {
+            let catdata = data[categories[cat]];
+            let category = categories[cat];
+            let speakers = [];
+            for (let i = 0; i < catdata.length; i++) {
                 speakers = speakers.concat(catdata[i].mc);
                 speakers = speakers.concat(catdata[i].speakers);
-                var combined = catdata[i].mc.concat(catdata[i].speakers);
-                var date = new Date(catdata[i].pubDate);
-                var year = date.getFullYear();
-                var month = (date.getMonth() + 1).toString().padStart(2, '0');
-                var day = date.getDate().toString().padStart(2, '0');
-                var date = year + '/' + month + '/' + day;
-                let text = '<a href="' + catdata[i].link + '" rel="nofollow" target="_blank"><span class="article-title">' + catdata[i].title + '</span> <span class="article-date">' + date + '</span></a>';
-                for (var j = 0; j < combined.length; j++) {
-                    if (typeof speakers2title[category][combined[j]] === "undefined") {
-                        speakers2title[category][combined[j]] = [];
-                    }
-                    speakers2title[category][combined[j]].push(text);
-                }
-                allTitles[category].push(text);
+                const combined = catdata[i].mc.concat(catdata[i].speakers);
+                const date = new Date(catdata[i].pubDate);
+                const year = date.getFullYear();
+                const month = (date.getMonth() + 1).toString().padStart(2, '0');
+                const day = date.getDate().toString().padStart(2, '0');
+                const titleData = {};
+                titleData.link = catdata[i].link;
+                titleData.year = year;
+                titleData.month = month;
+                titleData.day = day;
+                titleData.title = catdata[i].title;
+                titleData.date = year + '/' + month + '/' + day;
+                titleData.speakers = combined;
+                titleData.html = '<a href="' + titleData.link + '" rel="nofollow" target="_blank"><span class="article-title">' + titleData.title + '</span> <span class="article-date">' + titleData.date + '</span></a>';
+                allTitles[category].push(titleData);
             }
 
             speakers = Array.from(new Set(speakers));
             const index = speakers.indexOf("");
             speakers.splice(index, 1);
-            // console.log(speakers);
 
+            // 番組別の出演者一覧
             document.getElementById("n" + category).innerHTML = "<b>" + (speakers.length).toString() + "</b>";
             document.getElementById(category).innerHTML = '<span class="name">' + speakers.join('</span>, <span class="name">') + '</span>';
 
             allSpeakers = allSpeakers.concat(speakers);
         }
+        // 3番組の出演者一覧
         allSpeakers = Array.from(new Set(allSpeakers));
         document.getElementById("number").innerHTML = "<b>" + (allSpeakers.length).toString() + "</b>";
         document.getElementById("all").innerHTML = '<span class="name">' + allSpeakers.join('</span>, <span class="name">') + '</span>';
@@ -61,67 +58,59 @@ xhr.onload = function () {
 };
 xhr.send();
 
-var selectedName = null;
 addSelectNameListener(".name");
 getQuerySpeaker();
+searchTitleImpl();
 
-function addSelectNameListener(classname) {
-    var nameElements = document.querySelectorAll(classname);
+function addSelectNameListener(className) {
+    let nameElements = document.querySelectorAll(className);
     //名前をクリックしたときのイベントリスナーを付与
     nameElements.forEach(function (element) {
         element.addEventListener("click", function () {
-            if (selectedName !== null) {
-                selectedName.classList.remove("clicked");
+            // 選択済みスピーカーがいれば選択を外す
+            if (selectedSpeaker !== null) {
+                selectedSpeaker.classList.remove("clicked");
             }
-            selectedName = this;
+            selectedSpeaker = this;
             this.classList.add("clicked");
-            for (var cat = 0; cat < 3; cat++) {
-                if (cat == 0) {
-                    var category = "genba";
-                }
-                else if (cat == 1) {
-                    var category = "media";
-                }
-                else if (cat == 2) {
-                    var category = "sdgs";
-                }
-                var titleDisplay = document.getElementById(category + "_title");
-                if (typeof speakers2title[category][selectedName.textContent] === "undefined") {
-                    titleDisplay.innerHTML = "";
-                    document.getElementById("n" + category + "_title").innerHTML = "<b>0</b>";
-                }
-                else {
-                    titleDisplay.innerHTML = speakers2title[category][selectedName.textContent].join("<br>");
-                    var n = speakers2title[category][selectedName.textContent].length;
-                    document.getElementById("n" + category + "_title").innerHTML = "<b>" + n + "</b>";
-                }
-            }
-            var newQueryString = 'speaker=' + selectedName.textContent;
-            var newState = { page: 'newPage' };
-            window.history.pushState(newState, '', '?' + newQueryString);
+            speakerQ = selectedSpeaker.textContent;
+            document.getElementById("selected-speaker").textContent = speakerQ;
+            document.getElementById("check-selected-speaker").checked = true;
+            // タイトルの検索設定をリセット
+            document.getElementById("search-title-input").value = "";
+            titleQ = document.getElementById("search-title-input").value;
+            document.getElementById("selected-title").innerHTML = '<span class="not-selected">未選択</span>';
+            document.getElementById("check-selected-title").checked = true;
+            searchTitleImpl();
+            // URLクエリをセット
+            setQuerySpeaker();
         });
     });
 }
 
 function getQuerySpeaker() {
-    var queryString = window.location.search;
-    var params = new URLSearchParams(queryString);
-    var queryParameters = {};
+    let queryString = window.location.search;
+    let params = new URLSearchParams(queryString);
+    let queryParameters = {};
     params.forEach(function (value, key) {
         queryParameters[key] = value;
     });
     if (queryParameters.hasOwnProperty("speaker")) {
         document.getElementById("search-speaker-input").value = queryParameters.speaker;
         searchSpeaker();
-        document.querySelectorAll(".name-search")[0].click();
     }
 }
 
-function search(searchString, text) {
-    //ワード検索
+function setQuerySpeaker() {
+    let newQueryString = 'speaker=' + speakerQ;
+    let newState = { page: 'newPage' };
+    window.history.pushState(newState, '', '?' + newQueryString);
+}
+
+function searchWords(searchString, text) {
     searchString = searchString.replace(/\u3000/g, " ");
-    var searchStrings = searchString.split(" ");
-    for (var i = 0; i < searchStrings.length; i++) {
+    let searchStrings = searchString.split(" ");
+    for (let i = 0; i < searchStrings.length; i++) {
         if (!text.includes(searchStrings[i])) {
             return false;
         }
@@ -130,63 +119,117 @@ function search(searchString, text) {
 }
 
 function searchSpeaker() {
-    var searchInput = document.getElementById("search-speaker-input").value;
+    let searchInput = document.getElementById("search-speaker-input").value;
     if (searchInput === "") { }
     else {
-        var filteredSpeakers = allSpeakers.filter(function (speaker) {
-            return search(searchInput, speaker);
+        // 選択済みスピーカーがいれば選択を外す
+        if (selectedSpeaker !== null) {
+            selectedSpeaker.classList.remove("clicked");
+            selectedSpeaker = null;
+        }
+        let filteredSpeakers = allSpeakers.filter(function (speaker) {
+            return searchWords(searchInput.split('').join(" "), speaker);
         });
         document.getElementById("searched").innerHTML = filteredSpeakers.length + ' 名: ' + '<span class="name-search">' + filteredSpeakers.join('</span>, <span class="name-search">') + '</span>';
         addSelectNameListener(".name-search");
+        if (document.querySelectorAll(".name-search").length == 1) {
+            document.querySelectorAll(".name-search")[0].click();
+            selectedSpeaker = document.querySelectorAll(".name-search")[0];
+        }
+        document.getElementById("check-selected-speaker").checked = true;
     }
 }
 window.searchSpeaker = searchSpeaker;
 
 function searchTitle() {
-    var searchInput = document.getElementById("search-title-input").value;
-    if (searchInput === "") { }
+    titleQ = document.getElementById("search-title-input").value;
+    if (titleQ == "") {
+        document.getElementById("selected-title").innerHTML = '<span class="not-selected">未選択</span>';
+    }
     else {
-        for (var cat = 0; cat < 3; cat++) {
-            if (cat == 0) {
-                var category = "genba";
-            }
-            else if (cat == 1) {
-                var category = "media";
-            }
-            else if (cat == 2) {
-                var category = "sdgs";
-            }
-            var filteredTitles = allTitles[category].filter(function (title) {
-                return search(searchInput, title);
+        document.getElementById("selected-title").textContent = titleQ;
+    }
+    document.getElementById("check-selected-title").checked = true;
+    searchTitleImpl();
+}
+window.searchTitle = searchTitle;
+
+function searchTitleImpl() {
+    // console.log([titleQ, speakerQ, selectedYear, selectedMonth]);
+    for (let cat = 0; cat < 3; cat++) {
+        let category = categories[cat];
+
+        let filteredTitles = allTitles[category];
+
+        let checkboxTitle = document.getElementById("check-selected-title");
+        if (titleQ != "" && checkboxTitle.checked) {
+            filteredTitles = filteredTitles.filter(function (titleData) {
+                return searchWords(titleQ, titleData.title);
             });
-            var titleDisplay = document.getElementById(category + "_title");
-            if (filteredTitles.length === 0) {
-                titleDisplay.innerHTML = "";
-                document.getElementById("n" + category + "_title").innerHTML = "<b>0</b>";
-            }
-            else {
-                titleDisplay.innerHTML = filteredTitles.join("<br>");
-                var n = filteredTitles.length;
-                document.getElementById("n" + category + "_title").innerHTML = "<b>" + n + "</b>";
-            }
         }
-        var nameElements = document.querySelectorAll(".name");
-        for (var i = 0; i < nameElements.length; i++) {
-            nameElements[i].classList.remove("clicked");
+        let checkboxSpeaker = document.getElementById("check-selected-speaker");
+        if (speakerQ != "" && checkboxSpeaker.checked) {
+            filteredTitles = filteredTitles.filter(function (titleData) {
+                return titleData.speakers.includes(speakerQ);
+            });
+        }
+        if (selectedYear != "") {
+            filteredTitles = filteredTitles.filter(function (titleData) {
+                return selectedYear == titleData.year;
+            });
+        }
+        if (selectedMonth != "") {
+            filteredTitles = filteredTitles.filter(function (titleData) {
+                return selectedMonth == titleData.month;
+            });
+        }
+
+        let titleDisplay = document.getElementById(category + "_title");
+        let n = filteredTitles.length;
+        if (n === 0) {
+            titleDisplay.innerHTML = "";
+            document.getElementById("n" + category + "_title").innerHTML = "0";
+        }
+        else {
+            titleDisplay.innerHTML = filteredTitles.map(item => item.html).join("<br>");
+            document.getElementById("n" + category + "_title").innerHTML = "<b>" + n + "</b>";
         }
     }
 }
-window.searchTitle = searchTitle;
 
 function checkEnter(event) {
     //エンターキーイベント
     if (event.key === "Enter") {
-        if (event.target.id === "search-speaker-input") {
-            searchSpeaker();
-        }
-        else if (event.target.id === "search-title-input") {
-            searchTitle();
-        }
+        if (event.target.id === "search-speaker-input") { searchSpeaker(); }
+        else if (event.target.id === "search-title-input") { searchTitle(); }
     }
 }
 window.checkEnter = checkEnter;
+
+function handleYearSelection(radio) {
+    if (radio.checked) {
+        if (radio.value == "all") { selectedYear = ""; }
+        else { selectedYear = radio.value; }
+        searchTitleImpl();
+    }
+}
+window.handleYearSelection = handleYearSelection;
+
+function handleMonthSelection(radio) {
+    if (radio.checked) {
+        if (radio.value == "all") { selectedMonth = ""; }
+        else { selectedMonth = radio.value; }
+        searchTitleImpl();
+    }
+}
+window.handleMonthSelection = handleMonthSelection;
+
+function handleCheckSelectedSpeakerChange() {
+    searchTitleImpl();
+}
+window.handleCheckSelectedSpeakerChange = handleCheckSelectedSpeakerChange;
+
+function handleCheckSelectedTitleChange() {
+    searchTitleImpl();
+}
+window.handleCheckSelectedTitleChange = handleCheckSelectedTitleChange;

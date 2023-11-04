@@ -20,6 +20,10 @@ a {
     text-decoration: none;
 }
 
+label {
+    display: inline-block;
+}
+
 .outer {
     margin: 20px;
 }
@@ -30,12 +34,18 @@ a {
     line-height: 1.6;
 }
 
+.form {
+    font-size: 14px;
+    font-size: 1.4rem;
+    line-height: 1.6;
+}
+
 .container {
     display: flex;
 }
 
 .left {
-    flex: 1.5;
+    flex: 1.0;
     background-color: #f0f0f0;
     padding: 1.7vh;
     max-height: 95vh;
@@ -80,4 +90,8 @@ button {
     font-size: 12px;
     font-size: 1.2rem;
     font-weight: 400;
+}
+
+.not-selected{
+    color: #787871;
 }
