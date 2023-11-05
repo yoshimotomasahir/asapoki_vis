@@ -92,6 +92,14 @@ button {
     font-weight: 400;
 }
 
-.not-selected{
+.not-selected {
     color: #787871;
+}
+
+.name-search {
+    white-space: nowrap;
+}
+
+.name {
+    white-space: nowrap;
 }
