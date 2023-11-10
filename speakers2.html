@@ -83,12 +83,21 @@
                 タイトル絞り込み: <input type="checkbox" id="check-selected-title" onchange="handleCheckSelectedTitleChange()" checked />
                 <span id="selected-title"><span class="not-selected">未選択</span></span></label>
             </div>
-            <p>▶ ニュースの現場から: <span id="ngenba_title"></span> 本</p>
-            <div id="genba_title" class='list'></div>
-            <p>▶ MEDIA TALK: <span id="nmedia_title"></span> 本</p>
-            <div id="media_title" class='list'></div>
-            <p>▶ 新聞1面じゃなくても大事なこと -SDGsを話そう-: <span id="nsdgs_title"></span> 本</p>
-            <div id="sdgs_title" class='list'></div>
+
+            <div onclick="obj=document.getElementById('genba_title').style; obj.display=(obj.display=='none')?'block':'none';">
+                <p>▶ ニュースの現場から: <span id="ngenba_title"></span> 本</p>
+            </div>
+            <div id="genba_title" class='list' style="display:block;clear:both;"></div>
+
+            <div onclick="obj=document.getElementById('media_title').style; obj.display=(obj.display=='none')?'block':'none';">
+                <p>▶ MEDIA TALK: <span id="nmedia_title"></span> 本</p>
+            </div>
+            <div id="media_title" class='list' style="display:block;clear:both;"></div>
+
+            <div onclick="obj=document.getElementById('sdgs_title').style; obj.display=(obj.display=='none')?'block':'none';">
+                <p>▶ 新聞1面じゃなくても大事なこと -SDGsを話そう-: <span id="nsdgs_title"></span> 本</p>
+            </div>
+            <div id="sdgs_title" class='list' style="display:block;clear:both;"></div>
         </div>
     </div>
     <script src="./speakers2.js" type="module"></script>
