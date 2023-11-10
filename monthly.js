@@ -272,3 +272,30 @@ function initMonthSelectors() {
       createCalendar(selectedMonth.format("YYYY"), selectedMonth.format("M"));
     });
 }
+
+//スワイプ動作
+let startX, currentX;
+
+document.addEventListener('touchstart', (e) => {
+  startX = e.touches[0].clientX;
+});
+
+document.addEventListener('touchmove', (e) => {
+  if (!startX) return;
+  currentX = e.touches[0].clientX;
+});
+
+document.addEventListener('touchend', () => {
+  if (!startX || !currentX) return;
+  const diffX = currentX - startX;
+  if (diffX > window.innerWidth * 0.2) {
+    selectedMonth = dayjs(selectedMonth).subtract(1, "month");
+    createCalendar(selectedMonth.format("YYYY"), selectedMonth.format("M"));
+  }
+  else if (diffX < window.innerWidth * -0.2) {
+    selectedMonth = dayjs(selectedMonth).add(1, "month");
+    createCalendar(selectedMonth.format("YYYY"), selectedMonth.format("M"));
+  }
+  startX = null;
+  currentX = null;
+});
