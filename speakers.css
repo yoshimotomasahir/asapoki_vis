@@ -103,3 +103,13 @@ button {
 .name {
     white-space: nowrap;
 }
+
+.floating-element {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #e0e0e0;
+    padding: 7px;
+    border-radius: 3px;
+    cursor: pointer;
+}
