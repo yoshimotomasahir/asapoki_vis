@@ -31,6 +31,7 @@ xhr.onload = function () {
                 titleData.month = month;
                 titleData.day = day;
                 titleData.title = catdata[i].title;
+                titleData.titleForSearch = getTitleForSearch(catdata[i].title);
                 titleData.date = year + '/' + month + '/' + day;
                 titleData.speakers = combined;
                 titleData.html = '<a href="' + titleData.link + '" rel="nofollow" target="_blank"><span class="article-title">' + titleData.title + '</span> <span class="article-date">' + titleData.date + '</span></a>';
@@ -163,8 +164,9 @@ function searchTitleImpl() {
 
         let checkboxTitle = document.getElementById("check-selected-title");
         if (titleQ != "" && checkboxTitle.checked) {
+            let titleQForSearch = getTitleForSearch(titleQ);
             filteredTitles = filteredTitles.filter(function (titleData) {
-                return searchWords(titleQ, titleData.title);
+                return searchWords(titleQForSearch, titleData.titleForSearch);
             });
         }
         let checkboxSpeaker = document.getElementById("check-selected-speaker");
@@ -233,3 +235,21 @@ function handleCheckSelectedTitleChange() {
     searchTitleImpl();
 }
 window.handleCheckSelectedTitleChange = handleCheckSelectedTitleChange;
+
+function getTitleForSearch(str){
+    str = katakanaToHiragana(str);
+    str = fullToHalf(str);
+    return str.toLowerCase();
+}
+
+function katakanaToHiragana(str) {
+    return str.replace(/[\u30a1-\u30f6]/g, function(match) {
+        return String.fromCharCode( match.charCodeAt(0) - 0x60);
+    });
+}
+
+function fullToHalf(str) {
+    return str.replace(/[Ａ-Ｚａ-ｚ０-９]/g, function (match) {
+      return String.fromCharCode(match.charCodeAt(0) - 0xFEE0);
+    });
+}
