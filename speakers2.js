@@ -4,7 +4,7 @@ let categories = ["genba", "media", "sdgs"];
 let speakerQ = "";
 let titleQ = "";
 let selectedMonth = "";
-let selectedYear = "2023";
+let selectedYear = "";
 let selectedSpeaker = null;
 
 let xhr = new XMLHttpRequest();
