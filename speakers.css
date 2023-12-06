@@ -46,7 +46,7 @@ label {
 
 .left {
     flex: 1.0;
-    background-color: #f0f0f0;
+    background-color: #f7f7f7;
     padding: 1.7vh;
     max-height: 95vh;
     overflow-y: scroll;
@@ -54,7 +54,7 @@ label {
 
 .right {
     flex: 1;
-    background-color: #e0e0e0;
+    background-color: #e7e7e7;
     padding: 1.7vh;
     max-height: 95vh;
     overflow-y: scroll;
@@ -108,7 +108,7 @@ button {
     position: fixed;
     bottom: 15px;
     right: 15px;
-    background-color: #f0f0f0;
+    background-color: #f7f7f7;
     font-size: 12px;
     font-size: 1.2rem;
     padding: 6px;
