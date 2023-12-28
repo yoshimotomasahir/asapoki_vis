@@ -83,6 +83,10 @@
                 タイトル絞り込み: <input type="checkbox" id="check-selected-title" onchange="handleCheckSelectedTitleChange()" checked />
                 <span id="selected-title"><span class="not-selected">未選択</span></span></label>
             </div>
+            <div class="form">
+                <label>
+                出演者表示: <input type="checkbox" id="check-display-speaker" onchange="handleCheckDisplaySpeakerChange()"></label>
+            </div>
 
             <div onclick="obj=document.getElementById('genba_title').style; obj.display=(obj.display=='none')?'block':'none';">
                 <p>▶ ニュースの現場から: <span id="ngenba_title"></span> 本</p>

@@ -34,7 +34,7 @@ xhr.onload = function () {
                 titleData.titleForSearch = getTitleForSearch(catdata[i].title);
                 titleData.date = year + '/' + month + '/' + day;
                 titleData.speakers = combined;
-                titleData.html = '<a href="' + titleData.link + '" rel="nofollow" target="_blank"><span class="article-title">' + titleData.title + '</span> <span class="article-date">' + titleData.date + '</span></a>';
+                titleData.html = '<a href="' + titleData.link + '" rel="nofollow" target="_blank"><span class="article-title">' + titleData.title + '</span> <span class="article-date">' + titleData.date + '</span></a>&nbsp;&nbsp;<span class="article-speaker" style="display:none;"><span class="name">' + combined.join('</span>, <span class="name">') + '</span></span>';
                 allTitles[category].push(titleData);
             }
 
@@ -197,6 +197,7 @@ function searchTitleImpl() {
             document.getElementById("n" + category + "_title").innerHTML = "<b>" + n + "</b>";
         }
     }
+    handleCheckDisplaySpeakerChange();
 }
 
 function checkEnter(event) {
@@ -236,20 +237,29 @@ function handleCheckSelectedTitleChange() {
 }
 window.handleCheckSelectedTitleChange = handleCheckSelectedTitleChange;
 
-function getTitleForSearch(str){
+function getTitleForSearch(str) {
     str = katakanaToHiragana(str);
     str = fullToHalf(str);
     return str.toLowerCase();
 }
 
 function katakanaToHiragana(str) {
-    return str.replace(/[\u30a1-\u30f6]/g, function(match) {
-        return String.fromCharCode( match.charCodeAt(0) - 0x60);
+    return str.replace(/[\u30a1-\u30f6]/g, function (match) {
+        return String.fromCharCode(match.charCodeAt(0) - 0x60);
     });
 }
 
 function fullToHalf(str) {
     return str.replace(/[Ａ-Ｚａ-ｚ０-９]/g, function (match) {
-      return String.fromCharCode(match.charCodeAt(0) - 0xFEE0);
+        return String.fromCharCode(match.charCodeAt(0) - 0xFEE0);
     });
 }
+
+function handleCheckDisplaySpeakerChange() {
+    var displayValue = document.getElementById("check-display-speaker").checked ? 'inline' : 'none';
+    var toggleContents = document.querySelectorAll('.article-speaker');
+    toggleContents.forEach(function (content) {
+        content.style.display = displayValue;
+    });
+}
+window.handleCheckDisplaySpeakerChange = handleCheckDisplaySpeakerChange;
