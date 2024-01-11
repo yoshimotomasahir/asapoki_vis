@@ -14,39 +14,37 @@ xhr.onload = function () {
     if (xhr.status === 200) {
         let data = JSON.parse(xhr.responseText);
         for (let cat = 0; cat < 3; cat++) {
-            let catdata = data[categories[cat]];
+            let catData = data[categories[cat]];
             let category = categories[cat];
-            let speakers = [];
-            for (let i = 0; i < catdata.length; i++) {
-                speakers = speakers.concat(catdata[i].mc);
-                speakers = speakers.concat(catdata[i].speakers);
-                const combined = catdata[i].mc.concat(catdata[i].speakers);
-                const date = new Date(catdata[i].pubDate);
+            let catSpeakers = [];
+            for (let i = 0; i < catData.length; i++) {
+                catSpeakers = catSpeakers.concat(catData[i].mc);
+                catSpeakers = catSpeakers.concat(catData[i].speakers);
+                const combined = catData[i].mc.concat(catData[i].speakers);
+                const date = new Date(catData[i].pubDate);
                 const year = date.getFullYear();
                 const month = (date.getMonth() + 1).toString().padStart(2, '0');
                 const day = date.getDate().toString().padStart(2, '0');
                 const titleData = {};
-                titleData.link = catdata[i].link;
+                titleData.link = catData[i].link;
                 titleData.year = year;
                 titleData.month = month;
                 titleData.day = day;
-                titleData.title = catdata[i].title;
-                titleData.titleForSearch = getTitleForSearch(catdata[i].title);
+                titleData.title = catData[i].title;
+                titleData.titleForSearch = getTitleForSearch(catData[i].title);
                 titleData.date = year + '/' + month + '/' + day;
                 titleData.speakers = combined;
                 titleData.html = '<a href="' + titleData.link + '" rel="nofollow" target="_blank"><span class="article-title">' + titleData.title + '</span> <span class="article-date">' + titleData.date + '</span></a>&nbsp;&nbsp;<span class="article-speaker" style="display:none;"><span class="name">' + combined.join('</span>, <span class="name">') + '</span></span>';
                 allTitles[category].push(titleData);
             }
 
-            speakers = Array.from(new Set(speakers));
-            const index = speakers.indexOf("");
-            speakers.splice(index, 1);
+            catSpeakers = Array.from(new Set(catSpeakers));
 
             // 番組別の出演者一覧
-            document.getElementById("n" + category).innerHTML = "<b>" + (speakers.length).toString() + "</b>";
-            document.getElementById(category).innerHTML = '<span class="name">' + speakers.join('</span>, <span class="name">') + '</span>';
+            document.getElementById("n" + category).innerHTML = "<b>" + (catSpeakers.length).toString() + "</b>";
+            document.getElementById(category).innerHTML = '<span class="name">' + catSpeakers.join('</span>, <span class="name">') + '</span>';
 
-            allSpeakers = allSpeakers.concat(speakers);
+            allSpeakers = allSpeakers.concat(catSpeakers);
         }
         // 3番組の出演者一覧
         allSpeakers = Array.from(new Set(allSpeakers));
