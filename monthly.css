@@ -109,10 +109,10 @@ li {
   height: var(--day-label-size);
 }
 
-.calendar-day--not-current {
+/* .calendar-day--not-current {
   background-color: var(--grey-100);
   color: var(--grey-300);
-}
+} */
 
 .calendar-day--today {
   padding-top: 4px;
@@ -131,11 +131,17 @@ li {
   border-radius: 5px 5px 5px 5px;
 }
 
-.calendar-day--not-current>div {
+/* .calendar-day--not-current>div {
   display: flex;
   background-color: var(--grey-200);
   color: var(--grey-300);
   border-radius: 5px 5px 5px 5px;
+} */
+
+.calendar-day--not-current a {
+  color: var(--grey-300);
+  font-size: 14px;
+  font-size: 1.4rem;
 }
 
 .titles {
