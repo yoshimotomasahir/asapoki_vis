@@ -34,48 +34,77 @@ var titles = {};
 var xhr = new XMLHttpRequest();
 xhr.open('GET', 'https://script.google.com/macros/s/AKfycby1G_qqb8xBJh8adQBuvLsA5wOcnqYu59W22hs1jMlj4IT2DlqnJA7uaUG16GXJHDKU/exec', false);
 // xhr.open('GET', 'echo.json', false);
-xhr.onload = function() {
+xhr.onload = function () {
   if (xhr.status === 200) {
     var data = JSON.parse(xhr.responseText);
-    for (var cat = 0; cat < 3; cat++){
-        if (cat==0){
-            var catdata = data.genba;
-            var category = "現場";
-        }
-        else if (cat==1){
-            var catdata = data.media;
-            var category = "メディア";
-        }
-        else if (cat==2){
-            var catdata = data.sdgs;
-            var category = "SDGs";
-        }
-        for (var i = 0; i < catdata.length; i++) {
-            var title = catdata[i].title;
-            var link = catdata[i].link;
+    for (var cat = 0; cat < 3; cat++) {
+      if (cat == 0) {
+        var catData = data.genba;
+        var category = "現場";
+      }
+      else if (cat == 1) {
+        var catData = data.media;
+        var category = "メディア";
+      }
+      else if (cat == 2) {
+        var catData = data.sdgs;
+        var category = "SDGs";
+      }
+      for (var i = 0; i < catData.length; i++) {
+        var title = catData[i].title;
+        var link = catData[i].link;
 
-            var date = new Date(catdata[i].pubDate);
-            var year = date.getFullYear();
-            var month = (date.getMonth() + 1).toString().padStart(2, '0');
-            var day = date.getDate().toString().padStart(2, '0');
-            var date = year + '-' + month + '-' + day;
+        var date = new Date(catData[i].pubDate);
+        var year = date.getFullYear();
+        var month = (date.getMonth() + 1).toString().padStart(2, '0');
+        var day = date.getDate().toString().padStart(2, '0');
+        var date = year + '-' + month + '-' + day;
 
-            // var category = data[i].category;
-            // var minutes = data[i].minutes;
-            // console.log(category);
-              if (!titles.hasOwnProperty(date)) {
-              titles[date] = [];
-            }
-            titles[date].push([title,link,category]);
+        // var category = data[i].category;
+        // var minutes = data[i].minutes;
+        // console.log(category);
+        if (!titles.hasOwnProperty(date)) {
+          titles[date] = [];
         }
+        titles[date].push([title, link, category]);
+      }
     }
   }
-  else{
+  else {
     console.log('Error: ' + xhr.status);
   }
 };
 xhr.send();
 
+var xhr2 = new XMLHttpRequest();
+xhr2.open('GET', 'https://script.google.com/macros/s/AKfycbykaqKYcNP1OeDFW9MtfxqtCE01QqV1tebZgVFHY1AI53Zj6yOfd1OPDOGKag4zE8N5Qg/exec', false);
+// xhr2.open('GET', 'echo.json', false);
+xhr2.onload = function () {
+  if (xhr2.status === 200) {
+    var data = JSON.parse(xhr2.responseText);
+    var catData = data.youtube;
+    var category = "YouTube";
+    for (var i = 0; i < catData.length; i++) {
+      var title = catData[i].title;
+      var link = catData[i].link;
+
+      var date = new Date(catData[i].pubDate);
+      var year = date.getFullYear();
+      var month = (date.getMonth() + 1).toString().padStart(2, '0');
+      var day = date.getDate().toString().padStart(2, '0');
+      var date = year + '-' + month + '-' + day;
+
+      if (!titles.hasOwnProperty(date)) {
+        titles[date] = [];
+      }
+      titles[date].push([title, link, category]);
+    }
+  }
+  else {
+    console.log('Error: ' + xhr.status);
+  }
+};
+xhr2.send();
 
 // const WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const WEEKDAYS = ["月(Mon)", "火(Tue)", "水(Wed)", "木(Thu)", "金(Fri)", "土(Sat)", "日(Sun)"];
@@ -152,9 +181,9 @@ function appendDay(day, calendarDaysElement) {
       var title = titles[day["date"]][i][0];
       var link = titles[day["date"]][i][1];
       var category = titles[day["date"]][i][2];
-    //   var minutes = titles[day["date"]][i][3];
-    //   linkElement.textContent = "【"+category+"】"+title+" ("+minutes+"分)";
-      linkElement.innerHTML = "<b>【"+category+"】</b>"+title;
+      //   var minutes = titles[day["date"]][i][3];
+      //   linkElement.textContent = "【"+category+"】"+title+" ("+minutes+"分)";
+      linkElement.innerHTML = "<b>【" + category + "】</b>" + title;
       linkElement.href = link;
       podcastElement.appendChild(linkElement);
       const podcastElementClassList = podcastElement.classList;
@@ -214,8 +243,7 @@ function createDaysForPreviousMonth(year, month) {
   return [...Array(visibleNumberOfDaysFromPreviousMonth)].map((day, index) => {
     return {
       date: dayjs(
-        `${previousMonth.year()}-${previousMonth.month() + 1}-${
-          previousMonthLastMondayDayOfMonth + index
+        `${previousMonth.year()}-${previousMonth.month() + 1}-${previousMonthLastMondayDayOfMonth + index
         }`
       ).format("YYYY-MM-DD"),
       dayOfMonth: previousMonthLastMondayDayOfMonth + index,
