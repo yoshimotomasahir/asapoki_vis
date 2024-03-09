@@ -6,6 +6,7 @@ let titleQ = "";
 let selectedMonth = "";
 let selectedYear = "";
 let selectedSpeaker = null;
+let scatterChart = null;
 
 let xhr = new XMLHttpRequest();
 xhr.open('GET', 'https://script.google.com/macros/s/AKfycby1G_qqb8xBJh8adQBuvLsA5wOcnqYu59W22hs1jMlj4IT2DlqnJA7uaUG16GXJHDKU/exec', false);
@@ -155,6 +156,7 @@ window.searchTitle = searchTitle;
 
 function searchTitleImpl() {
     // console.log([titleQ, speakerQ, selectedYear, selectedMonth]);
+    let dateList = [];
     for (let cat = 0; cat < 3; cat++) {
         let category = categories[cat];
 
@@ -173,6 +175,12 @@ function searchTitleImpl() {
                 return titleData.speakers.includes(speakerQ);
             });
         }
+        let dates = [];
+        for (var i = 0; i < filteredTitles.length; i++) {
+            dates.push(new Date(filteredTitles[i].date));
+        }
+        dateList.push(dates);
+
         if (selectedYear != "") {
             filteredTitles = filteredTitles.filter(function (titleData) {
                 return selectedYear == titleData.year;
@@ -195,6 +203,7 @@ function searchTitleImpl() {
             document.getElementById("n" + category + "_title").innerHTML = "<b>" + n + "</b>";
         }
     }
+    drawScatter(dateList);
     handleCheckDisplaySpeakerChange();
 }
 
@@ -261,3 +270,45 @@ function handleCheckDisplaySpeakerChange() {
     });
 }
 window.handleCheckDisplaySpeakerChange = handleCheckDisplaySpeakerChange;
+
+function drawScatter(dateList) {
+    let ctx = document.getElementById('scatter').getContext('2d');
+    let datasets = [];
+    for (let i = 0; i < 3; i++) {
+        let dataset = [];
+        for (let j = 0; j < dateList[i].length; j++) {
+            dataset.push({ x: dateList[i][j], y: 0 })
+        }
+        datasets.push({ data: dataset });
+    }
+    if (scatterChart) {
+        scatterChart.destroy();
+    }
+    scatterChart = new Chart(ctx, {
+        type: 'scatter',
+        data: { datasets: datasets },
+        options: {
+            scales: {
+                xAxes: [{
+                    type: 'time',
+                    time: {
+                        unit: 'year',
+                        displayFormats: { year: 'YYYY年' }
+                    },
+                    ticks: {
+                        min: new Date('2020-08-01T00:00:00'),
+                        max: new Date(),
+                    }
+                }],
+                yAxes: [{ display: false }]
+            },
+            tooltips: { enabled: false },
+            legend: { display: false, },
+            plugins: {
+                colorschemes: {
+                    scheme: 'brewer.DarkTwo3'
+                }
+            }
+        },
+    });
+}

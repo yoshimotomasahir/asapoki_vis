@@ -9,6 +9,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600&display=swap" rel="stylesheet">
     <link href="./speakers.css" rel="stylesheet" type="text/css" media="all">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@^2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment@^2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@^1"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-colorschemes"></script>
 </head>
 
 <body>
@@ -28,16 +32,16 @@
 
             <div
                 onclick="obj=document.getElementById('genba').style; obj.display=(obj.display=='none')?'block':'none';">
-                <p style="cursor:pointer;">&nbsp;&nbsp;▶ ニュースの現場からの 出演者一覧 <span id="ngenba"></span> 名 ▼クリックで展開</p>
+                <p style="cursor:pointer;">&nbsp;&nbsp;<span style="color: #1b9e77">▶</span> ニュースの現場からの 出演者一覧 <span id="ngenba"></span> 名 ▼クリックで展開</p>
             </div>
             <div id="genba" style="display:none;clear:both;" class='list'></div>
             <div
                 onclick="obj=document.getElementById('media').style; obj.display=(obj.display=='none')?'block':'none';">
-                <p style="cursor:pointer;">&nbsp;&nbsp;▶ MEDIA TALKの 出演者一覧 <span id="nmedia"></span> 名 ▼クリックで展開</p>
+                <p style="cursor:pointer;">&nbsp;&nbsp;<span style="color: #d95f02">▶</span> MEDIA TALKの 出演者一覧 <span id="nmedia"></span> 名 ▼クリックで展開</p>
             </div>
             <div id="media" style="display:none;clear:both;" class='list'></div>
             <div onclick="obj=document.getElementById('sdgs').style; obj.display=(obj.display=='none')?'block':'none';">
-                <p style="cursor:pointer;">&nbsp;&nbsp;▶ 新聞1面じゃなくても大事なこと -SDGsを話そう-の 出演者一覧 <span id="nsdgs"></span> 名 ▼クリックで展開</p>
+                <p style="cursor:pointer;">&nbsp;&nbsp;<span style="color: #7570b3">▶</span> 新聞1面じゃなくても大事なこと -SDGsを話そう-の 出演者一覧 <span id="nsdgs"></span> 名 ▼クリックで展開</p>
             </div>
             <div id="sdgs" style="display:none;clear:both;" class='list'></div>
         </div>
@@ -74,6 +78,7 @@
                     <label><input type="radio" name="month" value="all" onchange="handleMonthSelection(this)" checked>全ての月</label>
                 </div>
             </form>
+            <canvas id="scatter" height="20"></canvas>
             <div class="form">
                 <label>
                 出演者絞り込み: <input type="checkbox" id="check-selected-speaker" onchange="handleCheckSelectedSpeakerChange()" checked />
@@ -90,17 +95,17 @@
             </div>
 
             <div onclick="obj=document.getElementById('genba_title').style; obj.display=(obj.display=='none')?'block':'none';">
-                <p>▶ ニュースの現場から: <span id="ngenba_title"></span> 本</p>
+                <p><span style="color: #1b9e77">▶</span> ニュースの現場から: <span id="ngenba_title"></span> 本</p>
             </div>
             <div id="genba_title" class='list' style="display:block;clear:both;"></div>
 
             <div onclick="obj=document.getElementById('media_title').style; obj.display=(obj.display=='none')?'block':'none';">
-                <p>▶ MEDIA TALK: <span id="nmedia_title"></span> 本</p>
+                <p><span style="color: #d95f02">▶</span> MEDIA TALK: <span id="nmedia_title"></span> 本</p>
             </div>
             <div id="media_title" class='list' style="display:block;clear:both;"></div>
 
             <div onclick="obj=document.getElementById('sdgs_title').style; obj.display=(obj.display=='none')?'block':'none';">
-                <p>▶ 新聞1面じゃなくても大事なこと -SDGsを話そう-: <span id="nsdgs_title"></span> 本</p>
+                <p><span style="color: #7570b3">▶</span> 新聞1面じゃなくても大事なこと -SDGsを話そう-: <span id="nsdgs_title"></span> 本</p>
             </div>
             <div id="sdgs_title" class='list' style="display:block;clear:both;"></div>
         </div>
