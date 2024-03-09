@@ -277,7 +277,7 @@ function drawScatter(dateList) {
     for (let i = 0; i < 3; i++) {
         let dataset = [];
         for (let j = 0; j < dateList[i].length; j++) {
-            dataset.push({ x: dateList[i][j], y: 0 })
+            dataset.push({ x: dateList[i][j], y: (1 - i) * 0.3 })
         }
         datasets.push({ data: dataset });
     }
@@ -300,7 +300,13 @@ function drawScatter(dateList) {
                         max: new Date(),
                     }
                 }],
-                yAxes: [{ display: false }]
+                yAxes: [{
+                    display: false,
+                    ticks: {
+                        min: -1,
+                        max: 1,
+                    }
+                }]
             },
             tooltips: { enabled: false },
             legend: { display: false, },
