@@ -1,5 +1,6 @@
 let allTitles = { "genba": [], "media": [], "sdgs": [] }
 let allSpeakers = [];
+let allSpeakerDurations = {};
 let categories = ["genba", "media", "sdgs"];
 let speakerQ = "";
 let titleQ = "";
@@ -17,11 +18,27 @@ xhr.onload = function () {
         for (let cat = 0; cat < 3; cat++) {
             let catData = data[categories[cat]];
             let category = categories[cat];
-            let catSpeakers = [];
+            let catSpeakerDurations = {};
             for (let i = 0; i < catData.length; i++) {
-                catSpeakers = catSpeakers.concat(catData[i].mc);
-                catSpeakers = catSpeakers.concat(catData[i].speakers);
                 const combined = catData[i].mc.concat(catData[i].speakers);
+                const duration = catData[i].duration;
+                const title = catData[i].title;
+                let actualDuration = duration;
+                if (title.length >= 3 && title.substring(0, 3) === "（再）") {
+                    actualDuration = 0;
+                }
+                combined.forEach(function (speaker) {
+                    if (!(speaker in catSpeakerDurations)) {
+                        catSpeakerDurations[speaker] = actualDuration;
+                    } else {
+                        catSpeakerDurations[speaker] += actualDuration;
+                    }
+                    if (!(speaker in allSpeakerDurations)) {
+                        allSpeakerDurations[speaker] = actualDuration;
+                    } else {
+                        allSpeakerDurations[speaker] += actualDuration;
+                    }
+                });
                 const date = new Date(catData[i].pubDate);
                 const year = date.getFullYear();
                 const month = (date.getMonth() + 1).toString().padStart(2, '0');
@@ -39,16 +56,14 @@ xhr.onload = function () {
                 allTitles[category].push(titleData);
             }
 
-            catSpeakers = Array.from(new Set(catSpeakers));
-
             // 番組別の出演者一覧
+            let catSpeakers = sortSpeakersByDuration(catSpeakerDurations);
             document.getElementById("n" + category).innerHTML = "<b>" + (catSpeakers.length).toString() + "</b>";
             document.getElementById(category).innerHTML = '<span class="name">' + catSpeakers.join('</span>, <span class="name">') + '</span>';
 
-            allSpeakers = allSpeakers.concat(catSpeakers);
         }
         // 3番組の出演者一覧
-        allSpeakers = Array.from(new Set(allSpeakers));
+        allSpeakers = sortSpeakersByDuration(allSpeakerDurations);
         document.getElementById("number").innerHTML = "<b>" + (allSpeakers.length).toString() + "</b>";
         document.getElementById("all").innerHTML = '<span class="name">' + allSpeakers.join('</span>, <span class="name">') + '</span>';
     }
@@ -62,6 +77,19 @@ addSelectNameListener(".name");
 getQuerySpeaker();
 searchTitleImpl();
 
+function sortSpeakersByDuration(speakerDurations) {
+    let sortedSpeakerDurations = Object.keys(speakerDurations).map(function (key) {
+        return [key, speakerDurations[key]];
+    });
+    sortedSpeakerDurations.sort(function (first, second) {
+        return second[1] - first[1];
+    });
+    let speakers = sortedSpeakerDurations.map(function (item) {
+        return item[0];
+    });
+    return speakers;
+}
+
 function addSelectNameListener(className) {
     let nameElements = document.querySelectorAll(className);
     //名前をクリックしたときのイベントリスナーを付与
@@ -74,7 +102,7 @@ function addSelectNameListener(className) {
             selectedSpeaker = this;
             this.classList.add("clicked");
             speakerQ = selectedSpeaker.textContent;
-            document.getElementById("selected-speaker").textContent = speakerQ;
+            document.getElementById("selected-speaker").textContent = speakerQ + " (" + (allSpeakerDurations[speakerQ] / 60.0).toFixed(0) + "分)";
             document.getElementById("check-selected-speaker").checked = true;
             // タイトルの検索設定をリセット
             document.getElementById("search-title-input").value = "";
@@ -277,7 +305,7 @@ function drawScatter(dateList) {
     for (let i = 0; i < 3; i++) {
         let dataset = [];
         for (let j = 0; j < dateList[i].length; j++) {
-            dataset.push({ x: dateList[i][j], y: (1 - i) * 0.3 })
+            dataset.push({ x: dateList[i][j], y: (1 - i) * 0.4 })
         }
         datasets.push({ data: dataset });
     }
