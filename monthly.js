@@ -37,7 +37,7 @@ xhr.open('GET', 'https://script.google.com/macros/s/AKfycby1G_qqb8xBJh8adQBuvLsA
 xhr.onload = function () {
   if (xhr.status === 200) {
     var data = JSON.parse(xhr.responseText);
-    for (var cat = 0; cat < 3; cat++) {
+    for (var cat = 0; cat < 4; cat++) {
       if (cat == 0) {
         var catData = data.genba;
         var category = "現場";
@@ -50,6 +50,10 @@ xhr.onload = function () {
         var catData = data.sdgs;
         var category = "SDGs";
       }
+      else if (cat == 3) {
+        var catData = data.YouTube;
+        var category = "YouTube";
+      }
       for (var i = 0; i < catData.length; i++) {
         var title = catData[i].title;
         var link = catData[i].link;
@@ -60,9 +64,6 @@ xhr.onload = function () {
         var day = date.getDate().toString().padStart(2, '0');
         var date = year + '-' + month + '-' + day;
 
-        // var category = data[i].category;
-        // var minutes = data[i].minutes;
-        // console.log(category);
         if (!titles.hasOwnProperty(date)) {
           titles[date] = [];
         }
@@ -75,36 +76,6 @@ xhr.onload = function () {
   }
 };
 xhr.send();
-
-var xhr2 = new XMLHttpRequest();
-xhr2.open('GET', 'https://script.google.com/macros/s/AKfycbykaqKYcNP1OeDFW9MtfxqtCE01QqV1tebZgVFHY1AI53Zj6yOfd1OPDOGKag4zE8N5Qg/exec', false);
-// xhr2.open('GET', 'echo.json', false);
-xhr2.onload = function () {
-  if (xhr2.status === 200) {
-    var data = JSON.parse(xhr2.responseText);
-    var catData = data.youtube;
-    var category = "YouTube";
-    for (var i = 0; i < catData.length; i++) {
-      var title = catData[i].title;
-      var link = catData[i].link;
-
-      var date = new Date(catData[i].pubDate);
-      var year = date.getFullYear();
-      var month = (date.getMonth() + 1).toString().padStart(2, '0');
-      var day = date.getDate().toString().padStart(2, '0');
-      var date = year + '-' + month + '-' + day;
-
-      if (!titles.hasOwnProperty(date)) {
-        titles[date] = [];
-      }
-      titles[date].push([title, link, category]);
-    }
-  }
-  else {
-    console.log('Error: ' + xhr.status);
-  }
-};
-xhr2.send();
 
 // const WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const WEEKDAYS = ["月(Mon)", "火(Tue)", "水(Wed)", "木(Thu)", "金(Fri)", "土(Sat)", "日(Sun)"];
