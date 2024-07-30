@@ -139,8 +139,8 @@ maxDurationSlider.max = maxDuration;
 maxDurationSlider.value = maxDuration;
 
 function updateDurationValues() {
-    minDurationValue.textContent = `${minDurationSlider.value}分`;
-    maxDurationValue.textContent = `${maxDurationSlider.value}分`;
+    minDurationValue.textContent = `${minDurationSlider.value.padStart(3, ' ')}`;
+    maxDurationValue.textContent = `${maxDurationSlider.value.padStart(3, ' ')}`;
     minDurationRange = parseInt(minDurationSlider.value);
     maxDurationRange = parseInt(maxDurationSlider.value);
     searchTitleImpl();

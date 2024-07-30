@@ -52,7 +52,7 @@
                 <button onclick="searchTitle()">検索</button>
             </div>
             <div class="form" style="display: flex; align-items: center;">
-                配信月絞り込み: 
+                配信月絞り込み:&nbsp;
                 <label for="start-slider"><span id="start-value">2020年08月</span>から</label>
                 <div class="button-container">
                     <span onclick="changeSliderValue('start-slider', 1)">&#9650;</span>
@@ -68,14 +68,14 @@
             </div>
             <canvas id="scatter" height="20"></canvas>
             <div class="form" style="display: flex; align-items: center;">
-                配信時間絞り込み: 
-                <label for="min-duration-slider"><span id="min-duration-value">0分</span>から</label>
+                配信時間絞り込み:&nbsp;
+                <label for="min-duration-slider"><span id="min-duration-value" class="padded-text">  0</span>分から</label>
                 <div class="button-container">
                     <span onclick="changeSliderValue('min-duration-slider', 10)">&#9650;</span>
                     <span onclick="changeSliderValue('min-duration-slider', -10)">&#9660;</span>
                 </div>
                 <input type="range" id="min-duration-slider" min="0" max="230" value="0" step="10">
-                <label for="max-duration-slider"><span id="max-duration-value">230分</span>まで</label>
+                <label for="max-duration-slider"><span id="max-duration-value" class="padded-text">230</span>分まで</label>
                 <div class="button-container">
                     <span onclick="changeSliderValue('max-duration-slider', 10)">&#9650;</span>
                     <span onclick="changeSliderValue('max-duration-slider', -10)">&#9660;</span>

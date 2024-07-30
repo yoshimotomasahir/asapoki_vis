@@ -138,3 +138,8 @@ button {
     line-height: 1.2;
     user-select: none;
 }
+
+.padded-text {
+    white-space: pre;
+    font-family: monospace;
+}
