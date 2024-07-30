@@ -51,34 +51,37 @@
                 <input type="text" id="search-title-input" placeholder="タイトル..." onkeydown="checkEnter(event)" />
                 <button onclick="searchTitle()">検索</button>
             </div>
-            <form>
-                <div class="form">
-                    <label><input type="radio" name="year" value="2020" onchange="handleYearSelection(this)">2020年</label>
-                    <label><input type="radio" name="year" value="2021" onchange="handleYearSelection(this)">2021年</label>
-                    <label><input type="radio" name="year" value="2022" onchange="handleYearSelection(this)">2022年</label>
-                    <label><input type="radio" name="year" value="2023" onchange="handleYearSelection(this)">2023年</label>
-                    <label><input type="radio" name="year" value="2024" onchange="handleYearSelection(this)">2024年</label>
-                    <label><input type="radio" name="year" value="all" onchange="handleYearSelection(this)" checked>全ての年</label>
+            <div class="form" style="display: flex; align-items: center;">
+                配信月絞り込み: 
+                <label for="start-slider"><span id="start-value">2020年08月</span>から</label>
+                <div class="button-container">
+                    <span onclick="changeSliderValue('start-slider', 1)">&#9650;</span>
+                    <span onclick="changeSliderValue('start-slider', -1)">&#9660;</span>
                 </div>
-            </form>
-            <form>
-                <div class="form">
-                    <label><input type="radio" name="month" value="01" onchange="handleMonthSelection(this)">1月</label>
-                    <label><input type="radio" name="month" value="02" onchange="handleMonthSelection(this)">2月</label>
-                    <label><input type="radio" name="month" value="03" onchange="handleMonthSelection(this)">3月</label>
-                    <label><input type="radio" name="month" value="04" onchange="handleMonthSelection(this)">4月</label>
-                    <label><input type="radio" name="month" value="05" onchange="handleMonthSelection(this)">5月</label>
-                    <label><input type="radio" name="month" value="06" onchange="handleMonthSelection(this)">6月</label>
-                    <label><input type="radio" name="month" value="07" onchange="handleMonthSelection(this)">7月</label>
-                    <label><input type="radio" name="month" value="08" onchange="handleMonthSelection(this)">8月</label>
-                    <label><input type="radio" name="month" value="09" onchange="handleMonthSelection(this)">9月</label>
-                    <label><input type="radio" name="month" value="10" onchange="handleMonthSelection(this)">10月</label>
-                    <label><input type="radio" name="month" value="11" onchange="handleMonthSelection(this)">11月</label>
-                    <label><input type="radio" name="month" value="12" onchange="handleMonthSelection(this)">12月</label>
-                    <label><input type="radio" name="month" value="all" onchange="handleMonthSelection(this)" checked>全ての月</label>
+                <input type="range" id="start-slider" min="0" max="1" value="0" step="1">
+                <label for="end-slider"><span id="end-value">2020年08月</span>まで</label>
+                <div class="button-container">
+                    <span onclick="changeSliderValue('end-slider', 1)">&#9650;</span>
+                    <span onclick="changeSliderValue('end-slider', -1)">&#9660;</span>
                 </div>
-            </form>
+                <input type="range" id="end-slider" min="0" max="1" value="1" step="1">
+            </div>
             <canvas id="scatter" height="20"></canvas>
+            <div class="form" style="display: flex; align-items: center;">
+                配信時間絞り込み: 
+                <label for="min-duration-slider"><span id="min-duration-value">0分</span>から</label>
+                <div class="button-container">
+                    <span onclick="changeSliderValue('min-duration-slider', 10)">&#9650;</span>
+                    <span onclick="changeSliderValue('min-duration-slider', -10)">&#9660;</span>
+                </div>
+                <input type="range" id="min-duration-slider" min="0" max="230" value="0" step="10">
+                <label for="max-duration-slider"><span id="max-duration-value">230分</span>まで</label>
+                <div class="button-container">
+                    <span onclick="changeSliderValue('max-duration-slider', 10)">&#9650;</span>
+                    <span onclick="changeSliderValue('max-duration-slider', -10)">&#9660;</span>
+                </div>
+                <input type="range" id="max-duration-slider" min="10" max="230" value="230" step="10">
+            </div>
             <div class="form">
                 <label>
                 出演者絞り込み: <input type="checkbox" id="check-selected-speaker" onchange="handleCheckSelectedSpeakerChange()" checked />

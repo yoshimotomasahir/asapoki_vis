@@ -4,10 +4,14 @@ let allSpeakerDurations = {};
 let categories = ["genba", "media", "sdgs"];
 let speakerQ = "";
 let titleQ = "";
-let selectedMonth = "";
-let selectedYear = "";
 let selectedSpeaker = null;
 let scatterChart = null;
+const startMonths = 2020 * 12 + 7; // 2020年8月
+let startMonth = 0;
+let endMonth = 0;
+let maxDuration = 230;
+let minDurationRange = 0;
+let maxDurationRange = 230;
 
 let xhr = new XMLHttpRequest();
 xhr.open('GET', 'https://script.google.com/macros/s/AKfycby1G_qqb8xBJh8adQBuvLsA5wOcnqYu59W22hs1jMlj4IT2DlqnJA7uaUG16GXJHDKU/exec', false);
@@ -24,6 +28,9 @@ xhr.onload = function () {
                 const duration = catData[i].duration;
                 const title = catData[i].title;
                 let actualDuration = duration;
+                if (duration / 60 > maxDuration){
+                    maxDuration = Math.ceil(duration / 10 / 60) * 10;
+                }
                 if (title.length >= 3 && title.substring(0, 3) === "（再）") {
                     actualDuration = 0;
                 }
@@ -47,12 +54,15 @@ xhr.onload = function () {
                 titleData.link = catData[i].link;
                 titleData.year = year;
                 titleData.month = month;
+                titleData.months = date.getFullYear() * 12 + date.getMonth() - startMonths;
                 titleData.day = day;
                 titleData.title = catData[i].title;
                 titleData.titleForSearch = getTitleForSearch(catData[i].title);
                 titleData.date = year + '/' + month + '/' + day;
                 titleData.speakers = combined;
-                titleData.html = '<a href="' + titleData.link + '" rel="nofollow" target="_blank"><span class="article-title">' + titleData.title + '</span> <span class="article-date">' + titleData.date + '</span></a>&nbsp;&nbsp;<span class="article-speaker" style="display:none;"><span class="name">' + combined.join('</span>, <span class="name">') + '</span></span>';
+                titleData.duration = duration;
+                titleData.minutes = Math.round(duration / 60);
+                titleData.html = '<a href="' + titleData.link + '" rel="nofollow" target="_blank"><span class="article-title">' + titleData.title + '</span> <span class="article-date">' + titleData.minutes + '分  ' + titleData.date + '</span></a>&nbsp;&nbsp;<span class="article-speaker" style="display:none;"><span class="name">' + combined.join('</span>, <span class="name">') + '</span></span>';
                 allTitles[category].push(titleData);
             }
 
@@ -73,9 +83,108 @@ xhr.onload = function () {
 };
 xhr.send();
 
+const today = new Date();
+const totalMonths = today.getFullYear() * 12 + today.getMonth() - startMonths;
+
+const startSlider = document.getElementById('start-slider');
+const endSlider = document.getElementById('end-slider');
+const startValue = document.getElementById('start-value');
+const endValue = document.getElementById('end-value');
+
+startSlider.max = totalMonths;
+endSlider.max = totalMonths;
+endSlider.value = totalMonths;
+
+function getFormattedDate(value) {
+    const months = startMonths + parseInt(value);
+    const year = Math.floor(months / 12);
+    const month = String(months % 12 + 1).padStart(2, '0');
+    return `${year}年${month}月`;
+}
+
+function updateMonthsValues() {
+    startValue.textContent = getFormattedDate(startSlider.value);
+    endValue.textContent = getFormattedDate(endSlider.value);
+    startMonth = parseInt(startSlider.value);
+    endMonth = parseInt(endSlider.value);
+    searchTitleImpl();
+}
+
+function updateStartMonthsValues() {
+    if (parseInt(startSlider.value) > parseInt(endSlider.value)) {
+        endSlider.value = parseInt(startSlider.value);
+    }
+    updateMonthsValues();
+}
+
+function updateEndMonthsValues() {
+    if (parseInt(startSlider.value) > parseInt(endSlider.value)) {
+        startSlider.value = parseInt(endSlider.value);
+    }
+    updateMonthsValues();
+}
+
+startSlider.addEventListener('input', updateStartMonthsValues);
+endSlider.addEventListener('input', updateEndMonthsValues);
+
+updateMonthsValues();
+
+const minDurationSlider = document.getElementById('min-duration-slider');
+const maxDurationSlider = document.getElementById('max-duration-slider');
+const minDurationValue = document.getElementById('min-duration-value');
+const maxDurationValue = document.getElementById('max-duration-value');
+
+minDurationSlider.max = maxDuration - 10;
+maxDurationSlider.max = maxDuration;
+maxDurationSlider.value = maxDuration;
+
+function updateDurationValues() {
+    minDurationValue.textContent = `${minDurationSlider.value}分`;
+    maxDurationValue.textContent = `${maxDurationSlider.value}分`;
+    minDurationRange = parseInt(minDurationSlider.value);
+    maxDurationRange = parseInt(maxDurationSlider.value);
+    searchTitleImpl();
+}
+
+function updateMinDurationValues() {
+    if (parseInt(minDurationSlider.value) >= parseInt(maxDurationSlider.value)) {
+        maxDurationSlider.value = parseInt(minDurationSlider.value) + 10;
+    }
+    updateDurationValues();
+}
+function updateMaxDurationValues() {
+    if (parseInt(minDurationSlider.value) >= parseInt(maxDurationSlider.value)) {
+        minDurationSlider.value = parseInt(maxDurationSlider.value) - 10;
+    }
+    updateDurationValues();
+}
+
+minDurationSlider.addEventListener('input', updateMinDurationValues);
+maxDurationSlider.addEventListener('input', updateMaxDurationValues);
+
+updateDurationValues();
+
+function changeSliderValue(sliderId, change) {
+    const slider = document.getElementById(sliderId);
+    let newValue = parseInt(slider.value) + change;
+    if (newValue >= parseInt(slider.min) && newValue <= parseInt(slider.max)) {
+        slider.value = newValue;
+        if (sliderId === 'start-slider') {
+            updateStartMonthsValues();
+        } else if (sliderId === 'end-slider') {
+            updateEndMonthsValues();
+        } else if (sliderId === 'min-duration-slider') {
+            updateMinDurationValues();
+        } else if (sliderId === 'max-duration-slider') {
+            updateMaxDurationValues();
+        }
+    }
+}
+window.changeSliderValue = changeSliderValue;
+
 addSelectNameListener(".name");
 getQuerySpeaker();
-searchTitleImpl();
+searchTitleImpl(true);
 
 function sortSpeakersByDuration(speakerDurations) {
     let sortedSpeakerDurations = Object.keys(speakerDurations).map(function (key) {
@@ -109,7 +218,7 @@ function addSelectNameListener(className) {
             titleQ = document.getElementById("search-title-input").value;
             document.getElementById("selected-title").innerHTML = '<span class="not-selected">未選択</span>';
             document.getElementById("check-selected-title").checked = true;
-            searchTitleImpl();
+            searchTitleImpl(true);
             // URLクエリをセット
             setQuerySpeaker();
         });
@@ -182,8 +291,8 @@ function searchTitle() {
 }
 window.searchTitle = searchTitle;
 
-function searchTitleImpl() {
-    // console.log([titleQ, speakerQ, selectedYear, selectedMonth]);
+function searchTitleImpl(updateScatter = false) {
+    // console.log([titleQ, speakerQ]);
     let dateList = [];
     for (let cat = 0; cat < 3; cat++) {
         let category = categories[cat];
@@ -209,16 +318,13 @@ function searchTitleImpl() {
         }
         dateList.push(dates);
 
-        if (selectedYear != "") {
-            filteredTitles = filteredTitles.filter(function (titleData) {
-                return selectedYear == titleData.year;
-            });
-        }
-        if (selectedMonth != "") {
-            filteredTitles = filteredTitles.filter(function (titleData) {
-                return selectedMonth == titleData.month;
-            });
-        }
+        filteredTitles = filteredTitles.filter(function (titleData) {
+            return startMonth <= titleData.months && titleData.months <= endMonth;
+        });
+
+        filteredTitles = filteredTitles.filter(function (titleData) {
+            return minDurationRange <= titleData.minutes && titleData.minutes <= maxDurationRange;
+        });
 
         let titleDisplay = document.getElementById(category + "_title");
         let n = filteredTitles.length;
@@ -231,7 +337,9 @@ function searchTitleImpl() {
             document.getElementById("n" + category + "_title").innerHTML = "<b>" + n + "</b>";
         }
     }
-    drawScatter(dateList);
+    if (updateScatter) {
+        drawScatter(dateList);
+    }
     handleCheckDisplaySpeakerChange();
 }
 
@@ -244,26 +352,8 @@ function checkEnter(event) {
 }
 window.checkEnter = checkEnter;
 
-function handleYearSelection(radio) {
-    if (radio.checked) {
-        if (radio.value == "all") { selectedYear = ""; }
-        else { selectedYear = radio.value; }
-        searchTitleImpl();
-    }
-}
-window.handleYearSelection = handleYearSelection;
-
-function handleMonthSelection(radio) {
-    if (radio.checked) {
-        if (radio.value == "all") { selectedMonth = ""; }
-        else { selectedMonth = radio.value; }
-        searchTitleImpl();
-    }
-}
-window.handleMonthSelection = handleMonthSelection;
-
 function handleCheckSelectedSpeakerChange() {
-    searchTitleImpl();
+    searchTitleImpl(true);
 }
 window.handleCheckSelectedSpeakerChange = handleCheckSelectedSpeakerChange;
 
