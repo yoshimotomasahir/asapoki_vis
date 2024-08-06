@@ -52,35 +52,35 @@
                 <button onclick="searchTitle()">検索</button>
             </div>
             <div class="form" style="display: flex; align-items: center;">
-                配信月絞り込み:&nbsp;
-                <label for="start-slider"><span id="start-value">2020年08月</span>から</label>
+                <span style="white-space: nowrap;">年月絞り込み:</span>&nbsp;
+                <label for="start-slider" style="white-space: nowrap;"><span id="start-value">2020年08月</span>から</label>
                 <div class="button-container">
                     <span onclick="changeSliderValue('start-slider', 1)">&#9650;</span>
                     <span onclick="changeSliderValue('start-slider', -1)">&#9660;</span>
                 </div>
-                <input type="range" id="start-slider" min="0" max="1" value="0" step="1">
-                <label for="end-slider"><span id="end-value">2020年08月</span>まで</label>
+                <input type="range" id="start-slider" min="0" max="1" value="0" step="1" style="width: 100%;">
+                <label for="end-slider" style="white-space: nowrap;"><span id="end-value">2020年08月</span>まで</label>
                 <div class="button-container">
                     <span onclick="changeSliderValue('end-slider', 1)">&#9650;</span>
                     <span onclick="changeSliderValue('end-slider', -1)">&#9660;</span>
                 </div>
-                <input type="range" id="end-slider" min="0" max="1" value="1" step="1">
+                <input type="range" id="end-slider" min="0" max="1" value="1" step="1" style="width: 100%;">
             </div>
             <canvas id="scatter" height="20"></canvas>
             <div class="form" style="display: flex; align-items: center;">
-                配信時間絞り込み:&nbsp;
-                <label for="min-duration-slider"><span id="min-duration-value" class="padded-text">  0</span>分から</label>
+                <span style="white-space: nowrap;">配信時間絞り込み:</span>&nbsp;
+                <label for="min-duration-slider" style="white-space: nowrap;"><span id="min-duration-value" class="padded-text">  0</span>分から</label>
                 <div class="button-container">
                     <span onclick="changeSliderValue('min-duration-slider', 10)">&#9650;</span>
                     <span onclick="changeSliderValue('min-duration-slider', -10)">&#9660;</span>
                 </div>
-                <input type="range" id="min-duration-slider" min="0" max="230" value="0" step="10">
-                <label for="max-duration-slider"><span id="max-duration-value" class="padded-text">230</span>分まで</label>
+                <input type="range" id="min-duration-slider" min="0" max="230" value="0" step="10" style="width: 100%;">
+                <label for="max-duration-slider" style="white-space: nowrap;"><span id="max-duration-value" class="padded-text">230</span>分まで</label>
                 <div class="button-container">
                     <span onclick="changeSliderValue('max-duration-slider', 10)">&#9650;</span>
                     <span onclick="changeSliderValue('max-duration-slider', -10)">&#9660;</span>
                 </div>
-                <input type="range" id="max-duration-slider" min="10" max="230" value="230" step="10">
+                <input type="range" id="max-duration-slider" min="10" max="230" value="230" step="10" style="width: 100%;">
             </div>
             <div class="form">
                 <label>
