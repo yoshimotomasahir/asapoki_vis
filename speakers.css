@@ -85,6 +85,10 @@ button {
     font-weight: 500;
 }
 
+.article-letter {
+    font-weight: 600;
+}
+
 .article-date {
     color: #787871;
     font-size: 12px;

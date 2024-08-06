@@ -52,7 +52,7 @@
                 <button onclick="searchTitle()">検索</button>
             </div>
             <div class="form" style="display: flex; align-items: center;">
-                <span style="white-space: nowrap;">年月絞り込み:</span>&nbsp;
+                <span style="white-space: nowrap;">配信年月:</span>&nbsp;
                 <label for="start-slider" style="white-space: nowrap;"><span id="start-value">2020年08月</span>から</label>
                 <div class="button-container">
                     <span onclick="changeSliderValue('start-slider', 1)">&#9650;</span>
@@ -66,9 +66,8 @@
                 </div>
                 <input type="range" id="end-slider" min="0" max="1" value="1" step="1" style="width: 100%;">
             </div>
-            <canvas id="scatter" height="20"></canvas>
             <div class="form" style="display: flex; align-items: center;">
-                <span style="white-space: nowrap;">配信時間絞り込み:</span>&nbsp;
+                <span style="white-space: nowrap;">配信時間:</span>&nbsp;
                 <label for="min-duration-slider" style="white-space: nowrap;"><span id="min-duration-value" class="padded-text">  0</span>分から</label>
                 <div class="button-container">
                     <span onclick="changeSliderValue('min-duration-slider', 10)">&#9650;</span>
@@ -82,6 +81,7 @@
                 </div>
                 <input type="range" id="max-duration-slider" min="10" max="230" value="230" step="10" style="width: 100%;">
             </div>
+            <canvas id="scatter" height="20"></canvas>
             <div class="form">
                 <label>
                 出演者絞り込み: <input type="checkbox" id="check-selected-speaker" onchange="handleCheckSelectedSpeakerChange()" checked />
@@ -96,7 +96,13 @@
                 <label>
                 出演者表示: <input type="checkbox" id="check-display-speaker" onchange="handleCheckDisplaySpeakerChange()"></label>
             </div>
-
+            <div class="form">
+                <label><input type="radio" name="order" value="oldest_first" onchange="handleRadioOrderChange(this)" checked>古い番組が上</label>
+                <label><input type="radio" name="order" value="newest_first" onchange="handleRadioOrderChange(this)">新しい番組が上</label>
+            </div>
+            <!-- // PODCAST MEETING2024 用 期間限定 -->
+            <div class="form">&#x1F4EE; をクリックすると、お気に入りエピソードの送信フォームが開きます</div>
+            <!-- // PODCAST MEETING2024 用 期間限定 -->
             <div onclick="obj=document.getElementById('genba_title').style; obj.display=(obj.display=='none')?'block':'none';">
                 <p><span style="color: #1b9e77">▶</span> ニュースの現場から: <span id="ngenba_title"></span> 本</p>
             </div>

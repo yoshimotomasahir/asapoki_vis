@@ -2,6 +2,7 @@ let allTitles = { "genba": [], "media": [], "sdgs": [] }
 let allSpeakers = [];
 let allSpeakerDurations = {};
 let categories = ["genba", "media", "sdgs"];
+let categories2 = ["ニュースの現場から", "MEDIA TALK", "SDGsを話そう"];
 let speakerQ = "";
 let titleQ = "";
 let selectedSpeaker = null;
@@ -12,6 +13,7 @@ let endMonth = 0;
 let maxDuration = 230;
 let minDurationRange = 0;
 let maxDurationRange = 230;
+let oldestFirst = true;
 
 let xhr = new XMLHttpRequest();
 xhr.open('GET', 'https://script.google.com/macros/s/AKfycby1G_qqb8xBJh8adQBuvLsA5wOcnqYu59W22hs1jMlj4IT2DlqnJA7uaUG16GXJHDKU/exec', false);
@@ -62,7 +64,14 @@ xhr.onload = function () {
                 titleData.speakers = combined;
                 titleData.duration = duration;
                 titleData.minutes = Math.round(duration / 60);
-                titleData.html = '<a href="' + titleData.link + '" rel="nofollow" target="_blank"><span class="article-title">' + titleData.title + '</span> <span class="article-date">' + titleData.minutes + '分  ' + titleData.date + '</span></a>&nbsp;&nbsp;<span class="article-speaker" style="display:none;"><span class="name">' + combined.join('</span>, <span class="name">') + '</span></span>';
+                // PODCAST MEETING2024 用 期間限定
+                const formUrlBase = "https://docs.google.com/forms/d/e/1FAIpQLSfIphlc_AiGBsVRfI7iMHYhPeFq8v-nfhqMI8sQjitsH57jVQ/viewform?";
+                const para1 = "entry.1804759183=";
+                const para2 = "&entry.1361099928=";
+                const formUrl = formUrlBase  + para1 + encodeURIComponent(categories2[cat]) + para2 + encodeURIComponent(titleData.title);
+                titleData.html = '<a href="'+formUrl+'" rel="nofollow" target="_blank"><span class="article-letter">&#x1F4EE;&nbsp;</span><a/>&nbsp;';
+                // PODCAST MEETING2024 用 期間限定
+                titleData.html += '<a href="' + titleData.link + '" rel="nofollow" target="_blank"><span class="article-title">' + titleData.title + '</span> <span class="article-date">' + titleData.minutes + '分  ' + titleData.date + '</span></a>&nbsp;&nbsp;<span class="article-speaker" style="display:none;"><span class="name">' + combined.join('</span>, <span class="name">') + '</span></span>';
                 allTitles[category].push(titleData);
             }
 
@@ -326,6 +335,10 @@ function searchTitleImpl(updateScatter = false) {
             return minDurationRange <= titleData.minutes && titleData.minutes <= maxDurationRange;
         });
 
+        if (!oldestFirst){
+            filteredTitles.reverse();
+        }
+
         let titleDisplay = document.getElementById(category + "_title");
         let n = filteredTitles.length;
         if (n === 0) {
@@ -388,6 +401,18 @@ function handleCheckDisplaySpeakerChange() {
     });
 }
 window.handleCheckDisplaySpeakerChange = handleCheckDisplaySpeakerChange;
+
+function handleRadioOrderChange(radio) {
+    if (radio.checked) {
+        if (radio.value === "oldest_first") {
+            oldestFirst = true;
+        } else if (radio.value === "newest_first") {
+            oldestFirst = false;
+        }
+    }
+    searchTitleImpl();
+}
+window.handleRadioOrderChange = handleRadioOrderChange;
 
 function drawScatter(dateList) {
     let ctx = document.getElementById('scatter').getContext('2d');
