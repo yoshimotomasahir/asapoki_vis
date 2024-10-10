@@ -193,6 +193,15 @@ window.changeSliderValue = changeSliderValue;
 
 addSelectNameListener(".name");
 getQuerySpeaker();
+
+const savedOrder = localStorage.getItem('oldestFirst');
+if (savedOrder === null) {
+    oldestFirst = true;
+} else {
+    oldestFirst = savedOrder === 'true';
+}
+document.getElementById(oldestFirst ? "oldest_first" : "newest_first").checked = true;
+
 searchTitleImpl(true);
 
 function sortSpeakersByDuration(speakerDurations) {
@@ -410,6 +419,7 @@ function handleRadioOrderChange(radio) {
             oldestFirst = false;
         }
     }
+    localStorage.setItem('oldestFirst', oldestFirst);    
     searchTitleImpl();
 }
 window.handleRadioOrderChange = handleRadioOrderChange;
