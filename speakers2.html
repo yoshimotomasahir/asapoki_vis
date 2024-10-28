@@ -46,6 +46,12 @@
             <div id="sdgs" style="display:none;clear:both;" class='list'></div>
         </div>
         <div class="right">
+            <div class="floating-platform">
+                <select name="platform" id="platform" onchange="handleSelectPlatformChange(event)">
+                    <option value="omnyfm">Omny.fm</option>
+                    <option value="spotify">Spotify</option>
+                  </select>
+            </div>
             <h2>タイトル一覧</h2>
             <div id="search-title" class="search-box">
                 <input type="text" id="search-title-input" placeholder="タイトル..." onkeydown="checkEnter(event)" />

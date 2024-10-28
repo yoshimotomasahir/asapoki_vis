@@ -14,6 +14,8 @@ let maxDuration = 230;
 let minDurationRange = 0;
 let maxDurationRange = 230;
 let oldestFirst = true;
+let platform = "omnyfm";
+const platforms = ['omnyfm', 'spotify'];
 
 let xhr = new XMLHttpRequest();
 xhr.open('GET', 'https://script.google.com/macros/s/AKfycby1G_qqb8xBJh8adQBuvLsA5wOcnqYu59W22hs1jMlj4IT2DlqnJA7uaUG16GXJHDKU/exec', false);
@@ -53,7 +55,8 @@ xhr.onload = function () {
                 const month = (date.getMonth() + 1).toString().padStart(2, '0');
                 const day = date.getDate().toString().padStart(2, '0');
                 const titleData = {};
-                titleData.link = catData[i].link;
+                titleData.linkOmnyfm = catData[i].link;
+                titleData.linkSpotify = catData[i].spotify;
                 titleData.year = year;
                 titleData.month = month;
                 titleData.months = date.getFullYear() * 12 + date.getMonth() - startMonths;
@@ -71,7 +74,18 @@ xhr.onload = function () {
                 // const formUrl = formUrlBase  + para1 + encodeURIComponent(categories2[cat]) + para2 + encodeURIComponent(titleData.title);
                 // titleData.html = '<a href="'+formUrl+'" rel="nofollow" target="_blank"><span class="article-letter">&#x1F4EE;&nbsp;</span><a/>&nbsp;';
                 // PODCAST MEETING2024 用 期間限定
-                titleData.html = '<a href="' + titleData.link + '" rel="nofollow" target="_blank"><span class="article-title">' + titleData.title + '</span> <span class="article-date">' + titleData.minutes + '分  ' + titleData.date + '</span></a>&nbsp;&nbsp;<span class="article-speaker" style="display:none;"><span class="name">' + combined.join('</span>, <span class="name">') + '</span></span>';
+                titleData.html = '';
+                titleData.html += `<span class="platform-omnyfm" style="display:${platform === 'omnyfm' ? 'inline' : 'none'};">`;
+                titleData.html += '<a href="' + titleData.linkOmnyfm + '" rel="nofollow" target="_blank">';
+                titleData.html += '<span class="article-title">' + titleData.title + '</span>&nbsp;';
+                titleData.html += '<span class="article-date">' + titleData.minutes + '分  ' + titleData.date + '</span>';
+                titleData.html += '</a></span>';
+                titleData.html += `<span class="platform-spotify" style="display:${platform === 'spotify' ? 'inline' : 'none'};">`;
+                titleData.html += '<a href="' + titleData.linkSpotify + '" rel="nofollow" target="_blank">';
+                titleData.html += '<span class="article-title">' + titleData.title + '</span>&nbsp;';
+                titleData.html += '<span class="article-date">' + titleData.minutes + '分  ' + titleData.date + '</span>';
+                titleData.html += '</a></span>';
+                titleData.html += '&nbsp;&nbsp;<span class="article-speaker" style="display:none;"><span class="name">' + combined.join('</span>, <span class="name">') + '</span></span>';
                 allTitles[category].push(titleData);
             }
 
@@ -201,6 +215,16 @@ if (savedOrder === null) {
     oldestFirst = savedOrder === 'true';
 }
 document.getElementById(oldestFirst ? "oldest_first" : "newest_first").checked = true;
+
+const savedPlatform = localStorage.getItem('platform');
+if (platforms.includes(savedPlatform)) {
+    platform = savedPlatform;
+}
+else {
+    platform = "omnyfm";
+    localStorage.setItem('platform', platform);
+}
+document.getElementById("platform").value = platform;
 
 searchTitleImpl(true);
 
@@ -363,6 +387,7 @@ function searchTitleImpl(updateScatter = false) {
         drawScatter(dateList);
     }
     handleCheckDisplaySpeakerChange();
+    setPlatform();
 }
 
 function checkEnter(event) {
@@ -423,6 +448,23 @@ function handleRadioOrderChange(radio) {
     searchTitleImpl();
 }
 window.handleRadioOrderChange = handleRadioOrderChange;
+
+function handleSelectPlatformChange(event) {
+    platform = event.target.value;
+    localStorage.setItem('platform', platform);
+    searchTitleImpl();
+}
+window.handleSelectPlatformChange = handleSelectPlatformChange;
+
+function setPlatform(){
+    var platforms = ['omnyfm', 'spotify'];
+    for (var i = 0; i < platforms.length; i++) {
+        var toggleContents = document.querySelectorAll(`.platform-${platforms[i]}`);
+        toggleContents.forEach(function (content) {
+            content.style.display = platform === platforms[i] ? 'inline' : 'none';
+        });
+    }
+}
 
 function drawScatter(dateList) {
     let ctx = document.getElementById('scatter').getContext('2d');

@@ -127,6 +127,19 @@ button {
     cursor: pointer;
 }
 
+.floating-platform {
+    position: fixed;
+    top: 15px;
+    right: 25px;
+    background-color: #f7f7f7;
+    z-index: 1000;
+    font-size: 12px;
+    font-size: 1.2rem;
+    padding: 6px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
 .button-container {
     display: flex;
     flex-direction: column;
