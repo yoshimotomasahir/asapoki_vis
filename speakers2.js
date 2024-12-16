@@ -8,8 +8,6 @@ let titleQ = "";
 let selectedSpeaker = null;
 let scatterChart = null;
 const startMonths = 2020 * 12 + 7; // 2020年8月
-let startMonth = 0;
-let endMonth = 0;
 let maxDuration = 230;
 let minDurationRange = 0;
 let maxDurationRange = 230;
@@ -32,7 +30,7 @@ xhr.onload = function () {
                 const duration = catData[i].duration;
                 const title = catData[i].title;
                 let actualDuration = duration;
-                if (duration / 60 > maxDuration){
+                if (duration / 60 > maxDuration) {
                     maxDuration = Math.ceil(duration / 10 / 60) * 10;
                 }
                 if (title.length >= 3 && title.substring(0, 3) === "（再）") {
@@ -107,50 +105,29 @@ xhr.onload = function () {
 xhr.send();
 
 const today = new Date();
-const totalMonths = today.getFullYear() * 12 + today.getMonth() - startMonths;
 
-const startSlider = document.getElementById('start-slider');
-const endSlider = document.getElementById('end-slider');
-const startValue = document.getElementById('start-value');
-const endValue = document.getElementById('end-value');
-
-startSlider.max = totalMonths;
-endSlider.max = totalMonths;
-endSlider.value = totalMonths;
-
-function getFormattedDate(value) {
-    const months = startMonths + parseInt(value);
-    const year = Math.floor(months / 12);
-    const month = String(months % 12 + 1).padStart(2, '0');
-    return `${year}年${month}月`;
-}
-
-function updateMonthsValues() {
-    startValue.textContent = getFormattedDate(startSlider.value);
-    endValue.textContent = getFormattedDate(endSlider.value);
-    startMonth = parseInt(startSlider.value);
-    endMonth = parseInt(endSlider.value);
-    searchTitleImpl();
-}
-
-function updateStartMonthsValues() {
-    if (parseInt(startSlider.value) > parseInt(endSlider.value)) {
-        endSlider.value = parseInt(startSlider.value);
+function calculateMonthValue(dateStr) {
+    const match = dateStr.match(/^(\d{4})年(\d{2})月/);
+    if (match) {
+        const year = parseInt(match[1], 10);
+        const month = parseInt(match[2], 10);
+        return year * 12 + (month - 1) - startMonths;
     }
-    updateMonthsValues();
+    return null;
 }
 
-function updateEndMonthsValues() {
-    if (parseInt(startSlider.value) > parseInt(endSlider.value)) {
-        startSlider.value = parseInt(endSlider.value);
-    }
-    updateMonthsValues();
+function calculateMonthStr(dateInt) {
+    const year = Math.floor((dateInt + startMonths) / 12);
+    const month = (dateInt + startMonths) % 12 + 1;
+    return `${year}-${String(month).padStart(2, '0')}`
 }
 
-startSlider.addEventListener('input', updateStartMonthsValues);
-endSlider.addEventListener('input', updateEndMonthsValues);
-
-updateMonthsValues();
+const minMonth = 0;
+const minDate = calculateMonthStr(minMonth);
+let startMonth = minMonth;
+const maxMonth = today.getFullYear() * 12 + today.getMonth() - startMonths;
+const maxDate = calculateMonthStr(maxMonth);
+let endMonth = maxMonth;
 
 const minDurationSlider = document.getElementById('min-duration-slider');
 const maxDurationSlider = document.getElementById('max-duration-slider');
@@ -192,11 +169,7 @@ function changeSliderValue(sliderId, change) {
     let newValue = parseInt(slider.value) + change;
     if (newValue >= parseInt(slider.min) && newValue <= parseInt(slider.max)) {
         slider.value = newValue;
-        if (sliderId === 'start-slider') {
-            updateStartMonthsValues();
-        } else if (sliderId === 'end-slider') {
-            updateEndMonthsValues();
-        } else if (sliderId === 'min-duration-slider') {
+        if (sliderId === 'min-duration-slider') {
             updateMinDurationValues();
         } else if (sliderId === 'max-duration-slider') {
             updateMaxDurationValues();
@@ -368,7 +341,7 @@ function searchTitleImpl(updateScatter = false) {
             return minDurationRange <= titleData.minutes && titleData.minutes <= maxDurationRange;
         });
 
-        if (!oldestFirst){
+        if (!oldestFirst) {
             filteredTitles.reverse();
         }
 
@@ -444,7 +417,7 @@ function handleRadioOrderChange(radio) {
             oldestFirst = false;
         }
     }
-    localStorage.setItem('oldestFirst', oldestFirst);    
+    localStorage.setItem('oldestFirst', oldestFirst);
     searchTitleImpl();
 }
 window.handleRadioOrderChange = handleRadioOrderChange;
@@ -456,7 +429,7 @@ function handleSelectPlatformChange(event) {
 }
 window.handleSelectPlatformChange = handleSelectPlatformChange;
 
-function setPlatform(){
+function setPlatform() {
     var platforms = ['omnyfm', 'spotify'];
     for (var i = 0; i < platforms.length; i++) {
         var toggleContents = document.querySelectorAll(`.platform-${platforms[i]}`);
@@ -513,3 +486,60 @@ function drawScatter(dateList) {
         },
     });
 }
+
+let startPicker, endPicker;
+
+document.addEventListener("DOMContentLoaded", () => {
+    startPicker = flatpickr("#startYearMonthPicker", {
+        locale: "ja",
+        minDate: minDate,
+        maxDate: maxDate,
+        disableMobile: true,
+        defaultDate: calculateMonthStr(startMonth),
+        plugins: [
+            new monthSelectPlugin({
+                shorthand: true,
+                dateFormat: "Y年m月から",
+                altFormat: "Y年m月から",
+            })
+        ],
+        onChange: (selectedDates, dateStr) => {
+            startMonth = calculateMonthValue(dateStr);
+            if (startMonth > endMonth) {
+                endMonth = startMonth;
+                endPicker.setDate(calculateMonthStr(endMonth), false);
+            }
+            searchTitleImpl();
+        }
+    });
+    endPicker = flatpickr("#endYearMonthPicker", {
+        locale: "ja",
+        minDate: minDate,
+        maxDate: maxDate,
+        disableMobile: true,
+        defaultDate: calculateMonthStr(endMonth),
+        plugins: [
+            new monthSelectPlugin({
+                shorthand: true,
+                dateFormat: "Y年m月まで",
+                altFormat: "Y年m月まで",
+            })
+        ],
+        onChange: (selectedDates, dateStr) => {
+            endMonth = calculateMonthValue(dateStr);
+            if (startMonth > endMonth) {
+                startMonth = endMonth;
+                startPicker.setDate(calculateMonthStr(startMonth), false);
+            }
+            searchTitleImpl();
+        }
+    });
+});
+
+function resetPicker() {
+    startMonth = minMonth;
+    endMonth = maxMonth;
+    startPicker.setDate(minDate, true);
+    endPicker.setDate(maxDate, true);
+}
+window.resetPicker = resetPicker;

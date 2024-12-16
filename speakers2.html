@@ -13,7 +13,9 @@
     <script src="https://cdn.jsdelivr.net/npm/moment@^2"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@^1"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-colorschemes"></script>
-</head>
+    <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/style.css" rel="stylesheet">
+  </head>
 
 <body>
     <div class="container">
@@ -57,20 +59,11 @@
                 <input type="text" id="search-title-input" placeholder="タイトル..." onkeydown="checkEnter(event)" />
                 <button onclick="searchTitle()">検索</button>
             </div>
-            <div class="form" style="display: flex; align-items: center;">
+            <div class="form">
                 <span style="white-space: nowrap;">配信年月:</span>&nbsp;
-                <label for="start-slider" style="white-space: nowrap;"><span id="start-value">2020年08月</span>から</label>
-                <div class="button-container">
-                    <span onclick="changeSliderValue('start-slider', 1)">&#9650;</span>
-                    <span onclick="changeSliderValue('start-slider', -1)">&#9660;</span>
-                </div>
-                <input type="range" id="start-slider" min="0" max="1" value="0" step="1" style="width: 100%;">
-                <label for="end-slider" style="white-space: nowrap;"><span id="end-value">2020年08月</span>まで</label>
-                <div class="button-container">
-                    <span onclick="changeSliderValue('end-slider', 1)">&#9650;</span>
-                    <span onclick="changeSliderValue('end-slider', -1)">&#9660;</span>
-                </div>
-                <input type="range" id="end-slider" min="0" max="1" value="1" step="1" style="width: 100%;">
+                <input type="text" id="startYearMonthPicker" placeholder="年と月を選択">
+                <input type="text" id="endYearMonthPicker" placeholder="年と月を選択">
+                <a href="javascript:void(0)" class="reset-link" onclick="resetPicker()">リセット</a>
             </div>
             <div class="form" style="display: flex; align-items: center;">
                 <span style="white-space: nowrap;">配信時間:</span>&nbsp;
@@ -126,6 +119,9 @@
         </div>
         <div class="floating-element"><a href="./monthly.html"><span class="article-title">カレンダー</span></a></div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ja.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/index.js"></script>
     <script src="./speakers2.js" type="module"></script>
 </body>
 
