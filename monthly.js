@@ -31,51 +31,73 @@ document.getElementById("app").innerHTML = `
 
 var titles = {};
 
-var xhr = new XMLHttpRequest();
-xhr.open('GET', 'https://script.google.com/macros/s/AKfycby1G_qqb8xBJh8adQBuvLsA5wOcnqYu59W22hs1jMlj4IT2DlqnJA7uaUG16GXJHDKU/exec', false);
-// xhr.open('GET', 'echo.json', false);
-xhr.onload = function () {
-  if (xhr.status === 200) {
-    var data = JSON.parse(xhr.responseText);
-    for (var cat = 0; cat < 4; cat++) {
-      if (cat == 0) {
-        var catData = data.genba;
-        var category = "現場";
-      }
-      else if (cat == 1) {
-        var catData = data.media;
-        var category = "メディア";
-      }
-      else if (cat == 2) {
-        var catData = data.sdgs;
-        var category = "SDGs";
-      }
-      else if (cat == 3) {
-        var catData = data.YouTube;
-        var category = "YouTube";
-      }
-      for (var i = 0; i < catData.length; i++) {
-        var title = catData[i].title;
-        var link = catData[i].link;
+const localStorageKey = 'jsonData';
 
-        var date = new Date(catData[i].pubDate);
-        var year = date.getFullYear();
-        var month = (date.getMonth() + 1).toString().padStart(2, '0');
-        var day = date.getDate().toString().padStart(2, '0');
-        var date = year + '-' + month + '-' + day;
+function updateTitles(data) {
+  for (let cat = 0; cat < 4; cat++) {
+    let catData, category;
+    if (cat === 0) {
+      catData = data.genba;
+      category = "現場";
+    } else if (cat === 1) {
+      catData = data.media;
+      category = "メディア";
+    } else if (cat === 2) {
+      catData = data.sdgs;
+      category = "SDGs";
+    } else if (cat === 3) {
+      catData = data.YouTube;
+      category = "YouTube";
+      }
 
-        if (!titles.hasOwnProperty(date)) {
-          titles[date] = [];
+    for (let i = 0; i < catData.length; i++) {
+      const title = catData[i].title;
+      const link = catData[i].link;
+
+      const date = new Date(catData[i].pubDate);
+      const year = date.getFullYear();
+      const month = (date.getMonth() + 1).toString().padStart(2, '0');
+      const day = date.getDate().toString().padStart(2, '0');
+      const formattedDate = `${year}-${month}-${day}`;
+
+      if (!titles.hasOwnProperty(formattedDate)) {
+        titles[formattedDate] = [];
         }
-        titles[date].push([title, link, category]);
+      const isDuplicate = titles[formattedDate].some((entry) => entry[1] === link);
+      if (!isDuplicate) {
+        titles[formattedDate].push([title, link, category]);
       }
     }
   }
-  else {
+  console.log("updateTitles");
+}
+
+function loadFromLocalStorage() {
+  const storedData = localStorage.getItem(localStorageKey);
+  if (storedData) {
+    const data = JSON.parse(storedData);
+    updateTitles(data);
+  }
+}
+
+function fetchData() {
+  const xhr = new XMLHttpRequest();
+  xhr.open('GET', 'https://script.google.com/macros/s/AKfycby1G_qqb8xBJh8adQBuvLsA5wOcnqYu59W22hs1jMlj4IT2DlqnJA7uaUG16GXJHDKU/exec', true);
+  xhr.onload = function () {
+    if (xhr.status === 200) {
+      const data = JSON.parse(xhr.responseText);
+      localStorage.setItem(localStorageKey, JSON.stringify(data));
+      updateTitles(data);
+    } else {
     console.log('Error: ' + xhr.status);
   }
+    createCalendar();
 };
 xhr.send();
+}
+
+loadFromLocalStorage();
+fetchData();
 
 // const WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const WEEKDAYS = ["月(Mon)", "火(Tue)", "水(Wed)", "木(Thu)", "金(Fri)", "土(Sat)", "日(Sun)"];
