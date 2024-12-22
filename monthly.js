@@ -122,9 +122,6 @@ WEEKDAYS.forEach((weekday) => {
 createCalendar();
 initMonthSelectors();
 
-const targetElement = document.getElementById("calendar-day--today");
-targetElement.scrollIntoView();
-
 function createCalendar(year = INITIAL_YEAR, month = INITIAL_MONTH) {
   const calendarDaysElement = document.getElementById("calendar-days");
 
@@ -192,7 +189,6 @@ function appendDay(day, calendarDaysElement) {
 
   if (day.date === TODAY) {
     dayElementClassList.add("calendar-day--today");
-    dayElement.id = "calendar-day--today"
   }
 }
 
