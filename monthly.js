@@ -14,6 +14,12 @@ document.getElementById("app").innerHTML = `
         <span id="present-month-selector">今日</span>
         <span id="next-month-selector">></span>
       </section>
+      <section class="platform-selectors">
+        <select name="platform" id="platform" onchange="handleSelectPlatformChange(event)">
+          <option value="omnyfm">Omny.fm</option>
+          <option value="spotify">Spotify</option>
+        </select>
+      </section>
     </section>
 
     <ol
@@ -30,6 +36,18 @@ document.getElementById("app").innerHTML = `
 `;
 
 var titles = {};
+
+let platform = "omnyfm";
+const platforms = ['omnyfm', 'spotify'];
+const savedPlatform = localStorage.getItem('platform');
+if (platforms.includes(savedPlatform)) {
+  platform = savedPlatform;
+}
+else {
+  platform = "omnyfm";
+  localStorage.setItem('platform', platform);
+}
+document.getElementById("platform").value = platform;
 
 const localStorageKey = 'jsonData';
 
@@ -48,11 +66,11 @@ function updateTitles(data) {
     } else if (cat === 3) {
       catData = data.YouTube;
       category = "YouTube";
-      }
+    }
 
     for (let i = 0; i < catData.length; i++) {
       const title = catData[i].title;
-      const link = catData[i].link;
+      const link = platform === 'omnyfm' || category === "YouTube" ? catData[i].link : catData[i].spotify;
 
       const date = new Date(catData[i].pubDate);
       const year = date.getFullYear();
@@ -62,9 +80,15 @@ function updateTitles(data) {
 
       if (!titles.hasOwnProperty(formattedDate)) {
         titles[formattedDate] = [];
+      }
+      const index = titles[formattedDate].findIndex(
+        (entry) => entry[0] === title && entry[2] === category
+      );
+      if (index !== -1) {
+        if (titles[formattedDate][index][1] !== link) {
+          titles[formattedDate][index][1] = link;
         }
-      const isDuplicate = titles[formattedDate].some((entry) => entry[1] === link);
-      if (!isDuplicate) {
+      } else {
         titles[formattedDate].push([title, link, category]);
       }
     }
@@ -89,11 +113,11 @@ function fetchData() {
       localStorage.setItem(localStorageKey, JSON.stringify(data));
       updateTitles(data);
     } else {
-    console.log('Error: ' + xhr.status);
-  }
+      console.log('Error: ' + xhr.status);
+    }
     createCalendar();
-};
-xhr.send();
+  };
+  xhr.send();
 }
 
 loadFromLocalStorage();
@@ -146,6 +170,7 @@ function createCalendar(year = INITIAL_YEAR, month = INITIAL_MONTH) {
   days.forEach((day) => {
     appendDay(day, calendarDaysElement);
   });
+  console.log("createCalendar")
 }
 
 function appendDay(day, calendarDaysElement) {
@@ -316,3 +341,13 @@ document.addEventListener('touchend', () => {
   startX = null;
   currentX = null;
 });
+
+function handleSelectPlatformChange(event) {
+  platform = event.target.value;
+  localStorage.setItem('platform', platform);
+  const storedData = localStorage.getItem(localStorageKey);
+  const data = JSON.parse(storedData);
+  updateTitles(data);
+  createCalendar();
+}
+window.handleSelectPlatformChange = handleSelectPlatformChange;
