@@ -52,7 +52,7 @@ document.getElementById("platform").value = platform;
 const localStorageKey = 'jsonData';
 
 function updateTitles(data) {
-  for (let cat = 0; cat < 4; cat++) {
+  for (let cat = 0; cat < 5; cat++) {
     let catData, category;
     if (cat === 0) {
       catData = data.genba;
@@ -66,6 +66,9 @@ function updateTitles(data) {
     } else if (cat === 3) {
       catData = data.YouTube;
       category = "YouTube";
+    } else if (cat === 4) {
+      catData = data.gakkou;
+      category = "ニュースの学校";
     }
 
     for (let i = 0; i < catData.length; i++) {
