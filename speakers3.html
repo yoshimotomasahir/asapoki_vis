@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="utf-8" />
+    <title>朝ポキ 出演者+タイトル一覧</title>
+    <meta name="robots" content="noindex,nofollow,noarchive" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@^2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment@^2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@^1"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-colorschemes"></script>
+    <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/style.css" rel="stylesheet">
+    <link href="./speakers.css" rel="stylesheet" type="text/css" media="all">
+</head>
+
+<body>
+    <div class="container">
+        <div class="left">
+            <h2>出演者検索</h2>
+            <div id="search-speaker" class="search-box">
+                <input type="text" id="search-speaker-input" placeholder="出演者名..." onkeydown="checkEnter(event)" />
+                <button onclick="searchSpeaker()">検索</button>
+            </div>
+            <div id="searched-speaker" style="clear:both;" class="list"></div>
+
+            <h3>出演者一覧</h3>
+            <div class="form">
+                <label><input type="radio" name="sort-speaker" value="speaker-duration" checked>出演時間の長い順</label>
+                <label><input type="radio" name="sort-speaker" value="speaker-newest">最近出演した順</label>
+                <label><input type="radio" name="sort-speaker" value="speaker-oldest">登場が古い順</label>
+            </div>
+            <p><span id="num_speaker">ロード中...</span> 名</p>
+
+            <div id="all_speaker" style="display:block;clear:both;" class='list'>ロード中...</div>
+        </div>
+
+        <div class="right">
+            <div class="floating-platform">
+                <select name="platform" id="platform" onchange="handleSelectPlatformChange(event)">
+                    <option value="omnyfm">Omny.fm</option>
+                    <option value="spotify">Spotify</option>
+                </select>
+            </div>
+            <h2>タイトル検索</h2>
+            <div id="search-title" class="search-box">
+                <input type="text" id="search-title-input" placeholder="タイトル..." onkeydown="checkEnter(event)" />
+                <button onclick="searchTitle()">検索</button>
+            </div>
+            <div id="searched-title" style="clear:both;" class="list"></div>
+            <h3>番組絞り込み</h3>
+            <div class="form">
+                <label><input type="radio" name="sort-title" value="title-newest" checked>新しい番組順</label>
+                <label><input type="radio" name="sort-title" value="title-oldest">古い番組順</label>
+            </div>
+            <div class="form">
+                <span style="white-space: nowrap;">配信年月:</span>&nbsp;
+                <input type="text" id="startYearMonthPicker" placeholder="年と月を選択">
+                <input type="text" id="endYearMonthPicker" placeholder="年と月を選択">
+                <a href="javascript:void(0)" class="reset-link" onclick="resetPicker()">リセット</a>
+            </div>
+            <div class="form" style="display: flex; align-items: center;">
+                <span style="white-space: nowrap;">配信時間:</span>&nbsp;
+                <label><input type="radio" name="select-duration" value="0-223-min" checked>絞り込みなし</label>
+                <label><input type="radio" name="select-duration" value="0-20-min">~20分</label>
+                <label><input type="radio" name="select-duration" value="21-40-min">21~40分</label>
+                <label><input type="radio" name="select-duration" value="41-60-min">41~60分</label>
+                <label><input type="radio" name="select-duration" value="61-120-min">61分~120分</label>
+                <label><input type="radio" name="select-duration" value="121-222-min">121分~222分</label>
+            </div>
+            <div class="form">
+                <span style="white-space: nowrap;">出演者:</span>&nbsp;
+                <label><input type="radio" name="select-speaker" value="unselected" checked>絞り込みなし</label>
+                <label id="select-speaker-label"><input type="radio" name="select-speaker" value="selected"
+                        disabled>出演者名をクリックしてください</label>
+            </div>
+            <p><span id="num_title">ロード中...</span> 番組</p>
+            <div id="all_title" class='list' style="display:block;clear:both;">ロード中...</div>
+        </div>
+        <div class="floating-element"><a href="./monthly.html"><span class="article-title">カレンダー</span></a></div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ja.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/index.js"></script>
+    <script src="./speakers3.js" type="module"></script>
+</body>
+
+</html>
