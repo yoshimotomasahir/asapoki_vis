@@ -154,7 +154,8 @@ function formatDuration(seconds) {
 
 function displayTitlesImpl(element, titleData) {
     const titleElement = document.createElement("a");
-    titleElement.href = titleData.linkSpotify;
+    if (platform === "omnyfm") { titleElement.href = titleData.linkOmnyfm; }
+    else { titleElement.href = titleData.linkSpotify; }
     titleElement.rel = "nofollow";
     titleElement.target = "_blank";
 
@@ -428,3 +429,10 @@ function resetPicker() {
     endPicker.setDate(endDate, true);
 }
 window.resetPicker = resetPicker;
+
+function handleSelectPlatformChange(event) {
+    platform = event.target.value;
+    localStorage.setItem('platform', platform);
+    displayTitles();
+}
+window.handleSelectPlatformChange = handleSelectPlatformChange;
