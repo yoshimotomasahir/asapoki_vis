@@ -72,12 +72,18 @@
                 <label><input type="radio" name="select-duration" value="121-222-min">121分~222分</label>
             </div>
             <div class="form">
+                <span style="white-space: nowrap;">プレイリスト:</span>&nbsp;
+                <label><input type="checkbox" name="select-playlist" value="0" checked><span style="color: #1b9e77">▶</span>ニュースの現場から</label>
+                <label><input type="checkbox" name="select-playlist" value="1" checked><span style="color: #d95f02">▶</span>MEDIA TALK</label>
+                <label><input type="checkbox" name="select-playlist" value="2" checked><span style="color: #7570b3">▶</span>新聞1面じゃなくても大事なこと -SDGsを話そう-</label>
+            </div>
+            <div class="form">
                 <span style="white-space: nowrap;">出演者:</span>&nbsp;
                 <label><input type="radio" name="select-speaker" value="unselected" checked>絞り込みなし</label>
                 <label id="select-speaker-label"><input type="radio" name="select-speaker" value="selected"
                         disabled>出演者名をクリックしてください</label>
             </div>
-            <p><span id="num_title">ロード中...</span> 番組</p>
+            <p><span id="num_title">ロード中...</span> 番組&nbsp;&nbsp;<span id="duration"></span> <span class="article-date">(再配信除く)</span></p>
             <div id="all_title" class='list' style="display:block;clear:both;">ロード中...</div>
         </div>
         <div class="floating-element"><a href="./monthly.html"><span class="article-title">カレンダー</span></a></div>

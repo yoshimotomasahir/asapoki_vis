@@ -99,8 +99,10 @@ function readData(data) {
             titleData.titleForSearch = getTitleForSearch(catData[i].title);
             titleData.speakers = combined;
             titleData.duration = duration;
+            titleData.actualDuration = actualDuration;
             titleData.minutes = Math.floor(titleData.duration / 60);
             titleData.months = date.getFullYear() * 12 + date.getMonth();
+            titleData.cat = cat;
             titles.push(titleData);
         }
     }
@@ -141,11 +143,30 @@ displayTitles();
 displaySpeakers();
 fetchData();
 
+function formatDuration(seconds) {
+    const days = Math.floor(seconds / 86400); // 1日 = 86400秒
+    const hours = Math.floor((seconds % 86400) / 3600); // 1時間 = 3600秒
+    const minutes = Math.floor((seconds % 3600) / 60); // 1分 = 60秒
+    if (days > 0) { return `${days}日${hours}時間${minutes}分`; }
+    else if (hours > 0) { return `${hours}時間${minutes}分`; }
+    else { return `${minutes}分`; }
+}
+
 function displayTitlesImpl(element, titleData) {
     const titleElement = document.createElement("a");
     titleElement.href = titleData.linkSpotify;
     titleElement.rel = "nofollow";
     titleElement.target = "_blank";
+
+    const playlistIcon = document.createElement("span");
+    if (titleData.cat === 0) {
+        playlistIcon.style.color = "#1b9e77";
+    } else if (titleData.cat === 1) {
+        playlistIcon.style.color = "#d95f02";
+    } else if (titleData.cat === 2) {
+        playlistIcon.style.color = "#7570b3";
+    }
+    playlistIcon.textContent = "▶";
 
     const titleSpan = document.createElement("span");
     titleSpan.className = "article-title";
@@ -154,8 +175,7 @@ function displayTitlesImpl(element, titleData) {
     const dateSpan = document.createElement("span");
     dateSpan.className = "article-date";
     const date = new Date(titleData.unixtime);
-    const durationInMinutes = Math.floor(titleData.duration / 60);
-    dateSpan.textContent = `${durationInMinutes}分  ${date.getFullYear()}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getDate().toString().padStart(2, '0')}`;
+    dateSpan.textContent = `${formatDuration(titleData.duration)}  ${date.getFullYear()}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getDate().toString().padStart(2, '0')}`;
 
     let speakerNames = titleData.speakers.map(speaker => {
         const span = document.createElement("span");
@@ -175,6 +195,7 @@ function displayTitlesImpl(element, titleData) {
     }
 
     titleElement.appendChild(titleSpan);
+    element.appendChild(playlistIcon);
     element.appendChild(titleElement);
     element.appendChild(dateSpan);
     element.appendChild(speakersSpan);
@@ -190,6 +211,7 @@ function displayTitles() {
     const sortOption = document.querySelector('input[name="sort-title"]:checked').value;
     const durationOption = document.querySelector('input[name="select-duration"]:checked').value;
     const [minDuration, maxDuration] = durationOption.split('-').map(Number);
+    const playlists = Array.from(document.querySelectorAll('input[name="select-playlist"]:checked')).map(checkbox => parseInt(checkbox.value));
     const selectedSpeakerRadio = document.querySelector('input[name="select-speaker"]:checked');
     let selectedSpeaker = "";
     if (selectedSpeakerRadio && selectedSpeakerRadio.value === "selected") {
@@ -207,17 +229,22 @@ function displayTitles() {
         else { throw new Error("Invalid sort option"); }
     });
     let counts = 0;
+    let totalDuration = 0;
     sortedTitles.forEach(titleData => {
-        if (titleData.minutes >= minDuration && titleData.minutes <= maxDuration) {
-            if (selectedSpeaker === "" || titleData.speakers.includes(selectedSpeaker)) {
-                if(startMonth <= titleData.months && titleData.months <= endMonth) {
-                    displayTitlesImpl(allTitleElement, titleData);
-                    counts += 1;
+        if (playlists.includes(titleData.cat)) {
+            if (titleData.minutes >= minDuration && titleData.minutes <= maxDuration) {
+                if (selectedSpeaker === "" || titleData.speakers.includes(selectedSpeaker)) {
+                    if (startMonth <= titleData.months && titleData.months <= endMonth) {
+                        displayTitlesImpl(allTitleElement, titleData);
+                        counts += 1;
+                        totalDuration += titleData.actualDuration;
+                    }
                 }
             }
         }
     });
     document.getElementById("num_title").textContent = counts;
+    document.getElementById("duration").textContent = formatDuration(totalDuration);
     console.log("End of displayTitles");
 }
 
@@ -293,6 +320,10 @@ document.querySelectorAll('input[name="select-duration"]').forEach(radio => {
 });
 document.querySelectorAll('input[name="select-speaker"]').forEach(radio => {
     radio.addEventListener('change', displayTitles);
+});
+
+document.querySelectorAll('input[name="select-playlist"]').forEach(checkbox => {
+    checkbox.addEventListener('change', displayTitles);
 });
 
 function searchSpeaker() {
