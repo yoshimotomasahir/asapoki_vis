@@ -15,6 +15,31 @@ document.getElementById("platform").value = platform;
 
 const localStorageKey = 'jsonData';
 
+const month0 = 2020 * 12 + 7; // 2020年8月
+const today = new Date();
+const month1 = today.getFullYear() * 12 + today.getMonth();
+
+function calculateMonthValue(dateStr) {
+    const match = dateStr.match(/^(\d{4})年(\d{2})月/);
+    if (match) {
+        const year = parseInt(match[1], 10);
+        const month = parseInt(match[2], 10);
+        return year * 12 + (month - 1);
+    }
+    return null;
+}
+
+function calculateMonthStr(dateInt) {
+    const year = Math.floor(dateInt / 12);
+    const month = dateInt % 12 + 1;
+    return `${year}-${String(month).padStart(2, '0')}`
+}
+
+const startDate = calculateMonthStr(month0);
+let startMonth = month0;
+const endDate = calculateMonthStr(month1);
+let endMonth = month1;
+
 function katakanaToHiragana(str) {
     return str.replace(/[\u30a1-\u30f6]/g, function (match) {
         return String.fromCharCode(match.charCodeAt(0) - 0x60);
@@ -75,6 +100,7 @@ function readData(data) {
             titleData.speakers = combined;
             titleData.duration = duration;
             titleData.minutes = Math.floor(titleData.duration / 60);
+            titleData.months = date.getFullYear() * 12 + date.getMonth();
             titles.push(titleData);
         }
     }
@@ -184,8 +210,10 @@ function displayTitles() {
     sortedTitles.forEach(titleData => {
         if (titleData.minutes >= minDuration && titleData.minutes <= maxDuration) {
             if (selectedSpeaker === "" || titleData.speakers.includes(selectedSpeaker)) {
-                displayTitlesImpl(allTitleElement, titleData);
-                counts += 1;
+                if(startMonth <= titleData.months && titleData.months <= endMonth) {
+                    displayTitlesImpl(allTitleElement, titleData);
+                    counts += 1;
+                }
             }
         }
     });
@@ -312,3 +340,60 @@ function checkEnter(event) {
     }
 }
 window.checkEnter = checkEnter;
+
+let startPicker, endPicker;
+
+document.addEventListener("DOMContentLoaded", () => {
+    startPicker = flatpickr("#startYearMonthPicker", {
+        locale: "ja",
+        minDate: startDate,
+        maxDate: endDate,
+        disableMobile: true,
+        defaultDate: calculateMonthStr(startMonth),
+        plugins: [
+            new monthSelectPlugin({
+                shorthand: true,
+                dateFormat: "Y年m月から",
+                altFormat: "Y年m月から",
+            })
+        ],
+        onChange: (selectedDates, dateStr) => {
+            startMonth = calculateMonthValue(dateStr);
+            if (startMonth > endMonth) {
+                endMonth = startMonth;
+                endPicker.setDate(calculateMonthStr(endMonth), false);
+            }
+            displayTitles();
+        }
+    });
+    endPicker = flatpickr("#endYearMonthPicker", {
+        locale: "ja",
+        minDate: startDate,
+        maxDate: endDate,
+        disableMobile: true,
+        defaultDate: calculateMonthStr(endMonth),
+        plugins: [
+            new monthSelectPlugin({
+                shorthand: true,
+                dateFormat: "Y年m月まで",
+                altFormat: "Y年m月まで",
+            })
+        ],
+        onChange: (selectedDates, dateStr) => {
+            endMonth = calculateMonthValue(dateStr);
+            if (startMonth > endMonth) {
+                startMonth = endMonth;
+                startPicker.setDate(calculateMonthStr(startMonth), false);
+            }
+            displayTitles();
+        }
+    });
+});
+
+function resetPicker() {
+    startMonth = month0;
+    endMonth = month1;
+    startPicker.setDate(startDate, true);
+    endPicker.setDate(endDate, true);
+}
+window.resetPicker = resetPicker;
