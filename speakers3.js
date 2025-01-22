@@ -295,7 +295,7 @@ function handleNameClick(event) {
     const clickedName = event.target.textContent;
 
     const labelElement = document.getElementById("select-speaker-label");
-    labelElement.style.fontWeight = "600";    
+    labelElement.style.fontWeight = "600";
     const inputElement = document.createElement("input");
     inputElement.type = "radio";
     inputElement.name = "select-speaker";
@@ -327,6 +327,17 @@ document.querySelectorAll('input[name="select-playlist"]').forEach(checkbox => {
     checkbox.addEventListener('change', displayTitles);
 });
 
+function searchWords(searchString, text) {
+    searchString = searchString.replace(/\u3000/g, " ");
+    let searchStrings = searchString.split(" ");
+    for (let i = 0; i < searchStrings.length; i++) {
+        if (!text.includes(searchStrings[i])) {
+            return false;
+        }
+    }
+    return true;
+}
+
 function searchSpeaker() {
     const searchInput = getTitleForSearch(document.getElementById("search-speaker-input").value);
     if (searchInput === "") { return; }
@@ -334,7 +345,7 @@ function searchSpeaker() {
     searchedSpeakerElement.innerHTML = "";
 
     let speakerArray = Object.keys(speakers).filter(speaker => {
-        return speaker.toLowerCase().includes(searchInput);
+        return searchWords(searchInput.split('').join(" "), speaker);
     }).map(speaker => {
         const span = document.createElement('span');
         span.className = 'name';
