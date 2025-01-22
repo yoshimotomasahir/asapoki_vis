@@ -210,7 +210,7 @@ function displayTitles() {
     const allTitleElement = document.getElementById("all_title");
     allTitleElement.innerHTML = ""; // 既存の内容をクリア
     const sortOption = document.querySelector('input[name="sort-title"]:checked').value;
-    const durationOption = document.querySelector('input[name="select-duration"]:checked').value;
+    const durationOption = document.querySelector('select[name="select-duration"]').value;
     const [minDuration, maxDuration] = durationOption.split('-').map(Number);
     const playlists = Array.from(document.querySelectorAll('input[name="select-playlist"]:checked')).map(checkbox => parseInt(checkbox.value));
     const selectedSpeakerRadio = document.querySelector('input[name="select-speaker"]:checked');
@@ -316,9 +316,8 @@ document.querySelectorAll('input[name="sort-title"]').forEach(radio => {
     radio.addEventListener('change', displayTitles);
 });
 
-document.querySelectorAll('input[name="select-duration"]').forEach(radio => {
-    radio.addEventListener('change', displayTitles);
-});
+document.querySelector('select[name="select-duration"]').addEventListener('change', displayTitles);
+
 document.querySelectorAll('input[name="select-speaker"]').forEach(radio => {
     radio.addEventListener('change', displayTitles);
 });

@@ -64,12 +64,14 @@
             </div>
             <div class="form" style="display: flex; align-items: center;">
                 <span style="white-space: nowrap;">配信時間:</span>&nbsp;
-                <label><input type="radio" name="select-duration" value="0-223-min" checked>絞り込みなし</label>
-                <label><input type="radio" name="select-duration" value="0-20-min">~20分</label>
-                <label><input type="radio" name="select-duration" value="21-40-min">21~40分</label>
-                <label><input type="radio" name="select-duration" value="41-60-min">41~60分</label>
-                <label><input type="radio" name="select-duration" value="61-120-min">61分~120分</label>
-                <label><input type="radio" name="select-duration" value="121-222-min">121分~222分</label>
+                <select name="select-duration">
+                    <option value="0-223-min" selected>絞り込みなし</option>
+                    <option value="0-20-min">~20分</option>
+                    <option value="21-40-min">21分~40分</option>
+                    <option value="41-60-min">41分~60分</option>
+                    <option value="61-120-min">61分~120分</option>
+                    <option value="121-222-min">121分~222分</option>
+                </select>
             </div>
             <div class="form">
                 <span style="white-space: nowrap;">プレイリスト:</span>&nbsp;
