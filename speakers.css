@@ -171,3 +171,9 @@ button {
 .flatpickr-months .flatpickr-month {
     height: 50px; /*モバイル対応*/
 }
+
+.pagination-button{
+    display: inline-block; /* テキスト幅に合わせる */
+    padding: 0 3px; /* 左右のスペースを追加 */
+    margin: 0 10px; /* 隣接する要素との間隔 */    
+}

@@ -375,15 +375,75 @@ function searchTitle() {
         return titleData.titleForSearch.includes(searchInput);
     });
     const searchedTitleElement = document.getElementById("searched-title");
+    const paginationElement = document.getElementById("pagination");
+
     if (titleArray.length === 0) {
         searchedTitleElement.innerHTML = "見つかりません";
+        paginationElement.innerHTML = "";
+        return;
     }
-    else {
+
+    const sortOption = document.querySelector('input[name="sort-title"]:checked').value;
+    titleArray.sort((a, b) => {
+        if (sortOption === "title-oldest") {
+            return a.unixtime - b.unixtime;
+        } else if (sortOption === "title-newest") {
+            return b.unixtime - a.unixtime;
+        }
+        else { throw new Error("Invalid sort option"); }
+    });
+
+    const itemsPerPage = 10; // 1ページあたりの件数
+    const totalPages = Math.ceil(titleArray.length / itemsPerPage);
+    let currentPage = 1;
+
+    function renderPage(pageNumber) {
+        const start = (pageNumber - 1) * itemsPerPage;
+        const end = start + itemsPerPage;
+        const pageItems = titleArray.slice(start, end);
+
         searchedTitleElement.innerHTML = "";
-        titleArray.forEach(titleData => {
+        pageItems.forEach(titleData => {
             displayTitlesImpl(searchedTitleElement, titleData);
         });
+
+        renderPagination();
     }
+
+    function renderPagination() {
+        paginationElement.innerHTML = "";
+
+        const paginationText = document.createElement("span");
+        paginationText.textContent = `${currentPage}ページ目 / 全${totalPages}ページ`;
+
+        const prevButton = document.createElement("button");
+        prevButton.textContent = "<前へ";
+        prevButton.className = "pagination-button";
+        prevButton.disabled = currentPage === 1;
+        prevButton.addEventListener("click", () => {
+            if (currentPage > 1) {
+                currentPage--;
+                renderPage(currentPage);
+            }
+        });
+
+        const nextButton = document.createElement("button");
+        nextButton.textContent = "次へ>";
+        nextButton.className = "pagination-button";
+        nextButton.disabled = currentPage === totalPages;
+        nextButton.addEventListener("click", () => {
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderPage(currentPage);
+            }
+        });
+
+        paginationElement.appendChild(prevButton);
+        paginationElement.appendChild(paginationText);
+        paginationElement.appendChild(nextButton);
+    }
+
+    renderPage(1); // 最初のページを表示
 }
 window.searchTitle = searchTitle;
 
