@@ -295,6 +295,7 @@ function handleNameClick(event) {
     const clickedName = event.target.textContent;
 
     const labelElement = document.getElementById("select-speaker-label");
+    labelElement.style.fontWeight = "600";    
     const inputElement = document.createElement("input");
     inputElement.type = "radio";
     inputElement.name = "select-speaker";
@@ -334,13 +335,24 @@ function searchSpeaker() {
 
     let speakerArray = Object.keys(speakers).filter(speaker => {
         return speaker.toLowerCase().includes(searchInput);
-    }).map(speaker => `<span class="name">${speaker}</span>`);
+    }).map(speaker => {
+        const span = document.createElement('span');
+        span.className = 'name';
+        span.textContent = speaker;
+        span.addEventListener('click', handleNameClick);
+        return span;
+    });
 
     if (speakerArray.length === 0) {
         searchedSpeakerElement.innerHTML = "見つかりません";
     } else {
-        searchedSpeakerElement.innerHTML = speakerArray.join(", ");
+        speakerArray.forEach(span => {
+            searchedSpeakerElement.appendChild(span);
+            searchedSpeakerElement.appendChild(document.createTextNode(", "));
+        });
+        searchedSpeakerElement.removeChild(searchedSpeakerElement.lastChild); //最後の, を削除
     }
+    if (speakerArray.length === 1) { speakerArray[0].click(); }
 }
 window.searchSpeaker = searchSpeaker;
 
