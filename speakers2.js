@@ -315,6 +315,7 @@ document.querySelectorAll('input[name="sort-speaker"]').forEach(radio => {
 
 document.querySelectorAll('input[name="sort-title"]').forEach(radio => {
     radio.addEventListener('change', displayTitles);
+    radio.addEventListener('change', searchTitle);
 });
 
 document.querySelector('select[name="select-duration"]').addEventListener('change', displayTitles);
@@ -414,11 +415,15 @@ function searchTitle() {
         paginationElement.innerHTML = "";
 
         const paginationText = document.createElement("span");
-        paginationText.textContent = `${currentPage}ページ目 / 全${totalPages}ページ`;
+        paginationText.textContent = `${(currentPage - 1) * itemsPerPage + 1} - ${Math.min(currentPage * itemsPerPage, titleArray.length)}`;
+
+        const paginationTotal = document.createElement("span");
+        paginationTotal.textContent = `(全${titleArray.length}番組)`;
 
         const prevButton = document.createElement("button");
-        prevButton.textContent = "<前へ";
+        prevButton.textContent = "<";
         prevButton.className = "pagination-button";
+        prevButton.style.marginLeft = "5px";
         prevButton.disabled = currentPage === 1;
         prevButton.addEventListener("click", () => {
             if (currentPage > 1) {
@@ -428,8 +433,9 @@ function searchTitle() {
         });
 
         const nextButton = document.createElement("button");
-        nextButton.textContent = "次へ>";
+        nextButton.textContent = ">";
         nextButton.className = "pagination-button";
+        nextButton.style.marginRight = "5px";
         nextButton.disabled = currentPage === totalPages;
         nextButton.addEventListener("click", () => {
             if (currentPage < totalPages) {
@@ -438,9 +444,10 @@ function searchTitle() {
             }
         });
 
-        paginationElement.appendChild(prevButton);
         paginationElement.appendChild(paginationText);
+        paginationElement.appendChild(prevButton);
         paginationElement.appendChild(nextButton);
+        paginationElement.appendChild(paginationTotal);
     }
 
     renderPage(1); // 最初のページを表示
@@ -516,5 +523,6 @@ function handleSelectPlatformChange(event) {
     platform = event.target.value;
     localStorage.setItem('platform', platform);
     displayTitles();
+    searchTitle();
 }
 window.handleSelectPlatformChange = handleSelectPlatformChange;

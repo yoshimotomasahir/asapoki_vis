@@ -173,7 +173,9 @@ button {
 }
 
 .pagination-button{
-    display: inline-block; /* テキスト幅に合わせる */
-    padding: 0 3px; /* 左右のスペースを追加 */
-    margin: 0 10px; /* 隣接する要素との間隔 */    
+    padding: 3px 0px; 
+    min-width: 3em;
+    width: 3em;
+    border: 1px solid #787871;
+    border-radius: 3px;
 }
