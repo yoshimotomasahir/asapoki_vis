@@ -88,6 +88,9 @@ function readData(data) {
             if (title.length >= 7 && title.substring(0, 7) === "（ふりかえり）") {
                 actualDuration = 0;
             }
+            if (title.length >= 5 && title.substring(0, 5) === "（深掘り）") {
+                actualDuration = 0;
+            }
             combined.forEach(function (speaker) {
                 if (!(speaker in speakers)) {
                     const speakerData = {};
