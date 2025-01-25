@@ -117,10 +117,10 @@ function readData(data) {
 
 
 function fetchData() {
-    console.log("Start of fetchData");
     const xhr = new XMLHttpRequest();
     xhr.open('GET', 'https://script.google.com/macros/s/AKfycby1G_qqb8xBJh8adQBuvLsA5wOcnqYu59W22hs1jMlj4IT2DlqnJA7uaUG16GXJHDKU/exec', true);
     xhr.onload = function () {
+        const startTime = performance.now();
         if (xhr.status === 200) {
             const data = JSON.parse(xhr.responseText);
             localStorage.setItem(localStorageKey, JSON.stringify(data));
@@ -130,19 +130,21 @@ function fetchData() {
         }
         displayTitles();
         displaySpeakers();
+        const endTime = performance.now();
+        console.log("onload of fetchData", (endTime - startTime).toFixed(1), "ms");
     };
     xhr.send();
-    console.log("End of fetchData");
 }
 
 function loadFromLocalStorage() {
-    console.log("loadFromLocalStorage");
+    const startTime = performance.now();
     const storedData = localStorage.getItem(localStorageKey);
     if (storedData) {
         const data = JSON.parse(storedData);
         readData(data);
     }
-    console.log("loadFromLocalStorage");
+    const endTime = performance.now();
+    console.log("loadFromLocalStorage", (endTime - startTime).toFixed(1), "ms");
 }
 
 loadFromLocalStorage();
@@ -212,7 +214,7 @@ function displayTitlesImpl(element, titleData) {
 }
 
 function displayTitles() {
-    console.log("Start of displayTitles");
+    const startTime = performance.now();
 
     const allTitleElement = document.getElementById("all_title");
     allTitleElement.innerHTML = ""; // 既存の内容をクリア
@@ -225,7 +227,6 @@ function displayTitles() {
     if (selectedSpeakerRadio && selectedSpeakerRadio.value === "selected") {
         selectedSpeaker = selectedSpeakerRadio.nextSibling.textContent;
     }
-    console.log("selectedSpeaker", selectedSpeaker);
 
     let sortedTitles = [...titles];
     sortedTitles.sort((a, b) => {
@@ -236,6 +237,8 @@ function displayTitles() {
         }
         else { throw new Error("Invalid sort option"); }
     });
+    const endTime1 = performance.now();
+    console.log("displayTitles1", (endTime1 - startTime).toFixed(1), "ms");
     let counts = 0;
     let totalDuration = 0;
     sortedTitles.forEach(titleData => {
@@ -251,13 +254,16 @@ function displayTitles() {
             }
         }
     });
+    const endTime2 = performance.now();
+    console.log("displayTitles2", (endTime2 - startTime).toFixed(1), "ms");
     document.getElementById("num_title").textContent = counts;
     document.getElementById("duration").textContent = formatDuration(totalDuration);
-    console.log("End of displayTitles");
+    const endTime3 = performance.now();
+    console.log("displayTitles3", (endTime3 - startTime).toFixed(1), "ms");
 }
 
 function displaySpeakers() {
-    console.log("Start of displaySpeakers");
+    const startTime = performance.now();
 
     const allSpeakerElement = document.getElementById("all_speaker");
     allSpeakerElement.innerHTML = ""; // 既存の内容をクリア
@@ -295,7 +301,8 @@ function displaySpeakers() {
     if (allSpeakerElement.lastChild) {
         allSpeakerElement.removeChild(allSpeakerElement.lastChild);
     }
-    console.log("End of displaySpeakers");
+    const endTime = performance.now();
+    console.log("displaySpeakers", (endTime - startTime).toFixed(1), "ms");
 }
 
 function handleNameClick(event) {
@@ -318,8 +325,8 @@ function handleNameClick(event) {
 
 document.querySelectorAll('input[name="sort-speaker"]').forEach(radio => {
     radio.addEventListener('change', () => {
-        if (radio.checked) { 
-            localStorage.setItem('sort-speaker', radio.value); 
+        if (radio.checked) {
+            localStorage.setItem('sort-speaker', radio.value);
             console.log("sort-speaker", radio.value);
         }
         displaySpeakers();
@@ -353,6 +360,7 @@ function searchWords(searchString, text) {
 }
 
 function searchSpeaker() {
+    const startTime = performance.now();
     const searchInput = getTitleForSearch(document.getElementById("search-speaker-input").value);
     if (searchInput === "") { return; }
     const searchedSpeakerElement = document.getElementById("searched-speaker");
@@ -378,10 +386,13 @@ function searchSpeaker() {
         searchedSpeakerElement.removeChild(searchedSpeakerElement.lastChild); //最後の, を削除
     }
     if (speakerArray.length === 1) { speakerArray[0].click(); }
+    const endTime = performance.now();
+    console.log("searchSpeaker", (endTime - startTime).toFixed(1), "ms");
 }
 window.searchSpeaker = searchSpeaker;
 
 function searchTitle() {
+    const startTime = performance.now();
     const searchInput = getTitleForSearch(document.getElementById("search-title-input").value);
     if (searchInput === "") { return; }
 
@@ -464,6 +475,8 @@ function searchTitle() {
     }
 
     renderPage(1); // 最初のページを表示
+    const endTime = performance.now();
+    console.log("searchSpeaker", (endTime - startTime).toFixed(1), "ms");
 }
 window.searchTitle = searchTitle;
 
