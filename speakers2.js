@@ -13,9 +13,14 @@ else {
 }
 document.getElementById("platform").value = platform;
 
-let sortSpeaker = localStorage.getItem('sort-speaker') === null ? "speaker-duration" : localStorage.getItem('sort-speaker');
-console.log("sort-speaker", sortSpeaker);
+const sortSpeaker = localStorage.getItem('sort-speaker') === null ? "speaker-duration" : localStorage.getItem('sort-speaker');
 let inputElement = document.querySelector(`input[name="sort-speaker"][value="${sortSpeaker}"]`);
+if (inputElement) {
+    inputElement.checked = true;
+}
+
+const sortTitle = localStorage.getItem('sort-title') === null ? "title-newest" : localStorage.getItem('sort-title');
+inputElement = document.querySelector(`input[name="sort-title"][value="${sortTitle}"]`);
 if (inputElement) {
     inputElement.checked = true;
 }
@@ -316,15 +321,19 @@ document.querySelectorAll('input[name="sort-speaker"]').forEach(radio => {
     radio.addEventListener('change', () => {
         if (radio.checked) {
             localStorage.setItem('sort-speaker', radio.value);
-            console.log("sort-speaker", radio.value);
         }
         displaySpeakers();
     });
 });
 
 document.querySelectorAll('input[name="sort-title"]').forEach(radio => {
-    radio.addEventListener('change', displayTitles);
-    radio.addEventListener('change', searchTitle);
+    radio.addEventListener('change', () => {  
+        if (radio.checked) {
+            localStorage.setItem('sort-title', radio.value);
+        }
+        displayTitles();
+        searchTitle();
+    });
 });
 
 document.querySelector('select[name="select-duration"]').addEventListener('change', displayTitles);
