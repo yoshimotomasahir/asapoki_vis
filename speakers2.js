@@ -263,38 +263,74 @@ function displaySpeakers() {
     allSpeakerElement.innerHTML = ""; // 既存の内容をクリア
     const sortOption = document.querySelector('input[name="sort-speaker"]:checked').value;
     let speakerArray = Object.keys(speakers).map(speaker => {
+        const value =
+            sortOption === "speaker-newest" ? -speakers[speaker].newest :
+                sortOption === "speaker-oldest" ? speakers[speaker].oldest :
+                    sortOption === "speaker-duration" ? -speakers[speaker].duration :
+                        null;
         return {
             name: speaker,
-            data: speakers[speaker]
+            data: speakers[speaker],
+            value: value
         };
     });
-    speakerArray.sort((a, b) => {
-        if (sortOption === "speaker-newest") {
-            return b.data.newest - a.data.newest;
-        } else if (sortOption === "speaker-oldest") {
-            return a.data.oldest - b.data.oldest;
-        } else if (sortOption === "speaker-duration") {
-            return b.data.duration - a.data.duration;
-        }
-        else { throw new Error("Invalid sort option"); }
-    });
-    let speakerNames = speakerArray.map(speaker => {
+    speakerArray.sort((a, b) => { return a.value - b.value; });
+
+    let splitterInt;
+    let splitterLabel;
+    const startYear = 2020;
+    const currentYear = new Date().getFullYear();
+    if (sortOption === "speaker-newest") {
+        splitterInt = Array.from({ length: currentYear - startYear + 1 }, (_, i) =>
+            -(new Date(currentYear - i + 1, 0, 1, 0, 0, 0).getTime())
+        );
+        splitterLabel = Array.from({ length: currentYear - startYear + 1 }, (_, i) =>
+            `${currentYear - i}年`
+        );
+    }
+    else if (sortOption === "speaker-oldest") {
+        splitterInt = Array.from({ length: currentYear - startYear + 1 }, (_, i) =>
+            new Date(startYear + i, 0, 1, 0, 0, 0).getTime()
+        );
+        splitterLabel = Array.from({ length: currentYear - startYear + 1 }, (_, i) =>
+            `${startYear + i}年`
+        );
+    }
+    else if (sortOption === "speaker-duration") {
+        splitterInt = [-1 * 24 * 60 * 60, -12 * 60 * 60, -6 * 60 * 60, -3 * 60 * 60, -1 * 60 * 60];
+        splitterLabel = ["12時間以上", "6時間~12時間", "3時間~6時間", "1時間~3時間", "1時間未満"];
+    }
+    else { throw new Error("Invalid sort option"); }
+
+    let currentSplitter = 0;
+    for (let i = 0; i < speakerArray.length; i++) {
         const span = document.createElement("span");
         span.className = "name";
-        span.textContent = speaker.name;
+        span.textContent = speakerArray[i].name;
         span.addEventListener("click", handleNameClick);
-        return span;
-    });
-    document.getElementById("num_speaker").textContent = speakerNames.length;
-    speakerNames.forEach(span => {
+        if (i == 0) {
+            allSpeakerElement.appendChild(document.createTextNode(splitterLabel[0]));
+            allSpeakerElement.appendChild(document.createElement("br"));
+        }
+        else if (currentSplitter + 1 < splitterInt.length && speakerArray[i].value > splitterInt[currentSplitter + 1]) {
+            if (allSpeakerElement.lastChild) {
+                allSpeakerElement.removeChild(allSpeakerElement.lastChild);
+            }
+            allSpeakerElement.appendChild(document.createElement("br"));
+            allSpeakerElement.appendChild(document.createElement("br"));
+            allSpeakerElement.appendChild(document.createTextNode(splitterLabel[currentSplitter + 1]));
+            allSpeakerElement.appendChild(document.createElement("br"));
+            currentSplitter += 1;
+        }
         allSpeakerElement.appendChild(span);
         allSpeakerElement.appendChild(document.createTextNode(", "));
-    });
-
-    // 最後のカンマを削除
+    }
     if (allSpeakerElement.lastChild) {
         allSpeakerElement.removeChild(allSpeakerElement.lastChild);
     }
+
+    document.getElementById("num_speaker").textContent = speakerArray.length;
+
     const endTime = performance.now();
     console.log("displaySpeakers", (endTime - startTime).toFixed(1), "ms");
 }
@@ -327,7 +363,7 @@ document.querySelectorAll('input[name="sort-speaker"]').forEach(radio => {
 });
 
 document.querySelectorAll('input[name="sort-title"]').forEach(radio => {
-    radio.addEventListener('change', () => {  
+    radio.addEventListener('change', () => {
         if (radio.checked) {
             localStorage.setItem('sort-title', radio.value);
         }
