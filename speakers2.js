@@ -161,56 +161,47 @@ function formatDuration(seconds) {
     else { return `${minutes}分`; }
 }
 
-function displayTitlesImpl(element, titleData) {
-    const titleElement = document.createElement("a");
-    if (platform === "omnyfm") { titleElement.href = titleData.linkOmnyfm; }
-    else { titleElement.href = titleData.linkSpotify; }
-    titleElement.rel = "nofollow";
-    titleElement.target = "_blank";
+function displayTitlesImpl(element, titleDatas) {
+    const fragment = document.createDocumentFragment(); // フラグメントを使用
 
-    const playlistIcon = document.createElement("span");
-    if (titleData.cat === 0) {
-        playlistIcon.style.color = "#1b9e77";
-    } else if (titleData.cat === 1) {
-        playlistIcon.style.color = "#d95f02";
-    } else if (titleData.cat === 2) {
-        playlistIcon.style.color = "#7570b3";
-    }
-    playlistIcon.textContent = "▶";
+    titleDatas.forEach(titleData => {
+        const titleElement = document.createElement("a");
+        titleElement.href = platform === "omnyfm" ? titleData.linkOmnyfm : titleData.linkSpotify;
+        titleElement.rel = "nofollow";
+        titleElement.target = "_blank";
 
-    const titleSpan = document.createElement("span");
-    titleSpan.className = "article-title";
-    titleSpan.textContent = titleData.title;
+        const playlistIcon = document.createElement("span");
+        playlistIcon.style.color = ["#1b9e77", "#d95f02", "#7570b3"][titleData.cat];
+        playlistIcon.textContent = "▶";
 
-    const dateSpan = document.createElement("span");
-    dateSpan.className = "article-date";
-    const date = new Date(titleData.unixtime);
-    dateSpan.textContent = `${formatDuration(titleData.duration)}  ${date.getFullYear()}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getDate().toString().padStart(2, '0')}`;
+        const titleSpan = document.createElement("span");
+        titleSpan.className = "article-title";
+        titleSpan.textContent = titleData.title;
 
-    let speakerNames = titleData.speakers.map(speaker => {
-        const span = document.createElement("span");
-        span.className = "name";
-        span.textContent = speaker;
+        const dateSpan = document.createElement("span");
+        dateSpan.className = "article-date";
+        const date = new Date(titleData.unixtime);
+        dateSpan.textContent = `${formatDuration(titleData.duration)}  ${date.getFullYear()}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getDate().toString().padStart(2, '0')}`;
+
+        const speakersSpan = document.createElement("span");
+        speakersSpan.className = "article-speakers";
+        speakersSpan.innerHTML = titleData.speakers.map(speaker =>
+            `<span class="name">${speaker}</span>`).join(", ");
+
+        // フラグメントにまとめて追加
+        titleElement.appendChild(titleSpan);
+        fragment.appendChild(playlistIcon);
+        fragment.appendChild(titleElement);
+        fragment.appendChild(dateSpan);
+        fragment.appendChild(speakersSpan);
+        fragment.appendChild(document.createElement("br"));
+    });
+
+    element.appendChild(fragment); // 最後に一括で要素に追加
+
+    element.querySelectorAll(".name").forEach(span => {
         span.addEventListener("click", handleNameClick);
-        return span;
     });
-    const speakersSpan = document.createElement("span");
-    speakersSpan.className = "article-speakers";
-    speakerNames.forEach(span => {
-        speakersSpan.appendChild(span);
-        speakersSpan.appendChild(document.createTextNode(", "));
-    });
-    if (speakersSpan.lastChild) {
-        speakersSpan.removeChild(speakersSpan.lastChild);
-    }
-
-    titleElement.appendChild(titleSpan);
-    element.appendChild(playlistIcon);
-    element.appendChild(titleElement);
-    element.appendChild(dateSpan);
-    element.appendChild(speakersSpan);
-
-    element.appendChild(document.createElement("br"));
 }
 
 function displayTitles() {
@@ -237,16 +228,15 @@ function displayTitles() {
         }
         else { throw new Error("Invalid sort option"); }
     });
-    const endTime1 = performance.now();
-    console.log("displayTitles1", (endTime1 - startTime).toFixed(1), "ms");
     let counts = 0;
     let totalDuration = 0;
+    let titleDatas = [];
     sortedTitles.forEach(titleData => {
         if (playlists.includes(titleData.cat)) {
             if (titleData.minutes >= minDuration && titleData.minutes <= maxDuration) {
                 if (selectedSpeaker === "" || titleData.speakers.includes(selectedSpeaker)) {
                     if (startMonth <= titleData.months && titleData.months <= endMonth) {
-                        displayTitlesImpl(allTitleElement, titleData);
+                        titleDatas.push(titleData);
                         counts += 1;
                         totalDuration += titleData.actualDuration;
                     }
@@ -254,12 +244,11 @@ function displayTitles() {
             }
         }
     });
-    const endTime2 = performance.now();
-    console.log("displayTitles2", (endTime2 - startTime).toFixed(1), "ms");
+    displayTitlesImpl(allTitleElement, titleDatas);
     document.getElementById("num_title").textContent = counts;
     document.getElementById("duration").textContent = formatDuration(totalDuration);
-    const endTime3 = performance.now();
-    console.log("displayTitles3", (endTime3 - startTime).toFixed(1), "ms");
+    const endTime = performance.now();
+    console.log("displayTitles", (endTime - startTime).toFixed(1), "ms");
 }
 
 function displaySpeakers() {
@@ -425,12 +414,10 @@ function searchTitle() {
     function renderPage(pageNumber) {
         const start = (pageNumber - 1) * itemsPerPage;
         const end = start + itemsPerPage;
-        const pageItems = titleArray.slice(start, end);
+        const titleDatas = titleArray.slice(start, end);
 
         searchedTitleElement.innerHTML = "";
-        pageItems.forEach(titleData => {
-            displayTitlesImpl(searchedTitleElement, titleData);
-        });
+        displayTitlesImpl(searchedTitleElement, titleDatas);
 
         renderPagination();
     }
