@@ -13,6 +13,13 @@ else {
 }
 document.getElementById("platform").value = platform;
 
+let sortSpeaker = localStorage.getItem('sort-speaker') === null ? "speaker-duration" : localStorage.getItem('sort-speaker');
+console.log("sort-speaker", sortSpeaker);
+let inputElement = document.querySelector(`input[name="sort-speaker"][value="${sortSpeaker}"]`);
+if (inputElement) {
+    inputElement.checked = true;
+}
+
 const localStorageKey = 'jsonData';
 
 const month0 = 2020 * 12 + 7; // 2020年8月
@@ -310,7 +317,13 @@ function handleNameClick(event) {
 }
 
 document.querySelectorAll('input[name="sort-speaker"]').forEach(radio => {
-    radio.addEventListener('change', displaySpeakers);
+    radio.addEventListener('change', () => {
+        if (radio.checked) { 
+            localStorage.setItem('sort-speaker', radio.value); 
+            console.log("sort-speaker", radio.value);
+        }
+        displaySpeakers();
+    });
 });
 
 document.querySelectorAll('input[name="sort-title"]').forEach(radio => {
