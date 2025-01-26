@@ -306,7 +306,7 @@ function displaySpeakers() {
         splitterLabel = ["12時間以上", "6時間~12時間", "3時間~6時間", "1時間~3時間", "1時間未満"];
     }
     else if (sortOption === "speaker-furigana") {
-        splitterInt = [0, 600 - 1, 1100 - 1, 1600 - 1, 2100 - 1, 2600 - 1, 3100 - 1, 3400 - 1, 3900 - 1, 4400 - 1];
+        splitterInt = [0, 600 - 1, 1100 - 1, 1600 - 1, 2100 - 1, 2600 - 1, 3100 - 1, 3600 - 1, 3900 - 1, 4400 - 1];
         splitterLabel = ["あ~お", "か~こ", "さ~そ", "た~と", "な~の", "は~ほ", "ま~も", "や~よ", "ら~ろ", "わ~ん"];
     }
     else { throw new Error("Invalid sort option"); }
