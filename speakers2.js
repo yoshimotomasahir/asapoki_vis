@@ -98,7 +98,7 @@ function readData(data) {
                     speakerData.categories = 1 << cat;
                     speakerData.oldest = unixtime;
                     speakerData.newest = unixtime;
-                    speakerData.furigana = data["speaker"]?.[speaker] ?? 0;
+                    speakerData.furiganaFloat = data["speakers"]?.[speaker]["furiganaFloat"] ?? 0;
                     speakers[speaker] = speakerData;
                 } else {
                     speakers[speaker].duration += actualDuration;
@@ -271,7 +271,7 @@ function displaySpeakers() {
             sortOption === "speaker-newest" ? -speakers[speaker].newest :
                 sortOption === "speaker-oldest" ? speakers[speaker].oldest :
                     sortOption === "speaker-duration" ? -speakers[speaker].duration :
-                        sortOption === "speaker-furigana" ? speakers[speaker].furigana :
+                        sortOption === "speaker-furigana" ? speakers[speaker].furiganaFloat :
                             null;
         return {
             name: speaker,
