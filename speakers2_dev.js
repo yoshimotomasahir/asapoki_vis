@@ -593,3 +593,28 @@ function handleSelectPlatformChange(event) {
     searchTitle();
 }
 window.handleSelectPlatformChange = handleSelectPlatformChange;
+
+function openModal() {
+    const modal = document.getElementById("settingsModal");
+    const overlay = document.getElementById("overlay");
+    if (window.innerWidth < 801) {
+        modal.classList.add("fullscreen");
+    } else {
+        modal.classList.remove("fullscreen");
+    }
+    modal.style.display = "block";
+    overlay.style.display = "block";
+}
+window.openModal = openModal;
+
+function closeModal() {
+    document.getElementById("settingsModal").style.display = "none";
+    document.getElementById("overlay").style.display = "none";
+}
+window.closeModal = closeModal;
+
+document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape") {
+        closeModal();
+    }
+});

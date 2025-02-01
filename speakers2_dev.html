@@ -16,10 +16,63 @@
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-colorschemes"></script>
     <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/style.css" rel="stylesheet">
-    <link href="./speakers.css" rel="stylesheet" type="text/css" media="all">
+    <link href="./speakers_dev.css" rel="stylesheet" type="text/css" media="all">
 </head>
 
 <body>
+    <div class="settings-icon" onclick="openModal()">⚙️</div>
+    <div class="overlay" id="overlay" onclick="closeModal()"></div>
+    <div class="modal" id="settingsModal">
+        <div style="padding: 20px 20px 20px 20px;">
+            <div class="modal-header">
+                <h3>設定画面</h3>
+                <span class="close-btn" onclick="closeModal()">✕</span>
+            </div>
+            <div class="form">
+                <h4 style="margin: 0.5em 0px 0.5em 0px;">配信プラットフォーム</h4>
+                <select name="platform" id="platform" onchange="handleSelectPlatformChange(event)">
+                    <option value="omnyfm">Omny.fm</option>
+                    <option value="spotify">Spotify</option>
+                </select>
+            </div>
+            <div class="form">
+                <h4 style="margin: 0.5em 0px 0.5em 0px;">番組順</h4>
+                <label><input type="radio" name="sort-title" value="title-newest" checked>新しい番組順</label>
+                <label><input type="radio" name="sort-title" value="title-oldest">古い番組順</label>
+            </div>
+            <div class="form">
+                <h4 style="margin: 0.5em 0px 0.5em 0px;">プレイリスト</h4>
+                <label><input type="checkbox" name="select-playlist" value="0" checked><span style="color: #1b9e77">▶</span>ニュースの現場から</label>
+                <label><input type="checkbox" name="select-playlist" value="1" checked><span style="color: #d95f02">▶</span>MEDIA TALK</label>
+                <label><input type="checkbox" name="select-playlist" value="2" checked><span style="color: #7570b3">▶</span>新聞1面じゃなくても大事なこと -SDGsを話そう-</label>
+            </div>
+            <div class="form">
+                <h4 style="margin: 0.5em 0px 0.5em 0px;">配信年月</h4>
+                <div><input type="text" id="startYearMonthPicker" placeholder="年と月を選択"></div>
+                <div><input type="text" id="endYearMonthPicker" placeholder="年と月を選択"></div>
+                <div><a href="javascript:void(0)" class="reset-link" onclick="resetPicker()">リセット</a></div>
+            </div>
+            <div class="form">
+                <h4 style="margin: 0.5em 0px 0.5em 0px;">配信時間</h4>
+                <select name="select-duration">
+                    <option value="0-223-min" selected>絞り込みなし</option>
+                    <option value="0-20-min">~20分</option>
+                    <option value="21-40-min">21分~40分</option>
+                    <option value="41-60-min">41分~60分</option>
+                    <option value="61-120-min">61分~120分</option>
+                    <option value="121-222-min">121分~222分</option>
+                </select>
+            </div>
+            <h3 style="margin: 1em 0px 0.5em 0px;">使い方</h3>
+            <div class="form">
+                <span>出演者の名前をクリックまたはタップすると、その方が出演された配信が 番組絞り込み に表示されます。</span>
+            </div>
+            <h3 style="margin: 1em 0px 0.5em 0px;">このページについて</h3>
+            <div class="form">
+                <span>本ツールは、朝ポキリスナー有志が製作しています。</span>
+            </div>
+        </div>
+    </div>    
     <div class="container">
         <div class="left">
             <h2>出演者検索</h2>
@@ -29,7 +82,7 @@
             </div>
             <div id="searched-speaker" style="clear:both;" class="list"></div>
 
-            <h3>出演者一覧</h3>
+            <h3 style="margin: 1em 0px 1em 0px;">出演者一覧</h3>
             <div class="form">
                 <label><input type="radio" name="sort-speaker" value="speaker-duration" checked>出演時間の長い順</label>
                 <label><input type="radio" name="sort-speaker" value="speaker-newest">最近出演した順</label>
@@ -42,12 +95,8 @@
         </div>
 
         <div class="right">
-            <div class="floating-platform">
-                <select name="platform" id="platform" onchange="handleSelectPlatformChange(event)">
-                    <option value="omnyfm">Omny.fm</option>
-                    <option value="spotify">Spotify</option>
-                </select>
-            </div>
+            <!-- <div class="floating-platform">
+            </div> -->
             <h2>タイトル検索</h2>
             <div id="search-title" class="search-box">
                 <input type="text" id="search-title-input" placeholder="タイトル..." onkeydown="checkEnter(event)" />
@@ -55,34 +104,11 @@
             </div>
             <div id="pagination"></div>
             <div id="searched-title" style="clear:both;" class="list"></div>
-            <h3>番組絞り込み</h3>
+            <h3 style="margin: 1em 0px 1em 0px;">番組絞り込み</h3>
             <div class="form">
-                <label><input type="radio" name="sort-title" value="title-newest" checked>新しい番組順</label>
-                <label><input type="radio" name="sort-title" value="title-oldest">古い番組順</label>
             </div>
-            <div class="form">
-                <span style="white-space: nowrap;">配信年月:</span>&nbsp;
-                <input type="text" id="startYearMonthPicker" placeholder="年と月を選択">
-                <input type="text" id="endYearMonthPicker" placeholder="年と月を選択">
-                <a href="javascript:void(0)" class="reset-link" onclick="resetPicker()">リセット</a>
-            </div>
-            <div class="form" style="display: flex; align-items: center;">
-                <span style="white-space: nowrap;">配信時間:</span>&nbsp;
-                <select name="select-duration">
-                    <option value="0-223-min" selected>絞り込みなし</option>
-                    <option value="0-20-min">~20分</option>
-                    <option value="21-40-min">21分~40分</option>
-                    <option value="41-60-min">41分~60分</option>
-                    <option value="61-120-min">61分~120分</option>
-                    <option value="121-222-min">121分~222分</option>
-                </select>
-            </div>
-            <div class="form">
-                <span style="white-space: nowrap;">プレイリスト:</span>&nbsp;
-                <label><input type="checkbox" name="select-playlist" value="0" checked><span style="color: #1b9e77">▶</span>ニュースの現場から</label>
-                <label><input type="checkbox" name="select-playlist" value="1" checked><span style="color: #d95f02">▶</span>MEDIA TALK</label>
-                <label><input type="checkbox" name="select-playlist" value="2" checked><span style="color: #7570b3">▶</span>新聞1面じゃなくても大事なこと -SDGsを話そう-</label>
-            </div>
+            <!-- <div class="form">
+            </div> -->
             <div class="form">
                 <span style="white-space: nowrap;">出演者:</span>&nbsp;
                 <label><input type="radio" name="select-speaker" value="unselected" checked>絞り込みなし</label>
@@ -97,7 +123,7 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ja.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/index.js"></script>
-    <script src="./speakers2.js" type="module"></script>
+    <script src="./speakers2_dev.js" type="module"></script>
 </body>
 
 </html>
