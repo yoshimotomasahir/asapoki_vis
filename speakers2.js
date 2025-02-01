@@ -99,6 +99,7 @@ function readData(data) {
                     speakerData.oldest = unixtime;
                     speakerData.newest = unixtime;
                     speakerData.furiganaFloat = data["speakers"]?.[speaker]["furiganaFloat"] ?? 0;
+                    speakerData.furigana = data["speakers"]?.[speaker]["furigana"] ?? "";
                     speakers[speaker] = speakerData;
                 } else {
                     speakers[speaker].duration += actualDuration;
@@ -409,9 +410,9 @@ function searchSpeaker() {
     const searchedSpeakerElement = document.getElementById("searched-speaker");
     searchedSpeakerElement.innerHTML = "";
 
-    let speakerArray = Object.keys(speakers).filter(speaker => {
-        return searchWords(searchInput.split('').join(" "), speaker);
-    }).map(speaker => {
+    let speakerArray = Object.entries(speakers).filter(([speaker, value]) => {
+        return searchWords(searchInput.split('').join(" "), speaker + value.furigana);
+    }).map(([speaker, value]) => {
         const span = document.createElement('span');
         span.className = 'name';
         span.textContent = speaker;
@@ -593,3 +594,31 @@ function handleSelectPlatformChange(event) {
     searchTitle();
 }
 window.handleSelectPlatformChange = handleSelectPlatformChange;
+
+function openModal() {
+    const modal = document.getElementById("settingsModal");
+    const overlay = document.getElementById("overlay");
+    const setWidth = 500;
+    if (window.innerWidth < setWidth / 0.9) {
+        modal.style.width = `90%`;
+        modal.style.left = `5%`;
+    } else {
+        modal.style.width = `${setWidth / window.innerWidth * 100}%`;
+        modal.style.left = `${50 - setWidth / window.innerWidth * 50}%`;
+    }
+    modal.style.display = "block";
+    overlay.style.display = "block";
+}
+window.openModal = openModal;
+
+function closeModal() {
+    document.getElementById("settingsModal").style.display = "none";
+    document.getElementById("overlay").style.display = "none";
+}
+window.closeModal = closeModal;
+
+document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape") {
+        closeModal();
+    }
+});
