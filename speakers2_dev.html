@@ -20,7 +20,7 @@
 </head>
 
 <body>
-    <div class="settings-icon" onclick="openModal()">⚙️</div>
+    <div class="settings-icon" onclick="openModal()">⚙️<span class="form">設定</span></div>
     <div class="overlay" id="overlay" onclick="closeModal()"></div>
     <div class="modal" id="settingsModal">
         <div style="padding: 20px 20px 20px 20px;">
@@ -63,13 +63,14 @@
                     <option value="121-222-min">121分~222分</option>
                 </select>
             </div>
-            <h3 style="margin: 1em 0px 0.5em 0px;">このページについて</h3>
             <div class="form">
+                <h4 style="margin: 0.5em 0px 0.5em 0px;">このページについて</h4>
                 <span>出演者の名前をクリックまたはタップすると、その方が出演された配信が 番組絞り込み に表示されます。本ツールは、朝ポキリスナー有志が製作しています。</span>
             </div>
-            <h3 style="margin: 1em 0px 0.5em 0px;">リンク集</h3>
             <div class="form">
+                <h4 style="margin: 0.5em 0px 0.5em 0px;">リンク集</h4>
                 <div><a href="https://www.asahi.com/special/podcasts/" rel="nofollow" target="_blank">朝日新聞 ポッドキャスト 公式サイト</a></div>
+                <div><a href="./monthly.html">朝ポキ カレンダー</a></div>
                 <div><a href="https://github.com/yoshimotomasahir/asapoki_vis/commits/main/" rel="nofollow" target="_blank">更新履歴 (Github)</a></div>
                 <div><a href="https://discord.com/channels/1195561707775467580/1331237074946228266" rel="nofollow" target="_blank">質問や要望はこちらへ (Discord)</a></div>
             </div>
@@ -97,8 +98,6 @@
         </div>
 
         <div class="right">
-            <!-- <div class="floating-platform">
-            </div> -->
             <h2>タイトル検索</h2>
             <div id="search-title" class="search-box">
                 <input type="text" id="search-title-input" placeholder="タイトル..." onkeydown="checkEnter(event)" />
@@ -109,8 +108,6 @@
             <h3 style="margin: 1em 0px 1em 0px;">番組絞り込み</h3>
             <div class="form">
             </div>
-            <!-- <div class="form">
-            </div> -->
             <div class="form">
                 <span style="white-space: nowrap;">出演者:</span>&nbsp;
                 <label><input type="radio" name="select-speaker" value="unselected" checked>絞り込みなし</label>
@@ -120,7 +117,6 @@
             <p><span id="num_title">ロード中...</span> 番組&nbsp;&nbsp;<span id="duration"></span> <span class="article-date">(再配信除く)</span></p>
             <div id="all_title" class='list' style="display:block;clear:both;">ロード中...</div>
         </div>
-        <div class="floating-element"><a href="./monthly.html"><span class="article-title">カレンダー</span></a></div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ja.js"></script>
