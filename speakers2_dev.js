@@ -99,6 +99,7 @@ function readData(data) {
                     speakerData.oldest = unixtime;
                     speakerData.newest = unixtime;
                     speakerData.furiganaFloat = data["speakers"]?.[speaker]["furiganaFloat"] ?? 0;
+                    speakerData.furigana = data["speakers"]?.[speaker]["furigana"] ?? "";
                     speakers[speaker] = speakerData;
                 } else {
                     speakers[speaker].duration += actualDuration;
@@ -409,9 +410,9 @@ function searchSpeaker() {
     const searchedSpeakerElement = document.getElementById("searched-speaker");
     searchedSpeakerElement.innerHTML = "";
 
-    let speakerArray = Object.keys(speakers).filter(speaker => {
-        return searchWords(searchInput.split('').join(" "), speaker);
-    }).map(speaker => {
+    let speakerArray = Object.entries(speakers).filter(([speaker, value]) => {
+        return searchWords(searchInput.split('').join(" "), speaker + value.furigana);
+    }).map(([speaker, value]) => {
         const span = document.createElement('span');
         span.className = 'name';
         span.textContent = speaker;
