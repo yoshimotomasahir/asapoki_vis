@@ -597,6 +597,7 @@ window.handleSelectPlatformChange = handleSelectPlatformChange;
 function openModal() {
     const modal = document.getElementById("settingsModal");
     const overlay = document.getElementById("overlay");
+    document.getElementById("modal-debug").textContent = `window.innerWidth: ${window.innerWidth} px`;
     if (window.innerWidth < 801) {
         modal.classList.add("fullscreen");
     } else {
