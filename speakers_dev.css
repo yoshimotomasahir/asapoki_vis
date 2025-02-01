@@ -10,7 +10,7 @@ body {
     color: #2a2a2a;
     text-size-adjust: 180%;
     -webkit-text-size-adjust: 180%;
-    margin: 0px;
+    margin: 2px;
 }
 
 h2 {
@@ -167,7 +167,7 @@ button {
 .settings-icon {
     position: fixed;
     top: 10px;
-    right: 25px;
+    right: 30px;
     cursor: pointer;
     font-size: 24px;
     font-size: 2.4rem;
