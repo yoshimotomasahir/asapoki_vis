@@ -597,23 +597,13 @@ window.handleSelectPlatformChange = handleSelectPlatformChange;
 function openModal() {
     const modal = document.getElementById("settingsModal");
     const overlay = document.getElementById("overlay");
-    document.getElementById("modal-debug").innerHTML = `screen.width: ${screen.width} px<br>`;
-    document.getElementById("modal-debug").innerHTML += `window.innerWidth: ${window.innerWidth} px<br>`;
-    document.getElementById("modal-debug").innerHTML += `window.outerWidth: ${window.outerWidth} px<br>`;
-    const element = document.body;
-    const computedStyle = window.getComputedStyle(element);
-    const textSizeAdjust = computedStyle.getPropertyValue('text-size-adjust');
-    const webkitTextSizeAdjust = computedStyle.getPropertyValue('-webkit-text-size-adjust');
-    document.getElementById("modal-debug").innerHTML += `text-size-adjust: ${textSizeAdjust}<br>`
-    document.getElementById("modal-debug").innerHTML += `-webkit-text-size-adjust: ${webkitTextSizeAdjust}<br>`;
-    if (screen.width < 444.44 * parseFloat(textSizeAdjust) / 100) {
-        modal.classList.add("fullscreen");
-        document.getElementById("modal-debug").innerHTML += `fullscreen mode<br>`;
+    const setWidth = 500;
+    if (window.innerWidth < setWidth / 0.9) {
+        modal.style.width = `90%`;
+        modal.style.left = `5%`;
     } else {
-        modal.classList.remove("fullscreen");
-        modal.style.width = `${400 * parseFloat(textSizeAdjust) / 100}px`;
-        modal.style.left = `${screen.width / 2 - (400 * parseFloat(textSizeAdjust) / 100) / 2}px`;
-        document.getElementById("modal-debug").innerHTML += `width: ${400 * parseFloat(textSizeAdjust) / 100}<br>`;
+        modal.style.width = `${setWidth / window.innerWidth * 100}%`;
+        modal.style.left = `${50 - setWidth / window.innerWidth * 50}%`;
     }
     modal.style.display = "block";
     overlay.style.display = "block";
