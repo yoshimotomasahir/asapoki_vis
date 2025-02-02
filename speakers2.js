@@ -599,10 +599,11 @@ function openModal() {
     const modal = document.getElementById("settingsModal");
     const overlay = document.getElementById("overlay");
     const setWidth = 500;
-    if (window.innerWidth < setWidth / 0.9) {
-        modal.style.width = `90%`;
-        modal.style.left = `5%`;
-    } else {
+    if (window.innerWidth < setWidth / 0.8 || screen.width < setWidth / 0.8) {
+        modal.style.width = `80%`;
+        modal.style.left = `10%`;
+    }
+    else {
         modal.style.width = `${setWidth / window.innerWidth * 100}%`;
         modal.style.left = `${50 - setWidth / window.innerWidth * 50}%`;
     }
