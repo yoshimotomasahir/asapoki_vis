@@ -6,7 +6,7 @@ function readData(data) {
 
     for (const key in data["reporters"]) {
         reporters[key] = {};
-        reporters[key]["url"] = data["reporters"][key]["url"];
+        reporters[key]["url"] = data["reporters"][key]["url"].replace("https://www.asahi.com/", "https://digital.asahi.com/");
         reporters[key]["asapoki"] = key in data.speakers;
     }
 }
