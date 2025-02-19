@@ -4,11 +4,11 @@ const localStorageKey = 'jsonData';
 
 function readData(data) {
 
-    Object.entries(data["reporters"]).forEach(([key, value]) => {
+    for (const key in data["reporters"]) {
         reporters[key] = {};
-        reporters[key]["url"] = value["url"];
-        reporters[key]["asapoki"] = key in data["speakers"];
-    });
+        reporters[key]["url"] = data["reporters"][key]["url"];
+        reporters[key]["asapoki"] = key in data.speakers;
+    }
 }
 
 function fetchData() {
@@ -48,7 +48,9 @@ fetchData();
 function displayReporters() {
     document.getElementById("reporter_asapoki").innerHTML = "";
     document.getElementById("reporter_others").innerHTML = "";
-    Object.entries(reporters).forEach(([key, value], index, array) => {
+
+    for (const key in reporters) {
+        const value = reporters[key];
         const titleElement = document.createElement("a");
         titleElement.textContent = key;
         titleElement.href = value["url"];
@@ -61,5 +63,5 @@ function displayReporters() {
 
         parentElement.appendChild(titleElement);
         parentElement.appendChild(document.createTextNode(", "));
-    });
+    }
 }
