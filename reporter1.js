@@ -51,17 +51,17 @@ function displayReporters() {
 
     for (const key in reporters) {
         const value = reporters[key];
-        const titleElement = document.createElement("a");
-        titleElement.textContent = key;
-        titleElement.href = value["url"];
-        titleElement.rel = "nofollow";
-        titleElement.target = "_blank";
+        const element = document.createElement("a");
+        element.textContent = key;
+        element.href = value["url"];
+        element.rel = "nofollow";
+        element.target = "_blank";
+        element.className = "name";
 
         const parentElement = value["asapoki"]
             ? document.getElementById("reporter_asapoki")
             : document.getElementById("reporter_others");
 
-        parentElement.appendChild(titleElement);
-        parentElement.appendChild(document.createTextNode(", "));
+        parentElement.appendChild(element);
     }
 }
