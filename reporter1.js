@@ -49,6 +49,8 @@ function displayReporters() {
     document.getElementById("reporter_asapoki").innerHTML = "";
     document.getElementById("reporter_others").innerHTML = "";
 
+    let count_asapoki = 0;
+    let count_others = 0;
     for (const key in reporters) {
         const value = reporters[key];
         const element = document.createElement("a");
@@ -58,10 +60,15 @@ function displayReporters() {
         element.target = "_blank";
         element.className = "name";
 
-        const parentElement = value["asapoki"]
-            ? document.getElementById("reporter_asapoki")
-            : document.getElementById("reporter_others");
-
-        parentElement.appendChild(element);
+        if (value["asapoki"]) {
+            document.getElementById("reporter_asapoki").appendChild(element);
+            count_asapoki += 1;
+        }
+        else {
+            document.getElementById("reporter_others").appendChild(element);
+            count_others += 1;
+        }
+        document.getElementById("num_reporter_asapoki").innerHTML = count_asapoki;
+        document.getElementById("num_reporter_others").innerHTML = count_others;
     }
 }
