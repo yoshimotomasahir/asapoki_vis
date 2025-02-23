@@ -1,4 +1,5 @@
-var reporters = {};
+let reporters = {};
+let reporters_last_update = "";
 
 const localStorageKey = 'jsonData';
 
@@ -9,6 +10,7 @@ function readData(data) {
         reporters[key]["url"] = data["reporters"][key]["url"];
         reporters[key]["asapoki"] = key in data.speakers;
     }
+    reporters_last_update = data["reportersLastUpdate"];
 }
 
 function fetchData() {
@@ -48,7 +50,8 @@ fetchData();
 function displayReporters() {
     document.getElementById("reporter_asapoki").innerHTML = "";
     document.getElementById("reporter_others").innerHTML = "";
-
+    document.getElementById("reporters_last_update").innerHTML = reporters_last_update;
+    
     let count_asapoki = 0;
     let count_others = 0;
     for (const key in reporters) {
