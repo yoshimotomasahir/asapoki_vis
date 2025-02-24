@@ -5,11 +5,14 @@ const localStorageKey = 'jsonData';
 
 function readData(data) {
 
-    for (const key in data["reporters"]) {
-        reporters[key] = {};
-        reporters[key]["url"] = data["reporters"][key]["url"];
-        reporters[key]["asapoki"] = key in data.speakers;
+    for (const speaker in data["reporters"]) {
+        reporters[speaker] = {};
+        reporters[speaker]["url"] = data["reporters"][speaker]["url"];
+        reporters[speaker]["asapoki"] = speaker in data.speakers;
+        reporters[speaker]["furiganaFloat"] = (data.speakers?.[speaker]?.furiganaFloat) ?? 0;
     }
+    const sortedReportersArray = Object.entries(reporters).sort(([, a], [, b]) => a.furiganaFloat - b.furiganaFloat);
+    reporters = Object.fromEntries(sortedReportersArray);    
     reporters_last_update = data["reportersLastUpdate"];
 }
 
@@ -51,7 +54,7 @@ function displayReporters() {
     document.getElementById("reporter_asapoki").innerHTML = "";
     document.getElementById("reporter_others").innerHTML = "";
     document.getElementById("reporters_last_update").innerHTML = reporters_last_update;
-    
+
     let count_asapoki = 0;
     let count_others = 0;
     for (const key in reporters) {
