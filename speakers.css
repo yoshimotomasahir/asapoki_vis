@@ -126,6 +126,10 @@ button {
     white-space: nowrap;
 }
 
+.name-reporter {
+    white-space: nowrap;
+}
+
 .button-container {
     display: flex;
     flex-direction: column;

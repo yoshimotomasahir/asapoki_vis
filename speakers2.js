@@ -1,5 +1,6 @@
 var titles = [];
 var speakers = {};
+var reporters = {};
 
 let platform = "omnyfm";
 const platforms = ['omnyfm', 'spotify'];
@@ -73,6 +74,7 @@ let categories = ["genba", "media", "sdgs"];
 function readData(data) {
     titles = [];
     speakers = {};
+    reporters = data["reporters"];
     for (let cat = 0; cat < 3; cat++) {
         let catData = data[categories[cat]];
         for (let i = 0; i < catData.length; i++) {
@@ -332,7 +334,22 @@ function displaySpeakers() {
             allSpeakerElement.appendChild(document.createElement("br"));
             currentSplitter += 1;
         }
-        allSpeakerElement.appendChild(span);
+        const wrapper = document.createElement("span");
+        wrapper.className = "name-reporter"; // CSSを適用
+        wrapper.appendChild(span);
+
+        if (reporters.hasOwnProperty(speakerArray[i].name)) {
+            const reporterElement = document.createElement("a");
+            reporterElement.href = reporters[speakerArray[i].name]["url"];
+            reporterElement.rel = "nofollow";
+            reporterElement.target = "_blank";
+            const reporterIcon = document.createElement("span");
+            reporterIcon.textContent = "🖊️";
+            reporterElement.appendChild(reporterIcon);
+            wrapper.appendChild(reporterElement);
+        }
+        allSpeakerElement.appendChild(wrapper);
+
         allSpeakerElement.appendChild(document.createTextNode(", "));
     }
     if (allSpeakerElement.lastChild) {
