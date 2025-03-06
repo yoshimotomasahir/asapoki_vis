@@ -1,6 +1,7 @@
 var titles = [];
 var speakers = {};
 var reporters = {};
+var selections = {};
 
 let platform = "omnyfm";
 const platforms = ['omnyfm', 'spotify'];
@@ -13,6 +14,18 @@ else {
     localStorage.setItem('platform', platform);
 }
 document.getElementById("platform").value = platform;
+
+// 朝リス セレクションの表示非表示
+const isSelectionVisible = localStorage.getItem("selection");
+if (isSelectionVisible === "true") {
+    document.getElementById("selection-toggle").checked = true;
+    document.getElementById("selection").style.display = "block";
+}
+else {
+    document.getElementById("selection-toggle").checked = false;
+    document.getElementById("selection").style.display = "none";
+    localStorage.setItem('platform', "false");
+}
 
 const sortSpeaker = localStorage.getItem('sort-speaker') === null ? "speaker-duration" : localStorage.getItem('sort-speaker');
 let inputElement = document.querySelector(`input[name="sort-speaker"][value="${sortSpeaker}"]`);
@@ -125,6 +138,16 @@ function readData(data) {
             titles.push(titleData);
         }
     }
+    const select = document.getElementById("selection-search");
+    Array.from(select.children).slice(1).forEach(child => select.removeChild(child)); // 最初の子要素以外を削除
+
+    Object.entries(data["playlists"]).forEach(([i, value]) => {
+        let option = document.createElement("option");
+        option.value = i;
+        option.textContent = `${value["title"]} by ${value["name"]}`;
+        select.appendChild(option);
+        selections[i] = value["ids"];
+    });
 }
 
 
@@ -262,6 +285,33 @@ function displayTitles() {
     const endTime = performance.now();
     console.log("displayTitles", (endTime - startTime).toFixed(1), "ms");
 }
+
+function displayTitlesInSelections(id) {
+    const startTime = performance.now();
+    const sortOption = document.querySelector('input[name="sort-title"]:checked').value;
+
+    let sortedTitles = [...titles];
+    sortedTitles.sort((a, b) => {
+        if (sortOption === "title-oldest") {
+            return a.unixtime - b.unixtime;
+        } else if (sortOption === "title-newest") {
+            return b.unixtime - a.unixtime;
+        }
+        else { throw new Error("Invalid sort option"); }
+    });
+    let titleDatas = [];
+    sortedTitles.forEach(titleData => {
+        if (titleData.linkSpotify != "") {
+            if (selections[id].includes(titleData.linkSpotify.split("/").pop())) {
+                titleDatas.push(titleData);
+            }
+        }
+    });
+    showTitlesWithPagination(titleDatas, "selection");
+    const endTime = performance.now();
+    console.log("displayTitlesInSelections", (endTime - startTime).toFixed(1), "ms");
+}
+
 
 function displaySpeakers() {
     const startTime = performance.now();
@@ -460,8 +510,16 @@ function searchTitle() {
     let titleArray = titles.filter(titleData => {
         return titleData.titleForSearch.includes(searchInput);
     });
-    const searchedTitleElement = document.getElementById("searched-title");
-    const paginationElement = document.getElementById("pagination");
+
+    showTitlesWithPagination(titleArray, "searched");
+    const endTime = performance.now();
+    console.log("searchSpeaker", (endTime - startTime).toFixed(1), "ms");
+}
+window.searchTitle = searchTitle;
+
+function showTitlesWithPagination(titleArray, section) {
+    const searchedTitleElement = document.getElementById(`${section}-title`);
+    const paginationElement = document.getElementById(`${section}-pagination`);
 
     if (titleArray.length === 0) {
         searchedTitleElement.innerHTML = "見つかりません";
@@ -505,7 +563,7 @@ function searchTitle() {
 
         const prevButton = document.createElement("button");
         prevButton.textContent = "<";
-        prevButton.className = "pagination-button";
+        prevButton.className = `${section}-pagination-button`;
         prevButton.style.marginLeft = "5px";
         prevButton.disabled = currentPage === 1;
         prevButton.addEventListener("click", () => {
@@ -517,7 +575,7 @@ function searchTitle() {
 
         const nextButton = document.createElement("button");
         nextButton.textContent = ">";
-        nextButton.className = "pagination-button";
+        nextButton.className = `${section}-pagination-button`;
         nextButton.style.marginRight = "5px";
         nextButton.disabled = currentPage === totalPages;
         nextButton.addEventListener("click", () => {
@@ -534,10 +592,7 @@ function searchTitle() {
     }
 
     renderPage(1); // 最初のページを表示
-    const endTime = performance.now();
-    console.log("searchSpeaker", (endTime - startTime).toFixed(1), "ms");
 }
-window.searchTitle = searchTitle;
 
 function checkEnter(event) {
     if (event.key === "Enter") {
@@ -612,6 +667,17 @@ function handleSelectPlatformChange(event) {
 }
 window.handleSelectPlatformChange = handleSelectPlatformChange;
 
+function handleSelectSelectionChange(event) {
+    const value = document.getElementById("selection-search").value;
+    if (value === "") {
+        document.getElementById(`selection-title`).innerHTML = "";
+        document.getElementById(`selection-pagination`).innerHTML = "";
+        return;
+    }
+    displayTitlesInSelections(value);
+}
+window.handleSelectSelectionChange = handleSelectSelectionChange;
+
 function openModal() {
     const modal = document.getElementById("settingsModal");
     const overlay = document.getElementById("overlay");
@@ -639,4 +705,11 @@ document.addEventListener("keydown", function (event) {
     if (event.key === "Escape") {
         closeModal();
     }
+});
+
+document.getElementById("selection-toggle").addEventListener("change", function () {
+    const visible = this.checked;
+    const selection = document.getElementById("selection");
+    selection.style.display = visible ? "block" : "none";
+    localStorage.setItem("selection", visible);
 });

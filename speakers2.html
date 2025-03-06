@@ -64,6 +64,13 @@
                 </select>
             </div>
             <div class="form">
+                <h4 style="margin: 0.5em 0px 0.5em 0px;">朝リス セレクション</h4>
+                <div>朝ポキリスナー有志が作成しているプレイリストです。</div>
+                <label>
+                    <input type="checkbox" id="selection-toggle"> セレクションを表示
+                </label>
+            </div>
+            <div class="form">
                 <h4 style="margin: 0.5em 0px 0.5em 0px;">このページについて</h4>
                 <span>出演者の名前をクリックまたはタップすると、その方が出演された配信が 番組絞り込み に表示されます。本ツールは、朝ポキリスナー有志が管理・更新しています。</span>
             </div>
@@ -104,8 +111,17 @@
                 <input type="text" id="search-title-input" placeholder="タイトル..." onkeydown="checkEnter(event)" />
                 <button onclick="searchTitle()">検索</button>
             </div>
-            <div id="pagination"></div>
+            <div id="searched-pagination"></div>
             <div id="searched-title" style="clear:both;" class="list"></div>
+            <div id="selection" style="display:none;">
+                <h3 style="margin: 1em 0px 1em 0px;">朝リス セレクション</h3>
+                <select id="selection-search" onchange="handleSelectSelectionChange()">
+                    <option value="">選択なし</option>
+                </select>
+                <div id="selection-link"></div>
+                <div id="selection-pagination"></div>
+                <div id="selection-title" style="clear:both;" class="list"></div>
+            </div>
             <h3 style="margin: 1em 0px 1em 0px;">番組絞り込み</h3>
             <div class="form">
             </div>
