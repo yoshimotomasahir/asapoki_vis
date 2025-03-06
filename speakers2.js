@@ -141,6 +141,7 @@ function readData(data) {
     const select = document.getElementById("selection-search");
     Array.from(select.children).slice(1).forEach(child => select.removeChild(child)); // 最初の子要素以外を削除
 
+    if (!data["playlists"]) { return; }
     Object.entries(data["playlists"]).forEach(([i, value]) => {
         let option = document.createElement("option");
         option.value = i;
