@@ -389,7 +389,7 @@ function displaySpeakers() {
         wrapper.className = "name-reporter"; // CSSを適用
         wrapper.appendChild(span);
 
-        if (reporters.hasOwnProperty(speakerArray[i].name)) {
+        if (reporters && reporters.hasOwnProperty(speakerArray[i].name)) {
             const reporterElement = document.createElement("a");
             reporterElement.href = reporters[speakerArray[i].name]["url"];
             reporterElement.rel = "nofollow";
