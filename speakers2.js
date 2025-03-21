@@ -313,6 +313,25 @@ function displayTitlesInSelections(id) {
     console.log("displayTitlesInSelections", (endTime - startTime).toFixed(1), "ms");
 }
 
+function addReporterURL(span) {
+    const speaker = span.textContent;
+    const wrapper = document.createElement("span");
+    wrapper.className = "name-reporter"; // CSSを適用
+    wrapper.appendChild(span);
+
+    if (reporters && reporters.hasOwnProperty(speaker)) {
+        const reporterElement = document.createElement("a");
+        reporterElement.href = reporters[speaker]["url"];
+        reporterElement.rel = "nofollow";
+        reporterElement.target = "_blank";
+        const reporterIcon = document.createElement("span");
+        reporterIcon.textContent = "🖊️";
+        reporterElement.appendChild(reporterIcon);
+        wrapper.appendChild(reporterElement);
+    }
+    return wrapper;
+}
+
 
 function displaySpeakers() {
     const startTime = performance.now();
@@ -385,21 +404,7 @@ function displaySpeakers() {
             allSpeakerElement.appendChild(document.createElement("br"));
             currentSplitter += 1;
         }
-        const wrapper = document.createElement("span");
-        wrapper.className = "name-reporter"; // CSSを適用
-        wrapper.appendChild(span);
-
-        if (reporters && reporters.hasOwnProperty(speakerArray[i].name)) {
-            const reporterElement = document.createElement("a");
-            reporterElement.href = reporters[speakerArray[i].name]["url"];
-            reporterElement.rel = "nofollow";
-            reporterElement.target = "_blank";
-            const reporterIcon = document.createElement("span");
-            reporterIcon.textContent = "🖊️";
-            reporterElement.appendChild(reporterIcon);
-            wrapper.appendChild(reporterElement);
-        }
-        allSpeakerElement.appendChild(wrapper);
+        allSpeakerElement.appendChild(addReporterURL(span));
 
         allSpeakerElement.appendChild(document.createTextNode(", "));
     }
@@ -492,7 +497,7 @@ function searchSpeaker() {
         searchedSpeakerElement.innerHTML = "見つかりません";
     } else {
         speakerArray.forEach(span => {
-            searchedSpeakerElement.appendChild(span);
+            searchedSpeakerElement.appendChild(addReporterURL(span));
             searchedSpeakerElement.appendChild(document.createTextNode(", "));
         });
         searchedSpeakerElement.removeChild(searchedSpeakerElement.lastChild); //最後の, を削除
