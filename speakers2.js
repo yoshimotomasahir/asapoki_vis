@@ -208,6 +208,7 @@ function displayTitlesImpl(element, titleDatas) {
 
         const playlistIcon = document.createElement("span");
         playlistIcon.style.color = ["#1b9e77", "#d95f02", "#7570b3"][titleData.cat];
+        playlistIcon.title = ["現場", "メディア", "SDGs"][titleData.cat];
         playlistIcon.textContent = "▶";
 
         const titleSpan = document.createElement("span");
