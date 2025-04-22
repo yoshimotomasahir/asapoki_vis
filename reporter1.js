@@ -10,9 +10,10 @@ function readData(data) {
         reporters[speaker]["url"] = data["reporters"][speaker]["url"];
         reporters[speaker]["asapoki"] = speaker in data.speakers;
         reporters[speaker]["furiganaFloat"] = (data.speakers?.[speaker]?.furiganaFloat) ?? 0;
+        reporters[speaker]["furigana"] = (data.speakers?.[speaker]?.furigana) ?? 0;
     }
     const sortedReportersArray = Object.entries(reporters).sort(([, a], [, b]) => a.furiganaFloat - b.furiganaFloat);
-    reporters = Object.fromEntries(sortedReportersArray);    
+    reporters = Object.fromEntries(sortedReportersArray);
     reporters_last_update = data["reportersLastUpdate"];
 }
 
@@ -50,6 +51,13 @@ loadFromLocalStorage();
 displayReporters();
 fetchData();
 
+function normalizeKana(kana) {
+    return kana.normalize("NFD")
+        .replace(/[\u3099\u309A]/g, "")
+        .replace(/[ー～]/g, "")
+        .charAt(0);
+}
+
 function displayReporters() {
     document.getElementById("reporter_asapoki").innerHTML = "";
     document.getElementById("reporter_others").innerHTML = "";
@@ -57,6 +65,7 @@ function displayReporters() {
 
     let count_asapoki = 0;
     let count_others = 0;
+    let currentHead = "";
     for (const key in reporters) {
         const value = reporters[key];
         const element = document.createElement("a");
@@ -67,6 +76,17 @@ function displayReporters() {
         element.className = "name";
 
         if (value["asapoki"]) {
+            const furigana = value["furigana"] || "";
+            if (furigana !== "") {
+                const head = normalizeKana(furigana.charAt(0));
+                if (currentHead !== head) {
+                    const heading = document.createElement("span");
+                    heading.className = "heading";
+                    heading.textContent = head;
+                    document.getElementById("reporter_asapoki").appendChild(heading);
+                    currentHead = head;
+                }
+            }
             document.getElementById("reporter_asapoki").appendChild(element);
             count_asapoki += 1;
         }
