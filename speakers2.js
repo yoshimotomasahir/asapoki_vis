@@ -268,6 +268,11 @@ function displayTitles() {
     let counts = 0;
     let totalDuration = 0;
     let titleDatas = [];
+    const categoryMonths = {
+        0: [], // 現場
+        1: [], // メディア
+        2: []  // SDGs
+    };
     sortedTitles.forEach(titleData => {
         if (playlists.includes(titleData.cat)) {
             if (titleData.minutes >= minDuration && titleData.minutes <= maxDuration) {
@@ -276,16 +281,111 @@ function displayTitles() {
                         titleDatas.push(titleData);
                         counts += 1;
                         totalDuration += titleData.actualDuration;
+                        if (titleData.actualDuration > 0) {
+                            categoryMonths[titleData.cat].push(titleData.months);
+                        }
                     }
                 }
             }
         }
     });
+    const svg = document.getElementById("chart");
+    if (svg) {
+        if (selectedSpeaker === "") { svg.style.display = "none"; }
+        else {
+            svg.style.display = "block";
+            drawChart(categoryMonths);
+        }
+    }
     displayTitlesImpl(allTitleElement, titleDatas);
     document.getElementById("num_title").textContent = counts;
     document.getElementById("duration").textContent = formatDuration(totalDuration);
     const endTime = performance.now();
     console.log("displayTitles", (endTime - startTime).toFixed(1), "ms");
+}
+
+function drawChart(categoryMonths) {
+    const svg = document.getElementById("chart");
+    svg.innerHTML = ""; // 初期化
+
+    const boxSize = 10;
+    const margin = 2;
+
+    const colorScales = [
+        ["#ffffff", "#bfe3d7", "#7dc6ae", "#1b9e77"], // 現場
+        ["#ffffff", "#f1c4a6", "#e68a52", "#d95f02"], // メディア
+        ["#ffffff", "#d3d0e8", "#a59ecf", "#7570b3"]  // SDGs
+    ];
+
+    function formatMonth(monthInt) {
+        const year = Math.floor(monthInt / 12);
+        const month = monthInt % 12 + 1;
+        return `${year}年${month}月`;
+    }
+
+    function getEventCount(cat, monthInt) {
+        return categoryMonths[cat].filter(m => m === monthInt).length;
+    }
+
+    for (let m = month0; m <= month1; m++) {
+        const col = month1 - m;
+        if (m % 12 === 0) {
+            const year = Math.floor(m / 12);
+            const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            text.setAttribute("x", col * (boxSize + margin) + boxSize / 2);
+            text.setAttribute("y", 12);
+            text.setAttribute("text-anchor", "middle");
+            text.setAttribute("font-size", "13");
+
+            const tspan1 = document.createElementNS("http://www.w3.org/2000/svg", "tspan");
+            tspan1.setAttribute("x", text.getAttribute("x"));
+            tspan1.setAttribute("dy", "0");
+            tspan1.textContent = `${year}年`;
+
+            const tspan2 = document.createElementNS("http://www.w3.org/2000/svg", "tspan");
+            tspan2.setAttribute("x", text.getAttribute("x"));
+            tspan2.setAttribute("dy", "1em");
+            tspan2.textContent = "1月";
+
+            text.appendChild(tspan1);
+            text.appendChild(tspan2);
+            svg.appendChild(text);
+        }
+
+        for (let cat = 0; cat < 3; cat++) {
+            const row = cat;
+            const count = getEventCount(cat, m);
+
+            const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+            rect.setAttribute("x", col * (boxSize + margin) + margin);
+            rect.setAttribute("y", row * (boxSize + margin) + margin + 30);
+            rect.setAttribute("width", boxSize);
+            rect.setAttribute("height", boxSize);
+            rect.setAttribute("rx", "2");
+            rect.setAttribute("ry", "2");
+            rect.setAttribute("stroke", "#000");
+            rect.setAttribute("stroke-width", "0.3");
+
+            let fillColor;
+            if (count === 0) {
+                fillColor = colorScales[cat][0];
+            } else if (count >= 1 && count <= 2) {
+                fillColor = colorScales[cat][1];
+            } else if (count >= 3 && count <= 4) {
+                fillColor = colorScales[cat][2];
+            } else {
+                fillColor = colorScales[cat][3];
+            }
+            rect.setAttribute("fill", fillColor);
+
+            const title = document.createElementNS("http://www.w3.org/2000/svg", "title");
+            title.textContent = `${formatMonth(m)} ${count === 0 ? "なし" : `${count} 番組`}`;
+            rect.appendChild(title);
+            svg.appendChild(rect);
+        }
+    }
+    svg.setAttribute("width", (month1 - month0 + 1) * (boxSize + margin) + margin);
+    svg.setAttribute("height", 3 * (boxSize + margin) + margin + 30);
 }
 
 function displayTitlesInSelections(id) {
