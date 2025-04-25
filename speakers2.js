@@ -379,7 +379,7 @@ function drawChart(categoryMonths) {
             rect.setAttribute("fill", fillColor);
 
             const title = document.createElementNS("http://www.w3.org/2000/svg", "title");
-            title.textContent = `${formatMonth(m)} ${count === 0 ? "なし" : `${count} 番組`}`;
+            title.textContent = `${["現場", "メディア", "SDGs"][cat]} ${formatMonth(m)} ${count === 0 ? "なし" : `${count} 番組`}`;
             rect.appendChild(title);
             svg.appendChild(rect);
         }
