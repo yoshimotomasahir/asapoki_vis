@@ -11,15 +11,19 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600&display=swap" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
+        html,
         body {
-            font-family: "Noto Sans JP", Meiryo, メイリオ, Verdana, "Hiragino Kaku Gothic ProN", "ヒラギノ角ゴ ProN W3", sans-serif;
+            height: 100%;
             margin: 0;
             padding: 0;
-            background-color: #f9f9f9;
-            line-height: 1.6;
+        }
+
+        body {
             display: flex;
             flex-direction: column;
-            height: 100vh;
+            background-color: #f9f9f9;
+            font-family: "Noto Sans JP", Meiryo, メイリオ, Verdana, "Hiragino Kaku Gothic ProN", "ヒラギノ角ゴ ProN W3", sans-serif;
+            line-height: 1.6;
         }
 
         .main {
@@ -27,6 +31,7 @@
             overflow: hidden;
             display: flex;
             flex-direction: column;
+            min-height: 0;
         }
 
         .content {
@@ -44,6 +49,7 @@
             display: flex;
             background: #eee;
             border-top: 1px solid #ccc;
+            height: 50px;
         }
 
         .bottom-bar button {
