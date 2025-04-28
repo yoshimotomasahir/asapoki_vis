@@ -195,6 +195,9 @@ function displayTitlesImpl(element, titleDatas) {
     const fragment = document.createDocumentFragment(); // フラグメントを使用
 
     titleDatas.forEach(titleData => {
+        const outerSpan = document.createElement("span");
+        outerSpan.className = "title"
+
         const titleElement = document.createElement("a");
         titleElement.href = platform === "omnyfm" ? titleData.linkOmnyfm : titleData.linkSpotify;
         titleElement.rel = "nofollow";
@@ -206,7 +209,6 @@ function displayTitlesImpl(element, titleDatas) {
         playlistIcon.textContent = "▶";
 
         const titleSpan = document.createElement("span");
-        titleSpan.className = "article-title";
         titleSpan.textContent = titleData.title;
 
         const dateSpan = document.createElement("span");
@@ -221,11 +223,11 @@ function displayTitlesImpl(element, titleDatas) {
 
         // フラグメントにまとめて追加
         titleElement.appendChild(titleSpan);
-        fragment.appendChild(playlistIcon);
-        fragment.appendChild(titleElement);
-        fragment.appendChild(dateSpan);
-        fragment.appendChild(speakersSpan);
-        fragment.appendChild(document.createElement("br"));
+        outerSpan.appendChild(playlistIcon);
+        outerSpan.appendChild(titleElement);
+        outerSpan.appendChild(dateSpan);
+        outerSpan.appendChild(speakersSpan);
+        fragment.appendChild(outerSpan);
     });
 
     element.appendChild(fragment); // 最後に一括で要素に追加
@@ -388,7 +390,7 @@ function drawChart(categoryMonths) {
 function addReporterURL(span) {
     const speaker = span.textContent;
     const wrapper = document.createElement("span");
-    wrapper.className = "name-nowrap"; // CSSを適用
+    wrapper.className = "nowrap"; // CSSを適用
     wrapper.appendChild(span);
     return wrapper;
 }

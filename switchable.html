@@ -25,7 +25,7 @@
             flex-direction: column;
             background-color: #f9f9f9;
             font-family: "Noto Sans JP", Meiryo, メイリオ, Verdana, "Hiragino Kaku Gothic ProN", "ヒラギノ角ゴ ProN W3", sans-serif;
-            line-height: 1.6;
+            line-height: 1.8;
         }
 
         h2 {
@@ -195,12 +195,8 @@
             margin: 0 20px;
         }
 
-        .name-nowrap {
+        .nowrap {
             white-space: nowrap;
-        }
-
-        .list {
-            line-height: 2.0;
         }
 
         .gray-text {
@@ -213,6 +209,12 @@
 
         .search-box {
             padding: 4px;
+        }
+
+        .title {
+            display: inline-block;
+            padding-top: 5px;
+            padding-bottom: 5px;
         }
     </style>
 </head>
@@ -290,17 +292,17 @@
                     <input type="text" id="search-speaker-input" placeholder="出演者名..." onkeydown="checkEnter(event)" />
                     <button onclick="searchSpeaker()">検索</button>
                 </div>
-                <div id="searched-speaker" style="clear:both;" class="list"></div>
+                <div id="searched-speaker" style="clear:both;"></div>
 
                 <h3>出演者一覧</h3>
                 <div>
-                    <label><input type="radio" name="sort-speaker" value="speaker-duration" checked>出演時間の長い順</label>
-                    <label><input type="radio" name="sort-speaker" value="speaker-newest">最近出演した順</label>
-                    <label><input type="radio" name="sort-speaker" value="speaker-oldest">登場が古い順</label>
-                    <label><input type="radio" name="sort-speaker" value="speaker-furigana">五十音順</label>
+                    <span class="nowrap"><label><input type="radio" name="sort-speaker" value="speaker-duration" checked>出演時間の長い順</label></span>
+                    <span class="nowrap"><label><input type="radio" name="sort-speaker" value="speaker-newest">最近出演した順</label></span>
+                    <span class="nowrap"><label><input type="radio" name="sort-speaker" value="speaker-oldest">登場が古い順</label></span>
+                    <span class="nowrap"><label><input type="radio" name="sort-speaker" value="speaker-furigana">五十音順</label></span>
                 </div>
                 <p><span id="num_speaker">ロード中...</span> 名
-                    <span id="all_speaker" style="display:block;clear:both;" class='list'>ロード中...</span>
+                    <span id="all_speaker" style="display:block;clear:both;">ロード中...</span>
                 </p>
             </div>
             <div class="right active content" id="titleScreen">
@@ -311,20 +313,20 @@
                     <button onclick="searchTitle()">検索</button>
                 </div>
                 <div id="searched-pagination"></div>
-                <div id="searched-title" style="clear:both;" class="list"></div>
+                <div id="searched-title" style="clear:both;"></div>
                 <h3>番組絞り込み</h3>
                 <div>
                     <span style="white-space: nowrap;">出演者:</span>&nbsp;
-                    <label><input type="radio" name="select-speaker" value="unselected" checked>絞り込みなし</label>
-                    <label id="select-speaker-label"><input type="radio" name="select-speaker" value="selected"
-                            disabled>出演者名をクリックしてください</label>
+                    <span class="nowrap"><label><input type="radio" name="select-speaker" value="unselected" checked>絞り込みなし</label></span>
+                    <span class="nowrap"><label id="select-speaker-label"><input type="radio" name="select-speaker" value="selected"
+                            disabled>出演者名をクリックしてください</label></span>
                 </div>
                 <div style="overflow-x: auto; width: 100%; margin: 4px 0px 0px 0px;">
                     <svg id="chart" height="0"></svg>
                 </div>
                 <p><span id="num_title">ロード中...</span> 番組&nbsp;&nbsp;<span id="duration"></span> <span
                         class="gray-text">(再配信除く <span id="start-month"></span>から<span id="end-month"></span>まで)</span>
-                    <span id="all_title" class='list' style="display:block;clear:both;">ロード中...</span>
+                    <span id="all_title" style="display:block;clear:both;">ロード中...</span>
                 </p>
             </div>
         </div>
