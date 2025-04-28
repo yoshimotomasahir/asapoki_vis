@@ -12,44 +12,252 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/style.css" rel="stylesheet">
-    <link href="./speakers.css" rel="stylesheet" type="text/css" media="all">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            background-color: #f9f9f9;
+            font-family: "Noto Sans JP", Meiryo, メイリオ, Verdana, "Hiragino Kaku Gothic ProN", "ヒラギノ角ゴ ProN W3", sans-serif;
+            line-height: 1.8;
+        }
+
+        h2 {
+            margin-top: 0.4em;
+            margin-bottom: 0.3em;
+        }
+
+        h4 {
+            margin-bottom: 0.3em;
+        }
+
+        a {
+            color: #2a2a2a;
+            font-weight: 500;
+            text-decoration: none;
+            text-decoration-color: #797979;
+        }
+
+        .main {
+            flex: 1;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+
+        .content {
+            flex: 1;
+            display: none;
+            overflow: auto;
+            padding: 20px;
+        }
+
+        .active {
+            display: block;
+        }
+
+        .split-container {
+            display: flex;
+            flex: 1;
+            flex-direction: row;
+            height: 100%;
+        }
+
+        .left,
+        .right {
+            flex: 1;
+            overflow-y: auto;
+            height: 100%;
+        }
+
+        .left {
+            background-color: #f7f7f7;
+        }
+
+        .right {
+            background-color: #e7e7e7;
+        }
+
+        .hide {
+            display: none;
+        }
+
+        .bottom-bar {
+            display: flex;
+            background: #eee;
+            border-top: 1px solid #ccc;
+            height: 50px;
+        }
+
+        .bottom-bar button {
+            flex: 1;
+            border: none;
+            background: #eee;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .bottom-bar button:hover {
+            background: #ccc;
+        }
+
+        .bottom-button.active-button {
+            background: #ddd;
+        }
+
+        .settings-open {
+            position: fixed;
+            top: 0;
+            right: 0;
+            cursor: pointer;
+            font-size: 20px;
+            padding: 5px 20px 5px 5px;
+        }
+
+        .settings-modal {
+            display: none;
+            position: fixed;
+            top: 5%;
+            height: 90%;
+            background: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            overflow-y: auto;
+        }
+
+        .settings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .settings-close {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            cursor: pointer;
+            font-size: 20px;
+            padding: 10px 20px 10px 10px;
+        }
+
+        .settings-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .settings-reset-link {
+            color: #2a2a2a;
+            font-weight: 400;
+        }
+
+        .settings-inner {
+            padding: 20px 20px 20px 20px;
+        }
+
+        .color-genba {
+            color: #1b9e77;
+        }
+
+        .color-media {
+            color: #d95f02;
+        }
+
+        .color-sdgs {
+            color: #7570b3;
+        }
+
+        .reporter-name {
+            line-height: 2.4;
+            white-space: nowrap;
+            margin: 0 5px;
+            text-decoration: none;
+        }
+
+        .reporter-name:hover {
+            text-decoration: underline;
+        }
+
+        .reporter-heading {
+            line-height: 2.4;
+            font-weight: 400;
+            margin: 0 20px;
+        }
+
+        .nowrap {
+            white-space: nowrap;
+        }
+
+        .gray-text {
+            color: #787871;
+            font-size: 14px;
+            font-weight: 400;
+            margin-left: 0px;
+            margin-right: 0px;
+        }
+
+        .search-box {
+            padding: 4px;
+        }
+
+        .title {
+            display: inline-block;
+            padding-top: 5px;
+            padding-bottom: 5px;
+        }
+    </style>
 </head>
 
 <body>
-    <div class="settings-icon" onclick="openModal()">⚙️<span class="form">設定</span></div>
-    <div class="overlay" id="overlay" onclick="closeModal()"></div>
-    <div class="modal" id="settingsModal">
-        <div class="modal-header">
-            <h3 style="padding: 20px 0px 0px 20px;">設定画面</h3>
-            <span class="close-btn" onclick="closeModal()">✕</span>
+    <div class="settings-open" onclick="openSetting()">⚙️設定</div>
+    <div class="settings-overlay" id="settingOverlay" onclick="closeSetting()"></div>
+    <div class="settings-modal" id="settingModal">
+        <div class="settings-header">
+            <span class="settings-close" onclick="closeSetting()">✕</span>
         </div>
-        <div style="padding: 20px 20px 20px 20px;">
-            <div class="form">
-                <h4 style="margin: 0.5em 0px 0.5em 0px;">配信プラットフォーム</h4>
+        <div class="settings-inner">
+            <h3>設定画面</h3>
+            <div>
+                <h4>配信プラットフォーム</h4>
                 <select name="platform" id="platform" onchange="handleSelectPlatformChange(event)">
                     <option value="omnyfm">Omny.fm</option>
                     <option value="spotify">Spotify</option>
                 </select>
             </div>
-            <div class="form">
-                <h4 style="margin: 0.5em 0px 0.5em 0px;">番組順</h4>
+            <div>
+                <h4>番組順</h4>
                 <label><input type="radio" name="sort-title" value="title-newest" checked>新しい番組順</label>
                 <label><input type="radio" name="sort-title" value="title-oldest">古い番組順</label>
             </div>
-            <div class="form">
-                <h4 style="margin: 0.5em 0px 0.5em 0px;">プレイリスト</h4>
-                <label><input type="checkbox" name="select-playlist" value="0" checked><span style="color: #1b9e77">▶</span>ニュースの現場から</label>
-                <label><input type="checkbox" name="select-playlist" value="1" checked><span style="color: #d95f02">▶</span>MEDIA TALK</label>
-                <label><input type="checkbox" name="select-playlist" value="2" checked><span style="color: #7570b3">▶</span>新聞1面じゃなくても大事なこと -SDGsを話そう-</label>
+            <div>
+                <h4>プレイリスト</h4>
+                <label><input type="checkbox" name="select-playlist" value="0" checked><span
+                        class="color-genba">▶</span>ニュースの現場から</label>
+                <label><input type="checkbox" name="select-playlist" value="1" checked><span
+                        class="color-media">▶</span>MEDIA TALK</label>
+                <label><input type="checkbox" name="select-playlist" value="2" checked><span
+                        class="color-sdgs">▶</span>新聞1面じゃなくても大事なこと -SDGsを話そう-</label>
             </div>
-            <div class="form">
-                <h4 style="margin: 0.5em 0px 0.5em 0px;">配信年月</h4>
+            <div>
+                <h4>配信年月</h4>
                 <div><input type="text" id="startYearMonthPicker" placeholder="年と月を選択"></div>
                 <div><input type="text" id="endYearMonthPicker" placeholder="年と月を選択"></div>
-                <div><a href="javascript:void(0)" class="reset-link" onclick="resetPicker()">リセット</a></div>
+                <div><a href="javascript:void(0)" class="settings-reset-link" onclick="resetPicker()">リセット</a></div>
             </div>
-            <div class="form">
-                <h4 style="margin: 0.5em 0px 0.5em 0px;">配信時間</h4>
+            <div>
+                <h4>配信時間</h4>
                 <select name="select-duration">
                     <option value="0-223-min" selected>絞り込みなし</option>
                     <option value="0-20-min">~20分</option>
@@ -59,67 +267,100 @@
                     <option value="121-222-min">121分~222分</option>
                 </select>
             </div>
-            <div class="form">
-                <h4 style="margin: 0.5em 0px 0.5em 0px;">このページについて</h4>
+            <div>
+                <h4>このページについて</h4>
                 <span>出演者の名前をクリックまたはタップすると、その方が出演された配信が 番組絞り込み に表示されます。本ツールは、朝ポキリスナー有志が管理・更新しています。</span>
             </div>
-            <div class="form">
-                <h4 style="margin: 0.5em 0px 0.5em 0px;">リンク集</h4>
-                <div><a href="https://www.asahi.com/special/podcasts/" rel="nofollow" target="_blank">朝日新聞 ポッドキャスト 公式サイト</a></div>
+            <div>
+                <h4>リンク集</h4>
+                <div><a href="https://www.asahi.com/special/podcasts/" rel="nofollow" target="_blank">朝日新聞 ポッドキャスト
+                        公式サイト</a></div>
                 <div><a href="./monthly.html">朝ポキ カレンダー</a></div>
-                <div><a href="https://github.com/yoshimotomasahir/asapoki_vis/commits/main/" rel="nofollow" target="_blank">更新履歴 (Github)</a></div>
-                <div><a href="https://discord.com/channels/1195561707775467580/1331237074946228266" rel="nofollow" target="_blank">質問や要望はこちらへ (朝ポキDiscord)</a></div>
+                <div><a href="https://github.com/yoshimotomasahir/asapoki_vis/commits/main/" rel="nofollow"
+                        target="_blank">更新履歴 (Github)</a></div>
+                <div><a href="https://discord.com/channels/1195561707775467580/1331237074946228266" rel="nofollow"
+                        target="_blank">質問や要望はこちらへ (朝ポキDiscord)</a></div>
             </div>
         </div>
-    </div>    
-    <div class="container">
-        <div class="left">
-            <h2>出演者検索</h2>
-            <div id="search-speaker" class="search-box">
-                <input type="text" id="search-speaker-input" placeholder="出演者名..." onkeydown="checkEnter(event)" />
-                <button onclick="searchSpeaker()">検索</button>
-            </div>
-            <div id="searched-speaker" style="clear:both;" class="list"></div>
+    </div>
 
-            <h3 style="margin: 1em 0px 1em 0px;">出演者一覧</h3>
-            <p>新ツール <a href="reporter1.html" rel="nofollow" target="_blank">朝日新聞の記者を探す</a> をリリースしました。🖊️は<a href="https://www.asahi.com/reporter-bio/" rel="nofollow" target="_blank">記者ページ</a>へのリンクです。</p>
-            <div class="form">
-                <label><input type="radio" name="sort-speaker" value="speaker-duration" checked>出演時間の長い順</label>
-                <label><input type="radio" name="sort-speaker" value="speaker-newest">最近出演した順</label>
-                <label><input type="radio" name="sort-speaker" value="speaker-oldest">登場が古い順</label>
-                <label><input type="radio" name="sort-speaker" value="speaker-furigana">五十音順</label>
-            </div>
-            <p><span id="num_speaker">ロード中...</span> 名</p>
 
-            <div id="all_speaker" style="display:block;clear:both;" class='list'>ロード中...</div>
+    <div class="main">
+        <div class="split-container active" id="splitScreen">
+            <div class="left content active" id="speakerScreen">
+                <h2>出演者検索</h2>
+                <div id="search-speaker" class="search-box">
+                    <input type="text" id="search-speaker-input" placeholder="出演者名..." onkeydown="checkEnter(event)" />
+                    <button onclick="searchSpeaker()">検索</button>
+                </div>
+                <div id="searched-speaker" style="clear:both;"></div>
+
+                <h3>出演者一覧</h3>
+                <div>
+                    <span class="nowrap"><label><input type="radio" name="sort-speaker" value="speaker-duration" checked>出演時間の長い順</label></span>
+                    <span class="nowrap"><label><input type="radio" name="sort-speaker" value="speaker-newest">最近出演した順</label></span>
+                    <span class="nowrap"><label><input type="radio" name="sort-speaker" value="speaker-oldest">登場が古い順</label></span>
+                    <span class="nowrap"><label><input type="radio" name="sort-speaker" value="speaker-furigana">五十音順</label></span>
+                </div>
+                <div><span id="num_speaker">ロード中...</span> 名
+                    <span id="all_speaker" style="display:block;clear:both;">ロード中...</span>
+                </div>
+                <p>以上</p>
+            </div>
+            <div class="right content active" id="titleScreen">
+                <h2>タイトル検索</h2>
+
+                <div id="search-title" class="search-box">
+                    <input type="text" id="search-title-input" placeholder="タイトル..." onkeydown="checkEnter(event)" />
+                    <button onclick="searchTitle()">検索</button>
+                </div>
+                <div id="searched-pagination"></div>
+                <div id="searched-title" style="clear:both;"></div>
+                <h3>番組絞り込み</h3>
+                <div>
+                    <span style="white-space: nowrap;">出演者:</span>&nbsp;
+                    <span class="nowrap"><label><input type="radio" name="select-speaker" value="unselected" checked>絞り込みなし</label></span>
+                    <span class="nowrap"><label id="select-speaker-label"><input type="radio" name="select-speaker" value="selected"
+                            disabled>出演者名をクリックしてください</label></span>
+                </div>
+                <div style="overflow-x: auto; width: 100%; margin: 4px 0px 0px 0px;">
+                    <svg id="chart" height="0"></svg>
+                </div>
+                <div><span id="num_title">ロード中...</span> 番組&nbsp;&nbsp;<span id="duration"></span> <span
+                        class="gray-text">(再配信除く <span id="start-month"></span>から<span id="end-month"></span>まで)</span>
+                    <span id="all_title" style="display:block;clear:both;">ロード中...</span>
+                </div>
+                <p>以上</p>
+            </div>
         </div>
 
-        <div class="right">
-            <h2>タイトル検索</h2>
-            <div id="search-title" class="search-box">
-                <input type="text" id="search-title-input" placeholder="タイトル..." onkeydown="checkEnter(event)" />
-                <button onclick="searchTitle()">検索</button>
-            </div>
-            <div id="searched-pagination"></div>
-            <div id="searched-title" style="clear:both;" class="list"></div>
-            <h3 style="margin: 1em 0px 1em 0px;">番組絞り込み</h3>
-            <div class="form">
-                <span style="white-space: nowrap;">出演者:</span>&nbsp;
-                <label><input type="radio" name="select-speaker" value="unselected" checked>絞り込みなし</label>
-                <label id="select-speaker-label"><input type="radio" name="select-speaker" value="selected"
-                        disabled>出演者名をクリックしてください</label>
-            </div>
-            <div style="overflow-x: auto; width: 100%; margin: 4px 0px 0px 0px;">
-                <svg id="chart" height="0"></svg>
-            </div>
-            <p><span id="num_title">ロード中...</span> 番組&nbsp;&nbsp;<span id="duration"></span> <span class="article-date">(再配信除く)</span></p>
-            <div id="all_title" class='list' style="display:block;clear:both;">ロード中...</div>
+        <div id="reporterScreen" class="content">
+            <h2>朝日新聞の記者を探す</h2>
+            <p>名前をクリック/タップすると、<a href="https://www.asahi.com/reporter-bio/" rel="nofollow" target="_blank">記者ページ</a>が開きます。
+            </p>
+            <p>最終更新日: <span id="reporters_last_update"></span></p>
+
+            <h3>朝ポキに出演した記者</h3>
+            <p>朝ポキとは、<a href="https://www.asahi.com/special/podcasts/" rel="nofollow"
+                    target="_blank">朝日新聞の音声コンテンツ、ポッドキャスト</a>です。</p>
+            <p><span id="reporter-asapoki">ロード中...</span> (<span id="reporter-num-asapoki"></span>名)</p>
+
+            <h3>他の記者</h3>
+            <p><span id="reporter-others">ロード中...</span> (<span id="reporter-num-others"></span>名)</p>
         </div>
+
+    </div>
+    <div class="bottom-bar">
+        <button class="bottom-button" onclick="showScreen(0)">全検索</button>
+        <button class="bottom-button" onclick="showScreen(1)">出演者</button>
+        <button class="bottom-button" onclick="showScreen(2)">タイトル</button>
+        <button class="bottom-button" onclick="showScreen(3)">記者🖊️</button>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ja.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/index.js"></script>
-    <script src="./speakers2.js" type="module"></script>
+    <script src="./speakers3.js" type="module"></script>
+
 </body>
 
 </html>
