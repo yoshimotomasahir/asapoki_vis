@@ -35,6 +35,13 @@
             margin-bottom: 0.3em;
         }
 
+        a {
+            color: #2a2a2a;
+            font-weight: 500;
+            text-decoration: underline;
+            text-decoration-color: #797979;
+        }
+
         .main {
             flex: 1;
             overflow: hidden;
@@ -155,7 +162,20 @@
             color: #7570b3;
         }
 
-
+        .reporter-name {
+            line-height: 2.4;
+            white-space: nowrap;
+            margin: 0 5px;
+            text-decoration: none;
+        }
+        .reporter-name:hover {
+            text-decoration: underline;
+        }
+        .reporter-heading {
+            line-height: 2.4;
+            font-weight: 400;
+            margin: 0 20px;
+        }
     </style>
 </head>
 
@@ -228,6 +248,22 @@
         <div class="split-container active" id="splitScreen">
             <div class="left active content" id="speakerScreen">
                 <h2>出演者検索</h2>
+                <div id="search-speaker" class="search-box">
+                    <input type="text" id="search-speaker-input" placeholder="出演者名..." onkeydown="checkEnter(event)" />
+                    <button onclick="searchSpeaker()">検索</button>
+                </div>
+                <div id="searched-speaker" style="clear:both;" class="list"></div>
+    
+                <h3>出演者一覧</h3>
+                <div>
+                    <label><input type="radio" name="sort-speaker" value="speaker-duration" checked>出演時間の長い順</label>
+                    <label><input type="radio" name="sort-speaker" value="speaker-newest">最近出演した順</label>
+                    <label><input type="radio" name="sort-speaker" value="speaker-oldest">登場が古い順</label>
+                    <label><input type="radio" name="sort-speaker" value="speaker-furigana">五十音順</label>
+                </div>
+                <p><span id="num_speaker">ロード中...</span> 名</p>
+    
+                <div id="all_speaker" style="display:block;clear:both;" class='list'>ロード中...</div>                
                 <p>あああああああああああああああ</p>
                 <p>いいいいいいいいいいいいいいい</p>
                 <p>ううううううううううううううう</p>
@@ -261,6 +297,24 @@
             </div>
             <div class="right active content" id="titleScreen">
                 <h2>タイトル検索</h2>
+                <div id="search-title" class="search-box">
+                    <input type="text" id="search-title-input" placeholder="タイトル..." onkeydown="checkEnter(event)" />
+                    <button onclick="searchTitle()">検索</button>
+                </div>
+                <div id="searched-pagination"></div>
+                <div id="searched-title" style="clear:both;" class="list"></div>
+                <h3>番組絞り込み</h3>
+                <div>
+                    <span style="white-space: nowrap;">出演者:</span>&nbsp;
+                    <label><input type="radio" name="select-speaker" value="unselected" checked>絞り込みなし</label>
+                    <label id="select-speaker-label"><input type="radio" name="select-speaker" value="selected"
+                            disabled>出演者名をクリックしてください</label>
+                </div>
+                <div style="overflow-x: auto; width: 100%; margin: 4px 0px 0px 0px;">
+                    <svg id="chart" height="0"></svg>
+                </div>
+                <p><span id="num_title">ロード中...</span> 番組&nbsp;&nbsp;<span id="duration"></span> <span class="article-date">(再配信除く)</span></p>
+                <div id="all_title" class='list' style="display:block;clear:both;">ロード中...</div>
                 <p>あああああああああああああああ</p>
                 <p>いいいいいいいいいいいいいいい</p>
                 <p>ううううううううううううううう</p>
@@ -296,6 +350,20 @@
 
         <div id="reporterScreen" class="content">
             <h2>朝日新聞の記者を探す</h2>
+            <p>名前をクリック/タップすると、<a href="https://www.asahi.com/reporter-bio/" rel="nofollow" target="_blank">記者ページ</a> が開きます。
+            </p>
+            <p>最終更新日: <span id="reporters_last_update"></span></p>
+    
+            <h3>朝ポキに出演した記者</h3>
+            <p>朝ポキとは、<a href="https://www.asahi.com/special/podcasts/" rel="nofollow"
+                    target="_blank">朝日新聞の音声コンテンツ、ポッドキャスト</a>です。</p>
+            <p><span id="reporter-asapoki">ロード中...</span> (<span id="reporter-num-asapoki"></span>名)</p>
+    
+            <h3>他の記者</h3>
+            <p><span id="reporter-others">ロード中...</span> (<span id="reporter-num-others"></span>名)</p>
+            <h3>説明</h3>
+            <p>記者は朝ポキのリスナーが手作業で追加しています。<a href="https://discord.com/channels/1195561707775467580/1341759565053825136" rel="nofollow" target="_blank">質問や要望はこちらへ (朝ポキDiscord)</a></p>
+    
             <p>あああああああああああああああ</p>
             <p>いいいいいいいいいいいいいいい</p>
             <p>ううううううううううううううう</p>
@@ -330,10 +398,10 @@
 
     </div>
     <div class="bottom-bar">
-        <button class="bottom-button" onclick="showScreen(0)">両方</button>
+        <button class="bottom-button" onclick="showScreen(0)">全検索</button>
         <button class="bottom-button" onclick="showScreen(1)">出演者</button>
         <button class="bottom-button" onclick="showScreen(2)">タイトル</button>
-        <button class="bottom-button" onclick="showScreen(3)">記者</button>
+        <button class="bottom-button" onclick="showScreen(3)">記者🖊️</button>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ja.js"></script>
