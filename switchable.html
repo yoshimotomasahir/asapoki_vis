@@ -49,30 +49,6 @@
             display: block;
         }
 
-        .bottom-bar {
-            display: flex;
-            background: #eee;
-            border-top: 1px solid #ccc;
-            height: 50px;
-        }
-
-        .bottom-bar button {
-            flex: 1;
-            padding: 10px;
-            border: none;
-            background: #eee;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        .bottom-bar button:hover {
-            background: #ddd;
-        }
-
-        .tab-button.active-button {
-            background: #ddd;
-        }
-
         .split-container {
             display: flex;
             flex: 1;
@@ -83,7 +59,6 @@
         .left,
         .right {
             flex: 1;
-            padding: 1.7vh;
             overflow-y: auto;
             height: 100%;
         }
@@ -100,31 +75,27 @@
             display: none;
         }
 
-        .modal {
-            display: none;
-            position: fixed;
-            top: 5%;
-            height: 90%;
-            background: white;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-            border-radius: 8px;
-            overflow-y: auto;
-        }
-
-        .modal-header {
+        .bottom-bar {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            background: #eee;
+            border-top: 1px solid #ccc;
+            height: 50px;
         }
 
-        .modal-close-button {
-            position: absolute;
-            top: 5px;
-            right: 5px;
+        .bottom-bar button {
+            flex: 1;
+            border: none;
+            background: #eee;
+            font-size: 16px;
             cursor: pointer;
-            font-size: 20px;
-            font-size: 2.0rem;
-            padding: 10px 20px 10px 10px;
+        }
+
+        .bottom-bar button:hover {
+            background: #ccc;
+        }
+
+        .bottom-button.active-button {
+            background: #ddd;
         }
     </style>
 </head>
@@ -201,15 +172,15 @@
         </div>
 
         <div id="reporterScreen" class="content">
-            <h2>記者ページ</h2>
+            <h2>タイトル検索</h2>
         </div>
 
     </div>
     <div class="bottom-bar">
-        <button class="tab-button" onclick="showScreen(0)">両方</button>
-        <button class="tab-button" onclick="showScreen(1)">出演者</button>
-        <button class="tab-button" onclick="showScreen(2)">タイトル</button>
-        <button class="tab-button" onclick="showScreen(3)">記者</button>
+        <button class="bottom-button" onclick="showScreen(0)">両方</button>
+        <button class="bottom-button" onclick="showScreen(1)">出演者</button>
+        <button class="bottom-button" onclick="showScreen(2)">タイトル</button>
+        <button class="bottom-button" onclick="showScreen(3)">記者</button>
     </div>
     <script>
         function showScreen(screenNum) {
@@ -218,7 +189,7 @@
             const speakerScreen = document.getElementById('speakerScreen');
             const titleScreen = document.getElementById('titleScreen');
             const reporterScreen = document.getElementById('reporterScreen');
-            const buttons = document.querySelectorAll('.tab-button');
+            const buttons = document.querySelectorAll('.bottom-button');
 
             // 全リセット
             splitScreen.style.display = 'none';
