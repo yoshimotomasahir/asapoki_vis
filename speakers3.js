@@ -219,7 +219,7 @@ function displayTitlesImpl(element, titleDatas) {
         const speakersSpan = document.createElement("span");
         speakersSpan.className = "article-speakers";
         speakersSpan.innerHTML = titleData.speakers.map(speaker =>
-            `<span class="name">${speaker}</span>`).join(", ");
+            `<span class="nowrap name">${speaker}</span>`).join(", ");
 
         // フラグメントにまとめて追加
         titleElement.appendChild(titleSpan);
@@ -450,7 +450,7 @@ function displaySpeakers() {
     let currentSplitter = 0;
     for (let i = 0; i < speakerArray.length; i++) {
         const span = document.createElement("span");
-        span.className = "name";
+        span.className = "nowrap";
         span.textContent = speakerArray[i].name;
         span.addEventListener("click", handleNameClick);
         if (i == 0) {

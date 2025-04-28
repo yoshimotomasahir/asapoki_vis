@@ -44,10 +44,6 @@
             text-decoration-color: #797979;
         }
 
-        p {
-            padding-bottom: 20px;
-        }
-
         .main {
             flex: 1;
             overflow: hidden;
@@ -166,6 +162,10 @@
             font-weight: 400;
         }
 
+        .settings-inner {
+            padding: 20px 20px 20px 20px;
+        }
+
         .color-genba {
             color: #1b9e77;
         }
@@ -226,7 +226,7 @@
         <div class="settings-header">
             <span class="settings-close" onclick="closeSetting()">✕</span>
         </div>
-        <div style="padding: 20px 20px 20px 20px;">
+        <div class="settings-inner">
             <h3>設定画面</h3>
             <div>
                 <h4>配信プラットフォーム</h4>
@@ -286,7 +286,7 @@
 
     <div class="main">
         <div class="split-container active" id="splitScreen">
-            <div class="left active content" id="speakerScreen">
+            <div class="left content active" id="speakerScreen">
                 <h2>出演者検索</h2>
                 <div id="search-speaker" class="search-box">
                     <input type="text" id="search-speaker-input" placeholder="出演者名..." onkeydown="checkEnter(event)" />
@@ -301,11 +301,12 @@
                     <span class="nowrap"><label><input type="radio" name="sort-speaker" value="speaker-oldest">登場が古い順</label></span>
                     <span class="nowrap"><label><input type="radio" name="sort-speaker" value="speaker-furigana">五十音順</label></span>
                 </div>
-                <p><span id="num_speaker">ロード中...</span> 名
+                <div><span id="num_speaker">ロード中...</span> 名
                     <span id="all_speaker" style="display:block;clear:both;">ロード中...</span>
-                </p>
+                </div>
+                <p>以上</p>
             </div>
-            <div class="right active content" id="titleScreen">
+            <div class="right content active" id="titleScreen">
                 <h2>タイトル検索</h2>
 
                 <div id="search-title" class="search-box">
@@ -324,10 +325,11 @@
                 <div style="overflow-x: auto; width: 100%; margin: 4px 0px 0px 0px;">
                     <svg id="chart" height="0"></svg>
                 </div>
-                <p><span id="num_title">ロード中...</span> 番組&nbsp;&nbsp;<span id="duration"></span> <span
+                <div><span id="num_title">ロード中...</span> 番組&nbsp;&nbsp;<span id="duration"></span> <span
                         class="gray-text">(再配信除く <span id="start-month"></span>から<span id="end-month"></span>まで)</span>
                     <span id="all_title" style="display:block;clear:both;">ロード中...</span>
-                </p>
+                </div>
+                <p>以上</p>
             </div>
         </div>
 
