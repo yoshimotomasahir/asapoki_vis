@@ -496,6 +496,10 @@ function handleNameClick(event) {
     labelElement.appendChild(inputElement);
     labelElement.appendChild(document.createTextNode(clickedName));
 
+    const savedScreen = localStorage.getItem('selectedScreen');
+    if (Number(savedScreen) == 1) {
+        showScreen(2);
+    }
     displayTitles();
 }
 
