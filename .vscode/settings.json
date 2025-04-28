@@ -1,0 +1,7 @@
+{
+    "github.copilot.chat.commitMessageGeneration.instructions": [
+        {
+            "text": "Semantic Commit MessageおよびCommit Message Guidelineに従い、日本語のコミットメッセージを1行で作成してください。"
+        }
+    ]
+}
