@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="utf-8" />
+    <title>表示コンテンツを切り替え可能なUIテスト</title>
+    <meta name="robots" content="noindex,nofollow,noarchive" />
+    <link rel="icon" href="/asapoki_vis/favicon.ico" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: "Noto Sans JP", Meiryo, メイリオ, Verdana, "Hiragino Kaku Gothic ProN", "ヒラギノ角ゴ ProN W3", sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        .main {
+            flex: 1;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content {
+            flex: 1;
+            display: none;
+            overflow: auto;
+            padding: 20px;
+        }
+
+        .active {
+            display: block;
+        }
+
+        .bottom-bar {
+            display: flex;
+            background: #eee;
+            border-top: 1px solid #ccc;
+        }
+
+        .bottom-bar button {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            background: #eee;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .bottom-bar button:hover {
+            background: #ddd;
+        }
+
+        .tab-button.active-button {
+            background: #ddd;
+        }
+
+        .split-container {
+            display: flex;
+            flex: 1;
+            flex-direction: row;
+            height: 100%;
+        }
+
+        .left,
+        .right {
+            flex: 1;
+            padding: 1.7vh;
+            overflow-y: auto;
+            height: 100%;
+        }
+
+        .left {
+            background-color: #f7f7f7;
+        }
+
+        .right {
+            background-color: #e7e7e7;
+        }
+
+        .hide {
+            display: none;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 5%;
+            height: 90%;
+            background: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-close-button {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            cursor: pointer;
+            font-size: 20px;
+            font-size: 2.0rem;
+            padding: 10px 20px 10px 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main">
+        <div class="split-container active" id="splitScreen">
+            <div class="left active content" id="speakerScreen">
+                <h2>出演者検索</h2>
+                <p>あああああああああああああああ</p>
+                <p>いいいいいいいいいいいいいいい</p>
+                <p>ううううううううううううううう</p>
+                <p>えええええええええええええええ</p>
+                <p>おおおおおおおおおおおおおおお</p>
+                <p>かかかかかかかかかかかかかかか</p>
+                <p>ききききききききききききききき</p>
+                <p>くくくくくくくくくくくくくくく</p>
+                <p>けけけけけけけけけけけけけけけ</p>
+                <p>こここここここここここここここ</p>
+                <p>さささささささささささささささ</p>
+                <p>ししししししししししししししし</p>
+                <p>すすすすすすすすすすすすすすす</p>
+                <p>せせせせせせせせせせせせせせせ</p>
+                <p>そそそそそそそそそそそそそそそ</p>
+                <p>たたたたたたたたたたたたたたた</p>
+                <p>ちちちちちちちちちちちちちちち</p>
+                <p>つつつつつつつつつつつつつつつ</p>
+                <p>ててててててててててててててて</p>
+                <p>ととととととととととととととと</p>
+                <p>ななななななななななななななな</p>
+                <p>ににににににににににににににに</p>
+                <p>ぬぬぬぬぬぬぬぬぬぬぬぬぬぬぬ</p>
+                <p>ねねねねねねねねねねねねねねね</p>
+                <p>ののののののののののののののの</p>
+                <p>ははははははははははははははは</p>
+                <p>ひひひひひひひひひひひひひひひ</p>
+                <p>ふふふふふふふふふふふふふふふ</p>
+                <p>へへへへへへへへへへへへへへへ</p>
+                <p>ほほほほほほほほほほほほほほほ</p>
+            </div>
+            <div class="right active content" id="titleScreen">
+                <h2>タイトル検索</h2>
+                <p>あああああああああああああああ</p>
+                <p>いいいいいいいいいいいいいいい</p>
+                <p>ううううううううううううううう</p>
+                <p>えええええええええええええええ</p>
+                <p>おおおおおおおおおおおおおおお</p>
+                <p>かかかかかかかかかかかかかかか</p>
+                <p>ききききききききききききききき</p>
+                <p>くくくくくくくくくくくくくくく</p>
+                <p>けけけけけけけけけけけけけけけ</p>
+                <p>こここここここここここここここ</p>
+                <p>さささささささささささささささ</p>
+                <p>ししししししししししししししし</p>
+                <p>すすすすすすすすすすすすすすす</p>
+                <p>せせせせせせせせせせせせせせせ</p>
+                <p>そそそそそそそそそそそそそそそ</p>
+                <p>たたたたたたたたたたたたたたた</p>
+                <p>ちちちちちちちちちちちちちちち</p>
+                <p>つつつつつつつつつつつつつつつ</p>
+                <p>ててててててててててててててて</p>
+                <p>ととととととととととととととと</p>
+                <p>ななななななななななななななな</p>
+                <p>ににににににににににににににに</p>
+                <p>ぬぬぬぬぬぬぬぬぬぬぬぬぬぬぬ</p>
+                <p>ねねねねねねねねねねねねねねね</p>
+                <p>ののののののののののののののの</p>
+                <p>ははははははははははははははは</p>
+                <p>ひひひひひひひひひひひひひひひ</p>
+                <p>ふふふふふふふふふふふふふふふ</p>
+                <p>へへへへへへへへへへへへへへへ</p>
+                <p>ほほほほほほほほほほほほほほほ</p>
+            </div>
+        </div>
+
+        <div id="reporterScreen" class="content">
+            <h2>記者ページ</h2>
+        </div>
+
+    </div>
+    <div class="bottom-bar">
+        <button class="tab-button" onclick="showScreen(0)">両方</button>
+        <button class="tab-button" onclick="showScreen(1)">出演者</button>
+        <button class="tab-button" onclick="showScreen(2)">タイトル</button>
+        <button class="tab-button" onclick="showScreen(3)">記者</button>
+    </div>
+    <script>
+        function showScreen(screenNum) {
+            localStorage.setItem('selectedScreen', screenNum);
+            const splitScreen = document.getElementById('splitScreen');
+            const speakerScreen = document.getElementById('speakerScreen');
+            const titleScreen = document.getElementById('titleScreen');
+            const reporterScreen = document.getElementById('reporterScreen');
+            const buttons = document.querySelectorAll('.tab-button');
+
+            // 全リセット
+            splitScreen.style.display = 'none';
+            speakerScreen.classList.remove('hide');
+            titleScreen.classList.remove('hide');
+            reporterScreen.classList.remove('active');
+
+            // ボタンのリセット
+            buttons.forEach(btn => btn.classList.remove('active-button'));
+            buttons[screenNum].classList.add('active-button');
+
+            if (screenNum === 0) {
+                splitScreen.style.display = 'flex';
+            }
+            else if (screenNum === 1) {
+                splitScreen.style.display = 'flex';
+                titleScreen.classList.add('hide');
+            }
+            else if (screenNum === 2) {
+                splitScreen.style.display = 'flex';
+                speakerScreen.classList.add('hide');
+            }
+            else if (screenNum === 3) {
+                reporterScreen.classList.add('active');
+            }
+        }
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedScreen = localStorage.getItem('selectedScreen');
+            if (savedScreen !== null) {
+                showScreen(Number(savedScreen));
+            } else {
+                showScreen(0);
+            }
+        });
+    </script>
+
+</body>
+
+</html>
