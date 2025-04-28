@@ -28,6 +28,11 @@
 
         h2 {
             margin-top: 0.3em;
+            margin-bottom: 0.3em;
+        }
+
+        h4 {
+            margin-bottom: 0.3em;
         }
 
         .main {
@@ -97,10 +102,136 @@
         .bottom-button.active-button {
             background: #ddd;
         }
+        .settings-open {
+            position: fixed;
+            top: 10px;
+            right: 30px;
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        .settings-modal {
+            display: none;
+            position: fixed;
+            top: 5%;
+            height: 90%;
+            background: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            overflow-y: auto;
+        }
+
+        .settings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .settings-close {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            cursor: pointer;
+            font-size: 20px;
+            padding: 10px 20px 10px 10px;
+        }
+
+        .settings-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .settings-reset-link {
+            color: #2a2a2a;
+            font-weight: 400;    
+        }
+
+        .color-genba {
+            color: #1b9e77;
+        }
+
+        .color-media {
+            color: #d95f02;
+        }
+
+        .color-sdgs {
+            color: #7570b3;
+        }
+
+
     </style>
 </head>
 
 <body>
+    <div class="settings-open" onclick="openSetting()">⚙️設定</div>
+    <div class="settings-overlay" id="settingOverlay" onclick="closeSetting()"></div>
+    <div class="settings-modal" id="settingModal">
+        <div class="settings-header">
+            <span class="settings-close" onclick="closeSetting()">✕</span>
+        </div>
+        <div style="padding: 20px 20px 20px 20px;">
+            <h3>設定画面</h3>
+            <div>
+                <h4>配信プラットフォーム</h4>
+                <select name="platform" id="platform" onchange="handleSelectPlatformChange(event)">
+                    <option value="omnyfm">Omny.fm</option>
+                    <option value="spotify">Spotify</option>
+                </select>
+            </div>
+            <div>
+                <h4>番組順</h4>
+                <label><input type="radio" name="sort-title" value="title-newest" checked>新しい番組順</label>
+                <label><input type="radio" name="sort-title" value="title-oldest">古い番組順</label>
+            </div>
+            <div>
+                <h4>プレイリスト</h4>
+                <label><input type="checkbox" name="select-playlist" value="0" checked><span
+                        class="color-genba">▶</span>ニュースの現場から</label>
+                <label><input type="checkbox" name="select-playlist" value="1" checked><span
+                        class="color-media">▶</span>MEDIA TALK</label>
+                <label><input type="checkbox" name="select-playlist" value="2" checked><span
+                        class="color-sdgs">▶</span>新聞1面じゃなくても大事なこと -SDGsを話そう-</label>
+            </div>
+            <div>
+                <h4>配信年月</h4>
+                <div><input type="text" id="startYearMonthPicker" placeholder="年と月を選択"></div>
+                <div><input type="text" id="endYearMonthPicker" placeholder="年と月を選択"></div>
+                <div><a href="javascript:void(0)" class="settings-reset-link" onclick="resetPicker()">リセット</a></div>
+            </div>
+            <div>
+                <h4>配信時間</h4>
+                <select name="select-duration">
+                    <option value="0-223-min" selected>絞り込みなし</option>
+                    <option value="0-20-min">~20分</option>
+                    <option value="21-40-min">21分~40分</option>
+                    <option value="41-60-min">41分~60分</option>
+                    <option value="61-120-min">61分~120分</option>
+                    <option value="121-222-min">121分~222分</option>
+                </select>
+            </div>
+            <div>
+                <h4>このページについて</h4>
+                <span>出演者の名前をクリックまたはタップすると、その方が出演された配信が 番組絞り込み に表示されます。本ツールは、朝ポキリスナー有志が管理・更新しています。</span>
+            </div>
+            <div>
+                <h4>リンク集</h4>
+                <div><a href="https://www.asahi.com/special/podcasts/" rel="nofollow" target="_blank">朝日新聞 ポッドキャスト
+                        公式サイト</a></div>
+                <div><a href="./monthly.html">朝ポキ カレンダー</a></div>
+                <div><a href="https://github.com/yoshimotomasahir/asapoki_vis/commits/main/" rel="nofollow"
+                        target="_blank">更新履歴 (Github)</a></div>
+                <div><a href="https://discord.com/channels/1195561707775467580/1331237074946228266" rel="nofollow"
+                        target="_blank">質問や要望はこちらへ (朝ポキDiscord)</a></div>
+            </div>
+        </div>
+    </div>
+
+
     <div class="main">
         <div class="split-container active" id="splitScreen">
             <div class="left active content" id="speakerScreen">
@@ -172,7 +303,37 @@
         </div>
 
         <div id="reporterScreen" class="content">
-            <h2>タイトル検索</h2>
+            <h2>朝日新聞の記者を探す</h2>
+            <p>あああああああああああああああ</p>
+            <p>いいいいいいいいいいいいいいい</p>
+            <p>ううううううううううううううう</p>
+            <p>えええええええええええええええ</p>
+            <p>おおおおおおおおおおおおおおお</p>
+            <p>かかかかかかかかかかかかかかか</p>
+            <p>ききききききききききききききき</p>
+            <p>くくくくくくくくくくくくくくく</p>
+            <p>けけけけけけけけけけけけけけけ</p>
+            <p>こここここここここここここここ</p>
+            <p>さささささささささささささささ</p>
+            <p>ししししししししししししししし</p>
+            <p>すすすすすすすすすすすすすすす</p>
+            <p>せせせせせせせせせせせせせせせ</p>
+            <p>そそそそそそそそそそそそそそそ</p>
+            <p>たたたたたたたたたたたたたたた</p>
+            <p>ちちちちちちちちちちちちちちち</p>
+            <p>つつつつつつつつつつつつつつつ</p>
+            <p>ててててててててててててててて</p>
+            <p>ととととととととととととととと</p>
+            <p>ななななななななななななななな</p>
+            <p>ににににににににににににににに</p>
+            <p>ぬぬぬぬぬぬぬぬぬぬぬぬぬぬぬ</p>
+            <p>ねねねねねねねねねねねねねねね</p>
+            <p>ののののののののののののののの</p>
+            <p>ははははははははははははははは</p>
+            <p>ひひひひひひひひひひひひひひひ</p>
+            <p>ふふふふふふふふふふふふふふふ</p>
+            <p>へへへへへへへへへへへへへへへ</p>
+            <p>ほほほほほほほほほほほほほほほ</p>
         </div>
 
     </div>
@@ -182,49 +343,10 @@
         <button class="bottom-button" onclick="showScreen(2)">タイトル</button>
         <button class="bottom-button" onclick="showScreen(3)">記者</button>
     </div>
-    <script>
-        function showScreen(screenNum) {
-            localStorage.setItem('selectedScreen', screenNum);
-            const splitScreen = document.getElementById('splitScreen');
-            const speakerScreen = document.getElementById('speakerScreen');
-            const titleScreen = document.getElementById('titleScreen');
-            const reporterScreen = document.getElementById('reporterScreen');
-            const buttons = document.querySelectorAll('.bottom-button');
-
-            // 全リセット
-            splitScreen.style.display = 'none';
-            speakerScreen.classList.remove('hide');
-            titleScreen.classList.remove('hide');
-            reporterScreen.classList.remove('active');
-
-            // ボタンのリセット
-            buttons.forEach(btn => btn.classList.remove('active-button'));
-            buttons[screenNum].classList.add('active-button');
-
-            if (screenNum === 0) {
-                splitScreen.style.display = 'flex';
-            }
-            else if (screenNum === 1) {
-                splitScreen.style.display = 'flex';
-                titleScreen.classList.add('hide');
-            }
-            else if (screenNum === 2) {
-                splitScreen.style.display = 'flex';
-                speakerScreen.classList.add('hide');
-            }
-            else if (screenNum === 3) {
-                reporterScreen.classList.add('active');
-            }
-        }
-        window.addEventListener('DOMContentLoaded', () => {
-            const savedScreen = localStorage.getItem('selectedScreen');
-            if (savedScreen !== null) {
-                showScreen(Number(savedScreen));
-            } else {
-                showScreen(0);
-            }
-        });
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ja.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/index.js"></script>
+    <script src="./speakers3.js"></script>
 
 </body>
 
