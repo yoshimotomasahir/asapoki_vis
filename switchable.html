@@ -44,6 +44,10 @@
             text-decoration-color: #797979;
         }
 
+        p {
+            padding-bottom: 20px;
+        }
+
         .main {
             flex: 1;
             overflow: hidden;
@@ -95,6 +99,7 @@
             border-top: 1px solid #ccc;
             height: 50px;
         }
+
         .bottom-bar button {
             flex: 1;
             border: none;
@@ -102,9 +107,11 @@
             font-size: 16px;
             cursor: pointer;
         }
+
         .bottom-bar button:hover {
             background: #ccc;
         }
+
         .bottom-button.active-button {
             background: #ddd;
         }
@@ -117,6 +124,7 @@
             font-size: 20px;
             padding: 5px 20px 5px 5px;
         }
+
         .settings-modal {
             display: none;
             position: fixed;
@@ -127,11 +135,13 @@
             border-radius: 8px;
             overflow-y: auto;
         }
+
         .settings-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
+
         .settings-close {
             position: absolute;
             top: 5px;
@@ -140,6 +150,7 @@
             font-size: 20px;
             padding: 10px 20px 10px 10px;
         }
+
         .settings-overlay {
             display: none;
             position: fixed;
@@ -149,17 +160,20 @@
             height: 100%;
             background: rgba(0, 0, 0, 0.5);
         }
+
         .settings-reset-link {
             color: #2a2a2a;
-            font-weight: 400;    
+            font-weight: 400;
         }
 
         .color-genba {
             color: #1b9e77;
         }
+
         .color-media {
             color: #d95f02;
         }
+
         .color-sdgs {
             color: #7570b3;
         }
@@ -170,9 +184,11 @@
             margin: 0 5px;
             text-decoration: none;
         }
+
         .reporter-name:hover {
             text-decoration: underline;
         }
+
         .reporter-heading {
             line-height: 2.4;
             font-weight: 400;
@@ -184,7 +200,7 @@
         }
 
         .list {
-            line-height: 1.8;
+            line-height: 2.0;
         }
 
         .gray-text {
@@ -275,7 +291,7 @@
                     <button onclick="searchSpeaker()">検索</button>
                 </div>
                 <div id="searched-speaker" style="clear:both;" class="list"></div>
-    
+
                 <h3>出演者一覧</h3>
                 <div>
                     <label><input type="radio" name="sort-speaker" value="speaker-duration" checked>出演時間の長い順</label>
@@ -283,12 +299,13 @@
                     <label><input type="radio" name="sort-speaker" value="speaker-oldest">登場が古い順</label>
                     <label><input type="radio" name="sort-speaker" value="speaker-furigana">五十音順</label>
                 </div>
-                <p><span id="num_speaker">ロード中...</span> 名</p>
-                <p><span id="all_speaker" style="display:block;clear:both;" class='list'>ロード中...</span></p>
+                <p><span id="num_speaker">ロード中...</span> 名
+                    <span id="all_speaker" style="display:block;clear:both;" class='list'>ロード中...</span>
+                </p>
             </div>
             <div class="right active content" id="titleScreen">
                 <h2>タイトル検索</h2>
-                
+
                 <div id="search-title" class="search-box">
                     <input type="text" id="search-title-input" placeholder="タイトル..." onkeydown="checkEnter(event)" />
                     <button onclick="searchTitle()">検索</button>
@@ -305,22 +322,24 @@
                 <div style="overflow-x: auto; width: 100%; margin: 4px 0px 0px 0px;">
                     <svg id="chart" height="0"></svg>
                 </div>
-                <p><span id="num_title">ロード中...</span> 番組&nbsp;&nbsp;<span id="duration"></span> <span class="gray-text">(再配信除く <span id="start-month"></span> から <span id="end-month"></span> まで)</span></p>
-                <p><span id="all_title" class='list' style="display:block;clear:both;">ロード中...</span></p>
+                <p><span id="num_title">ロード中...</span> 番組&nbsp;&nbsp;<span id="duration"></span> <span
+                        class="gray-text">(再配信除く <span id="start-month"></span>から<span id="end-month"></span>まで)</span>
+                    <span id="all_title" class='list' style="display:block;clear:both;">ロード中...</span>
+                </p>
             </div>
         </div>
 
         <div id="reporterScreen" class="content">
             <h2>朝日新聞の記者を探す</h2>
-            <p>名前をクリック/タップすると、<a href="https://www.asahi.com/reporter-bio/" rel="nofollow" target="_blank">記者ページ</a> が開きます。
+            <p>名前をクリック/タップすると、<a href="https://www.asahi.com/reporter-bio/" rel="nofollow" target="_blank">記者ページ</a>が開きます。
             </p>
             <p>最終更新日: <span id="reporters_last_update"></span></p>
-    
+
             <h3>朝ポキに出演した記者</h3>
             <p>朝ポキとは、<a href="https://www.asahi.com/special/podcasts/" rel="nofollow"
                     target="_blank">朝日新聞の音声コンテンツ、ポッドキャスト</a>です。</p>
             <p><span id="reporter-asapoki">ロード中...</span> (<span id="reporter-num-asapoki"></span>名)</p>
-    
+
             <h3>他の記者</h3>
             <p><span id="reporter-others">ロード中...</span> (<span id="reporter-num-others"></span>名)</p>
         </div>

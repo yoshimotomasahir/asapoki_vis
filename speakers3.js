@@ -390,17 +390,6 @@ function addReporterURL(span) {
     const wrapper = document.createElement("span");
     wrapper.className = "name-nowrap"; // CSSを適用
     wrapper.appendChild(span);
-
-    if (reporters && reporters.hasOwnProperty(speaker)) {
-        const reporterElement = document.createElement("a");
-        reporterElement.href = reporters[speaker]["url"];
-        reporterElement.rel = "nofollow";
-        reporterElement.target = "_blank";
-        const reporterIcon = document.createElement("span");
-        reporterIcon.textContent = "🖊️";
-        reporterElement.appendChild(reporterIcon);
-        wrapper.appendChild(reporterElement);
-    }
     return wrapper;
 }
 
