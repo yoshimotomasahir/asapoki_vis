@@ -9,6 +9,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/style.css" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         html,
@@ -38,7 +40,7 @@
         a {
             color: #2a2a2a;
             font-weight: 500;
-            text-decoration: underline;
+            text-decoration: none;
             text-decoration-color: #797979;
         }
 
@@ -175,6 +177,22 @@
             line-height: 2.4;
             font-weight: 400;
             margin: 0 20px;
+        }
+
+        .name-nowrap {
+            white-space: nowrap;
+        }
+
+        .list {
+            line-height: 1.8;
+        }
+
+        .gray-text {
+            color: #787871;
+            font-size: 14px;
+            font-weight: 400;
+            margin-left: 0px;
+            margin-right: 0px;
         }
     </style>
 </head>
@@ -313,7 +331,8 @@
                 <div style="overflow-x: auto; width: 100%; margin: 4px 0px 0px 0px;">
                     <svg id="chart" height="0"></svg>
                 </div>
-                <p><span id="num_title">ロード中...</span> 番組&nbsp;&nbsp;<span id="duration"></span> <span class="article-date">(再配信除く)</span></p>
+                <p></p>
+                <p><span id="num_title">ロード中...</span> 番組&nbsp;&nbsp;<span id="duration"></span> <span class="gray-text">(再配信除く <span id="start-month"></span> から <span id="end-month"></span> まで)</span></p>
                 <div id="all_title" class='list' style="display:block;clear:both;">ロード中...</div>
                 <p>あああああああああああああああ</p>
                 <p>いいいいいいいいいいいいいいい</p>
