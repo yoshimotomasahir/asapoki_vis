@@ -304,7 +304,7 @@ function displayTitles() {
     });
     const svg = document.getElementById("chart");
     if (svg) {
-        if (selectedSpeaker === "") { svg.style.display = "none"; }
+        if (selectedSpeaker === "" || counts < 5) { svg.style.display = "none"; }
         else {
             svg.style.display = "block";
             drawChart(categoryMonths);
