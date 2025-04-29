@@ -290,8 +290,10 @@ function displayTitles() {
                 if (selectedSpeaker === "" || titleData.speakers.includes(selectedSpeaker)) {
                     if (startMonth <= titleData.months && titleData.months <= endMonth) {
                         titleDatas.push(titleData);
-                        counts += 1;
-                        totalDuration += titleData.actualDuration;
+                        if (titleData.actualDuration > 0) {
+                            counts += 1;
+                            totalDuration += titleData.actualDuration;
+                        }
                     }
                     if (titleData.actualDuration > 0) {
                         categoryMonths[titleData.cat].push(titleData.months);
@@ -309,7 +311,7 @@ function displayTitles() {
         }
     }
     displayTitlesImpl(allTitleElement, titleDatas);
-    
+
     document.getElementById("start-month").textContent = formatMonth(startMonth);
     document.getElementById("end-month").textContent = formatMonth(endMonth);
     document.getElementById("num_title").textContent = counts;
@@ -615,11 +617,13 @@ window.searchTitle = searchTitle;
 
 function showTitlesWithPagination(titleArray, section) {
     const searchedTitleElement = document.getElementById(`${section}-title`);
-    const paginationElement = document.getElementById(`${section}-pagination`);
+    const paginationElement1 = document.getElementById(`${section}-pagination1`);
+    const paginationElement2 = document.getElementById(`${section}-pagination2`);
 
     if (titleArray.length === 0) {
         searchedTitleElement.innerHTML = "見つかりません";
-        paginationElement.innerHTML = "";
+        paginationElement1.innerHTML = "";
+        paginationElement2.innerHTML = "";
         return;
     }
 
@@ -649,42 +653,51 @@ function showTitlesWithPagination(titleArray, section) {
     }
 
     function renderPagination() {
-        paginationElement.innerHTML = "";
+        paginationElement1.innerHTML = "";
+        paginationElement2.innerHTML = "";
 
-        const paginationText = document.createElement("span");
-        paginationText.textContent = `${(currentPage - 1) * itemsPerPage + 1} - ${Math.min(currentPage * itemsPerPage, titleArray.length)}`;
+        const createPaginationElements = () => {
+            const paginationElement = document.createDocumentFragment();
 
-        const paginationTotal = document.createElement("span");
-        paginationTotal.textContent = `(全${titleArray.length}番組)`;
+            const paginationText = document.createElement("span");
+            paginationText.textContent = `${(currentPage - 1) * itemsPerPage + 1} - ${Math.min(currentPage * itemsPerPage, titleArray.length)}`;
 
-        const prevButton = document.createElement("button");
-        prevButton.textContent = "<";
-        prevButton.className = `${section}-pagination-button`;
-        prevButton.style.marginLeft = "5px";
-        prevButton.disabled = currentPage === 1;
-        prevButton.addEventListener("click", () => {
-            if (currentPage > 1) {
-                currentPage--;
-                renderPage(currentPage);
-            }
-        });
+            const paginationTotal = document.createElement("span");
+            paginationTotal.textContent = `(全${titleArray.length}番組)`;
 
-        const nextButton = document.createElement("button");
-        nextButton.textContent = ">";
-        nextButton.className = `${section}-pagination-button`;
-        nextButton.style.marginRight = "5px";
-        nextButton.disabled = currentPage === totalPages;
-        nextButton.addEventListener("click", () => {
-            if (currentPage < totalPages) {
-                currentPage++;
-                renderPage(currentPage);
-            }
-        });
+            const prevButton = document.createElement("button");
+            prevButton.textContent = "<";
+            prevButton.className = `${section}-pagination-button`;
+            prevButton.style.marginLeft = "5px";
+            prevButton.disabled = currentPage === 1;
+            prevButton.addEventListener("click", () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderPage(currentPage);
+                }
+            });
 
-        paginationElement.appendChild(paginationText);
-        paginationElement.appendChild(prevButton);
-        paginationElement.appendChild(nextButton);
-        paginationElement.appendChild(paginationTotal);
+            const nextButton = document.createElement("button");
+            nextButton.textContent = ">";
+            nextButton.className = `${section}-pagination-button`;
+            nextButton.style.marginRight = "5px";
+            nextButton.disabled = currentPage === totalPages;
+            nextButton.addEventListener("click", () => {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderPage(currentPage);
+                }
+            });
+
+            paginationElement.appendChild(paginationText);
+            paginationElement.appendChild(prevButton);
+            paginationElement.appendChild(nextButton);
+            paginationElement.appendChild(paginationTotal);
+            return paginationElement;
+        };
+
+        paginationElement1.appendChild(createPaginationElements());
+        paginationElement2.appendChild(createPaginationElements());
     }
 
     renderPage(1); // 最初のページを表示

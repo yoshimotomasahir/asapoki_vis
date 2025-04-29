@@ -218,6 +218,14 @@
             padding-bottom: 5px;
             width: 100%;
         }
+
+        .searched-pagination-button{
+            padding: 3px 0px; 
+            min-width: 3em;
+            width: 3em;
+            border: 1px solid #787871;
+            border-radius: 3px;
+        }
     </style>
 </head>
 
@@ -315,11 +323,11 @@
                     <input type="text" id="search-title-input" placeholder="タイトル..." onkeydown="checkEnter(event)" />
                     <button onclick="searchTitle()">検索</button>
                 </div>
-                <div id="searched-pagination"></div>
+                <div id="searched-pagination1"></div>
                 <div id="searched-title" style="clear:both;"></div>
-                <h3>番組絞り込み</h3>
+                <div id="searched-pagination2"></div>
+                <h3>出演者で絞り込み</h3>
                 <div>
-                    <span style="white-space: nowrap;">出演者:</span>&nbsp;
                     <span class="nowrap"><label><input type="radio" name="select-speaker" value="unselected" checked>絞り込みなし</label></span>
                     <span class="nowrap"><label id="select-speaker-label"><input type="radio" name="select-speaker" value="selected"
                             disabled>出演者名をクリックしてください</label></span>
