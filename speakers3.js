@@ -69,6 +69,27 @@ function getTitleForSearch(str) {
     str = fullToHalf(str);
     return str.toLowerCase();
 }
+function normalizeKana(kana) {
+    return kana.normalize("NFD")
+        .replace(/[\u3099\u309A]/g, "")
+        .replace(/[ー～]/g, "")
+        .charAt(0);
+}
+function formatDuration(seconds) {
+    const days = Math.floor(seconds / 86400); // 1日 = 86400秒
+    const hours = Math.floor((seconds % 86400) / 3600); // 1時間 = 3600秒
+    const minutes = Math.floor((seconds % 3600) / 60); // 1分 = 60秒
+    if (days > 0) { return `${days}日${hours}時間${minutes}分`; }
+    else if (hours > 0) { return `${hours}時間${minutes}分`; }
+    else { return `${minutes}分`; }
+}
+function formatMonth(monthInt) {
+    const year = Math.floor(monthInt / 12);
+    const month = monthInt % 12 + 1;
+    return `${year}年${month}月`;
+}
+
+
 
 let categories = ["genba", "media", "sdgs"];
 
@@ -182,14 +203,8 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 
-function formatDuration(seconds) {
-    const days = Math.floor(seconds / 86400); // 1日 = 86400秒
-    const hours = Math.floor((seconds % 86400) / 3600); // 1時間 = 3600秒
-    const minutes = Math.floor((seconds % 3600) / 60); // 1分 = 60秒
-    if (days > 0) { return `${days}日${hours}時間${minutes}分`; }
-    else if (hours > 0) { return `${hours}時間${minutes}分`; }
-    else { return `${minutes}分`; }
-}
+
+
 
 function displayTitlesImpl(element, titleDatas) {
     const fragment = document.createDocumentFragment(); // フラグメントを使用
@@ -303,11 +318,10 @@ function displayTitles() {
     console.log("displayTitles", (endTime - startTime).toFixed(1), "ms");
 }
 
-function formatMonth(monthInt) {
-    const year = Math.floor(monthInt / 12);
-    const month = monthInt % 12 + 1;
-    return `${year}年${month}月`;
-}
+
+
+
+
 
 function drawChart(categoryMonths) {
     const svg = document.getElementById("chart");
@@ -388,7 +402,6 @@ function drawChart(categoryMonths) {
 }
 
 function addReporterURL(span) {
-    const speaker = span.textContent;
     const wrapper = document.createElement("span");
     wrapper.className = "nowrap"; // CSSを適用
     wrapper.appendChild(span);
@@ -481,6 +494,9 @@ function displaySpeakers() {
     console.log("displaySpeakers", (endTime - startTime).toFixed(1), "ms");
 }
 
+
+
+
 function handleNameClick(event) {
     const clickedName = event.target.textContent;
 
@@ -502,6 +518,9 @@ function handleNameClick(event) {
     }
     displayTitles();
 }
+
+
+
 
 document.querySelectorAll('input[name="sort-speaker"]').forEach(radio => {
     radio.addEventListener('change', () => {
@@ -590,6 +609,10 @@ function searchTitle() {
 }
 window.searchTitle = searchTitle;
 
+
+
+
+
 function showTitlesWithPagination(titleArray, section) {
     const searchedTitleElement = document.getElementById(`${section}-title`);
     const paginationElement = document.getElementById(`${section}-pagination`);
@@ -675,6 +698,12 @@ function checkEnter(event) {
 }
 window.checkEnter = checkEnter;
 
+
+
+
+
+
+
 let startPicker, endPicker;
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -744,12 +773,7 @@ window.handleSelectPlatformChange = handleSelectPlatformChange;
 
 
 
-function normalizeKana(kana) {
-    return kana.normalize("NFD")
-        .replace(/[\u3099\u309A]/g, "")
-        .replace(/[ー～]/g, "")
-        .charAt(0);
-}
+
 
 function displayReporters() {
     document.getElementById("reporter-asapoki").innerHTML = "";
