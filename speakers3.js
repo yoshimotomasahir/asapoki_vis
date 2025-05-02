@@ -1,6 +1,7 @@
 var titles = [];
 var speakers = {};
 var reporters = {};
+var asapoki_members = {};
 let reporters_last_update = "";
 
 const localStorageKey = 'jsonData';
@@ -155,6 +156,10 @@ function readData(data) {
         reporters[speaker]["furiganaFloat"] = (data.speakers?.[speaker]?.furiganaFloat) ?? 0;
         reporters[speaker]["furigana"] = (data.speakers?.[speaker]?.furigana) ?? 0;
     }
+    for (const speaker in data["asapoki_members"]) {
+        asapoki_members[speaker] = data["asapoki_members"][speaker];
+    }    
+
     const sortedReportersArray = Object.entries(reporters).sort(([, a], [, b]) => a.furiganaFloat - b.furiganaFloat);
     reporters = Object.fromEntries(sortedReportersArray);
     reporters_last_update = data["reportersLastUpdate"];
@@ -810,10 +815,12 @@ window.handleSelectPlatformChange = handleSelectPlatformChange;
 
 
 function displayReporters() {
+    document.getElementById("reporter-asapoki-members").innerHTML = "";
     document.getElementById("reporter-asapoki").innerHTML = "";
     document.getElementById("reporter-others").innerHTML = "";
     document.getElementById("reporters_last_update").innerHTML = reporters_last_update;
 
+    let count_asapoki_members = 0;
     let count_asapoki = 0;
     let count_others = 0;
     let currentHead = "";
@@ -826,7 +833,11 @@ function displayReporters() {
         element.target = "_blank";
         element.className = "reporter-name";
 
-        if (value["asapoki"]) {
+        if (asapoki_members.hasOwnProperty(key)){
+            document.getElementById("reporter-asapoki-members").appendChild(element);
+            count_asapoki_members += 1;
+        }
+        else if (value["asapoki"]) {
             const furigana = value["furigana"] || "";
             if (furigana !== "") {
                 const head = normalizeKana(furigana.charAt(0));
@@ -845,6 +856,7 @@ function displayReporters() {
             document.getElementById("reporter-others").appendChild(element);
             count_others += 1;
         }
+        document.getElementById("reporter-num-asapoki-members").innerHTML = count_asapoki_members;
         document.getElementById("reporter-num-asapoki").innerHTML = count_asapoki;
         document.getElementById("reporter-num-others").innerHTML = count_others;
     }
