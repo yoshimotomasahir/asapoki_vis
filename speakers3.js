@@ -193,8 +193,14 @@ function loadFromLocalStorage() {
 }
 
 window.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const paramScreen = urlParams.get("screen");
     const savedScreen = localStorage.getItem('selectedScreen');
-    showScreen(savedScreen !== null ? Number(savedScreen) : 0);
+    const initialScreen = paramScreen !== null ? Number(paramScreen) : (savedScreen !== null ? Number(savedScreen) : 0);
+    if (![0, 1, 2, 3].includes(initialScreen)) {
+        initialScreen = 0;
+    }
+    showScreen(initialScreen);
     loadFromLocalStorage();
     displayTitles();
     displaySpeakers();
@@ -862,6 +868,9 @@ function showScreen(screenNum) {
     else if (screenNum === 3) {
         reporterScreen.classList.add('active');
     }
+    const url = new URL(window.location);
+    url.searchParams.set("screen", screenNum);
+    window.history.replaceState({}, "", url);
 }
 
 
