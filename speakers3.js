@@ -192,7 +192,22 @@ function loadFromLocalStorage() {
     console.log("loadFromLocalStorage", (endTime - startTime).toFixed(1), "ms");
 }
 
+function isTargetDevice() {
+    try {
+        const ua = navigator.userAgent || '';
+        return (/Android|iPhone|iPad/i.test(ua));
+    } catch (e) {
+        return false;
+    }
+}
+
 window.addEventListener('DOMContentLoaded', () => {
+    if (isTargetDevice()) {
+        const appLink = document.getElementById('mobile-app-link');
+        if (appLink) {
+            appLink.style.display = 'block';
+        }
+    }
     const urlParams = new URLSearchParams(window.location.search);
     const paramScreen = urlParams.get("screen");
     const savedScreen = localStorage.getItem('selectedScreen');
