@@ -167,7 +167,7 @@ function readData(data) {
 
 function fetchData() {
     const xhr = new XMLHttpRequest();
-    xhr.open('GET', 'https://script.google.com/macros/s/AKfycby1G_qqb8xBJh8adQBuvLsA5wOcnqYu59W22hs1jMlj4IT2DlqnJA7uaUG16GXJHDKU/exec', true);
+    xhr.open('GET', 'https://script.google.com/macros/s/AKfycbzQrE9Q5cQtcHHSb6VYg45aO95Fo6HicFklxA9-rxIqnLTG-B_zPmVvamBhyuFY0gA5/exec', true);
     xhr.onload = function () {
         const startTime = performance.now();
         if (xhr.status === 200) {
