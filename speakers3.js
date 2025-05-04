@@ -158,7 +158,7 @@ function readData(data) {
     }
     for (const speaker in data["asapoki_members"]) {
         asapoki_members[speaker] = data["asapoki_members"][speaker];
-    }    
+    }
 
     const sortedReportersArray = Object.entries(reporters).sort(([, a], [, b]) => a.furiganaFloat - b.furiganaFloat);
     reporters = Object.fromEntries(sortedReportersArray);
@@ -278,14 +278,28 @@ function displayTitlesImpl(element, titleDatas) {
     });
 }
 
+function getCheckedDurations() {
+    const checkboxes = document.querySelectorAll('input[name="select-duration[]"]:checked');
+    const durations = [];
+
+    checkboxes.forEach(cb => {
+        const rangeStr = cb.value.replace('-min', ''); // "0-20-min" → "0-20"
+        const [start, end] = rangeStr.split('-').map(Number); // [0, 20]
+        for (let i = start; i <= end; i++) {
+            durations.push(i);
+        }
+    });
+
+    return durations;
+}
+
 function displayTitles() {
     const startTime = performance.now();
 
     const allTitleElement = document.getElementById("all_title");
     allTitleElement.innerHTML = ""; // 既存の内容をクリア
     const sortOption = document.querySelector('input[name="sort-title"]:checked').value;
-    const durationOption = document.querySelector('select[name="select-duration"]').value;
-    const [minDuration, maxDuration] = durationOption.split('-').map(Number);
+    const durations = getCheckedDurations();
     const playlists = Array.from(document.querySelectorAll('input[name="select-playlist"]:checked')).map(checkbox => parseInt(checkbox.value));
     const selectedSpeakerRadio = document.querySelector('input[name="select-speaker"]:checked');
     let selectedSpeaker = "";
@@ -311,18 +325,16 @@ function displayTitles() {
         2: []  // SDGs
     };
     sortedTitles.forEach(titleData => {
-        if (playlists.includes(titleData.cat)) {
-            if (titleData.minutes >= minDuration && titleData.minutes <= maxDuration) {
-                if (selectedSpeaker === "" || titleData.speakers.includes(selectedSpeaker)) {
-                    if (startMonth <= titleData.months && titleData.months <= endMonth) {
-                        titleDatas.push(titleData);
-                        if (titleData.actualDuration > 0) {
-                            counts += 1;
-                            totalDuration += titleData.actualDuration;
-                        }
-                    }
+        if (selectedSpeaker === "" || titleData.speakers.includes(selectedSpeaker)) {
+            if (titleData.actualDuration > 0) {
+                categoryMonths[titleData.cat].push(titleData.months);
+            }
+            if (playlists.includes(titleData.cat) && durations.includes(titleData.minutes)) {
+                if (startMonth <= titleData.months && titleData.months <= endMonth) {
+                    titleDatas.push(titleData);
                     if (titleData.actualDuration > 0) {
-                        categoryMonths[titleData.cat].push(titleData.months);
+                        counts += 1;
+                        totalDuration += titleData.actualDuration;
                     }
                 }
             }
@@ -569,7 +581,10 @@ document.querySelectorAll('input[name="sort-title"]').forEach(radio => {
     });
 });
 
-document.querySelector('select[name="select-duration"]').addEventListener('change', displayTitles);
+document.querySelectorAll('input[name="select-duration[]"]').forEach(el => {
+    el.addEventListener('change', displayTitles);
+    el.addEventListener('change', searchTitle);
+});
 
 document.querySelectorAll('input[name="select-speaker"]').forEach(radio => {
     radio.addEventListener('change', displayTitles);
@@ -625,10 +640,11 @@ window.searchSpeaker = searchSpeaker;
 function searchTitle() {
     const startTime = performance.now();
     const searchInput = getTitleForSearch(document.getElementById("search-title-input").value);
+    const durations = getCheckedDurations();
     if (searchInput === "") { return; }
 
     let titleArray = titles.filter(titleData => {
-        return titleData.titleForSearch.includes(searchInput);
+        return titleData.titleForSearch.includes(searchInput) && durations.includes(titleData.minutes);
     });
 
     showTitlesWithPagination(titleArray, "searched");
@@ -833,7 +849,7 @@ function displayReporters() {
         element.target = "_blank";
         element.className = "reporter-name";
 
-        if (asapoki_members.hasOwnProperty(key)){
+        if (asapoki_members.hasOwnProperty(key)) {
             document.getElementById("reporter-asapoki-members").appendChild(element);
             count_asapoki_members += 1;
         }
