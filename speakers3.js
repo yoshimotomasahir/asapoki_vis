@@ -552,6 +552,25 @@ function handleNameClick(event) {
     labelElement.appendChild(inputElement);
     labelElement.appendChild(document.createTextNode(clickedName));
 
+    const spanElement = document.getElementById('select-reporter-link');
+    if (clickedName in reporters) {
+        spanElement.innerHTML = '';
+        const link = document.createElement('a');
+        link.href = reporters[clickedName].url;
+        link.textContent = '(記者ページへ)';
+        link.rel = "nofollow";
+        link.target = '_blank';
+        spanElement.appendChild(link);
+        spanElement.style.display = 'inline';
+        spanElement.style.fontWeight = "400";
+        labelElement.style.paddingRight = '15px';
+    }
+    else {
+        spanElement.innerHTML = '';
+        spanElement.style.display = 'none';
+        labelElement.style.paddingRight = '0px';
+    }
+
     const savedScreen = localStorage.getItem('selectedScreen');
     if (Number(savedScreen) == 1) {
         showScreen(2);
