@@ -91,14 +91,15 @@ function formatMonth(monthInt) {
 }
 
 
-
-let categories = ["genba", "media", "sdgs"];
+const categories = ["genba", "media", "sdgs", "houdan"];
+const categoriesShort = ["現場", "メディア", "SDGs", "報談"]
+const num_cat = 4;
 
 function readData(data) {
     titles = [];
     speakers = {};
 
-    for (let cat = 0; cat < 3; cat++) {
+    for (let cat = 0; cat < num_cat; cat++) {
         let catData = data[categories[cat]];
         for (let i = 0; i < catData.length; i++) {
             const combined = catData[i].mc.concat(catData[i].speakers);
@@ -246,7 +247,7 @@ function displayTitlesImpl(element, titleDatas) {
 
         const playlistIcon = document.createElement("span");
         playlistIcon.className = "color-" + categories[titleData.cat];
-        playlistIcon.title = ["現場", "メディア", "SDGs"][titleData.cat];
+        playlistIcon.title = categoriesShort[titleData.cat];
         playlistIcon.textContent = "▶";
 
         const titleSpan = document.createElement("span");
@@ -322,7 +323,8 @@ function displayTitles() {
     const categoryMonths = {
         0: [], // 現場
         1: [], // メディア
-        2: []  // SDGs
+        2: [], // SDGs
+        3: []  // 報談
     };
     sortedTitles.forEach(titleData => {
         if (selectedSpeaker === "" || titleData.speakers.includes(selectedSpeaker)) {
@@ -373,7 +375,8 @@ function drawChart(categoryMonths) {
     const colorScales = [
         ["#ffffff", "#bfe3d7", "#7dc6ae", "#1b9e77"], // 現場
         ["#ffffff", "#f1c4a6", "#e68a52", "#d95f02"], // メディア
-        ["#ffffff", "#d3d0e8", "#a59ecf", "#7570b3"]  // SDGs
+        ["#ffffff", "#d3d0e8", "#a59ecf", "#7570b3"], // SDGs
+        ["#ffffff", "#b5d3ea", "#75add6", "#1f78b4"]  // 報談
     ];
 
     function getEventCount(cat, monthInt) {
@@ -405,7 +408,7 @@ function drawChart(categoryMonths) {
             svg.appendChild(text);
         }
 
-        for (let cat = 0; cat < 3; cat++) {
+        for (let cat = 0; cat < num_cat; cat++) {
             const row = cat;
             const count = getEventCount(cat, m);
 
@@ -432,13 +435,13 @@ function drawChart(categoryMonths) {
             rect.setAttribute("fill", fillColor);
 
             const title = document.createElementNS("http://www.w3.org/2000/svg", "title");
-            title.textContent = `${["現場", "メディア", "SDGs"][cat]} ${formatMonth(m)} ${count === 0 ? "なし" : `${count} 番組`}`;
+            title.textContent = `${categoriesShort[cat]} ${formatMonth(m)} ${count === 0 ? "なし" : `${count} 番組`}`;
             rect.appendChild(title);
             svg.appendChild(rect);
         }
     }
     svg.setAttribute("width", (month1 - month0 + 1) * (boxSize + margin) + margin);
-    svg.setAttribute("height", 3 * (boxSize + margin) + margin + 30);
+    svg.setAttribute("height", num_cat * (boxSize + margin) + margin + 30);
 }
 
 function addReporterURL(span) {
