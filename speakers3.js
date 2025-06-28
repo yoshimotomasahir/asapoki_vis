@@ -101,6 +101,7 @@ function readData(data) {
 
     for (let cat = 0; cat < num_cat; cat++) {
         let catData = data[categories[cat]];
+        if (catData === undefined) continue;
         for (let i = 0; i < catData.length; i++) {
             const combined = catData[i].mc.concat(catData[i].speakers);
             const duration = catData[i].duration;

@@ -73,6 +73,7 @@ function updateTitles(data) {
       catData = data.houdan;
       category = "報談";
     }
+    if (catData === undefined) continue;
 
     for (let i = 0; i < catData.length; i++) {
       const title = catData[i].title;
