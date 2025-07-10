@@ -7,7 +7,7 @@ let reporters_last_update = "";
 const localStorageKey = 'jsonData';
 
 let platform = "omnyfm";
-const platforms = ['omnyfm', 'spotify'];
+const platforms = ['omnyfm', 'spotify', 'asahi'];
 const savedPlatform = localStorage.getItem('platform');
 if (platforms.includes(savedPlatform)) {
     platform = savedPlatform;
@@ -136,8 +136,10 @@ function readData(data) {
                 }
             });
             const titleData = {};
-            titleData.linkOmnyfm = catData[i].link;
-            titleData.linkSpotify = catData[i].spotify;
+            titleData.link = {};
+            titleData.link["omnyfm"] = catData[i].link;
+            titleData.link["spotify"] = catData[i].spotify;
+            titleData.link["asahi"] = "https://www.asahi.com/special/podcasts/item/?itemid=" + catData[i].clipId;
             titleData.unixtime = unixtime;
             titleData.title = catData[i].title;
             titleData.titleForSearch = getTitleForSearch(catData[i].title);
@@ -242,7 +244,7 @@ function displayTitlesImpl(element, titleDatas) {
         outerSpan.className = "title"
 
         const titleElement = document.createElement("a");
-        titleElement.href = platform === "omnyfm" ? titleData.linkOmnyfm : titleData.linkSpotify;
+        titleElement.href = titleData.link[platform];
         titleElement.rel = "nofollow";
         titleElement.target = "_blank";
 
