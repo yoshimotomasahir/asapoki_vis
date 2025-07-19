@@ -137,8 +137,8 @@ function readData(data) {
             });
             const titleData = {};
             titleData.link = {};
-            titleData.link["omnyfm"] = catData[i].link;
-            titleData.link["spotify"] = catData[i].spotify;
+            titleData.link["omnyfm"] = "https://omny.fm/shows/asahi/" + catData[i].link.split('/').pop();
+            titleData.link["spotify"] = "https://open.spotify.com/episode/" + catData[i].spotify.split('/').pop();
             titleData.link["asahi"] = "https://www.asahi.com/special/podcasts/item/?itemid=" + catData[i].clipId;
             titleData.unixtime = unixtime;
             titleData.title = catData[i].title;

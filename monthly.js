@@ -77,7 +77,18 @@ function updateTitles(data) {
 
     for (let i = 0; i < catData.length; i++) {
       const title = catData[i].title;
-      const link = platform === 'omnyfm' || category === "YouTube" ? catData[i].link : catData[i].spotify;
+      let link = "";
+      if (category === "YouTube") {
+        link = "https://www.youtube.com/watch?v=" + catData[i].link.split('#').pop();
+      }
+      else {
+        if (platform === "omnyfm") {
+          link = "https://omny.fm/shows/asahi/" + catData[i].link.split('/').pop();
+        }
+        else if (platform === "spotify") {
+          link = "https://open.spotify.com/episode/" + catData[i].spotify.split('/').pop();
+        }
+      }
 
       const date = new Date(catData[i].pubDate);
       const year = date.getFullYear();
