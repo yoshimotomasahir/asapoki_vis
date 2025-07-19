@@ -98,60 +98,62 @@ const num_cat = 4;
 function readData(data) {
     titles = [];
     speakers = {};
-
-    for (let cat = 0; cat < num_cat; cat++) {
-        let catData = data[categories[cat]];
-        if (catData === undefined) continue;
-        for (let i = 0; i < catData.length; i++) {
-            const combined = catData[i].mc.concat(catData[i].speakers);
-            const duration = catData[i].duration;
-            const title = catData[i].title;
-            let actualDuration = duration;
-            const date = new Date(catData[i].pubDate);
-            const unixtime = date.getTime();
-            if (title.length >= 3 && title.substring(0, 3) === "（再）") {
-                actualDuration = 0;
-            }
-            if (title.length >= 7 && title.substring(0, 7) === "（ふりかえり）") {
-                actualDuration = 0;
-            }
-            if (title.length >= 5 && title.substring(0, 5) === "（深掘り）") {
-                actualDuration = 0;
-            }
-            combined.forEach(function (speaker) {
-                if (!(speaker in speakers)) {
-                    const speakerData = {};
-                    speakerData.duration = actualDuration;
-                    speakerData.categories = 1 << cat;
-                    speakerData.oldest = unixtime;
-                    speakerData.newest = unixtime;
-                    speakerData.furiganaFloat = data["speakers"]?.[speaker]["furiganaFloat"] ?? 0;
-                    speakerData.furigana = data["speakers"]?.[speaker]["furigana"] ?? "";
-                    speakers[speaker] = speakerData;
-                } else {
-                    speakers[speaker].duration += actualDuration;
-                    speakers[speaker].categories |= 1 << cat;
-                    speakers[speaker].oldest = Math.min(speakers[speaker].oldest, unixtime);
-                    speakers[speaker].newest = Math.max(speakers[speaker].newest, unixtime);
+    try {
+        for (let cat = 0; cat < num_cat; cat++) {
+            let catData = data[categories[cat]];
+            for (let i = 0; i < catData.length; i++) {
+                const combined = catData[i].mc.concat(catData[i].speakers);
+                const duration = catData[i].duration;
+                const title = catData[i].title;
+                let actualDuration = duration;
+                const date = new Date(catData[i].pubDate);
+                const unixtime = date.getTime();
+                if (title.length >= 3 && title.substring(0, 3) === "（再）") {
+                    actualDuration = 0;
                 }
-            });
-            const titleData = {};
-            titleData.link = {};
-            titleData.link["omnyfm"] = "https://omny.fm/shows/asahi/" + catData[i].link.split('/').pop();
-            titleData.link["spotify"] = "https://open.spotify.com/episode/" + catData[i].spotify.split('/').pop();
-            titleData.link["asahi"] = "https://www.asahi.com/special/podcasts/item/?itemid=" + catData[i].clipId.split('=').pop();
-            titleData.link["pca"] = "https://pca.st/episode/" + catData[i].pca.split('/').pop();
-            titleData.unixtime = unixtime;
-            titleData.title = catData[i].title;
-            titleData.titleForSearch = getTitleForSearch(catData[i].title);
-            titleData.speakers = combined;
-            titleData.duration = duration;
-            titleData.actualDuration = actualDuration;
-            titleData.minutes = Math.floor(titleData.duration / 60);
-            titleData.months = date.getFullYear() * 12 + date.getMonth();
-            titleData.cat = cat;
-            titles.push(titleData);
+                if (title.length >= 7 && title.substring(0, 7) === "（ふりかえり）") {
+                    actualDuration = 0;
+                }
+                if (title.length >= 5 && title.substring(0, 5) === "（深掘り）") {
+                    actualDuration = 0;
+                }
+                combined.forEach(function (speaker) {
+                    if (!(speaker in speakers)) {
+                        const speakerData = {};
+                        speakerData.duration = actualDuration;
+                        speakerData.categories = 1 << cat;
+                        speakerData.oldest = unixtime;
+                        speakerData.newest = unixtime;
+                        speakerData.furiganaFloat = data["speakers"]?.[speaker]["furiganaFloat"] ?? 0;
+                        speakerData.furigana = data["speakers"]?.[speaker]["furigana"] ?? "";
+                        speakers[speaker] = speakerData;
+                    } else {
+                        speakers[speaker].duration += actualDuration;
+                        speakers[speaker].categories |= 1 << cat;
+                        speakers[speaker].oldest = Math.min(speakers[speaker].oldest, unixtime);
+                        speakers[speaker].newest = Math.max(speakers[speaker].newest, unixtime);
+                    }
+                });
+                const titleData = {};
+                titleData.link = {};
+                titleData.link["omnyfm"] = "https://omny.fm/shows/asahi/" + catData[i].link.split('/').pop();
+                titleData.link["spotify"] = "https://open.spotify.com/episode/" + catData[i].spotify.split('/').pop();
+                titleData.link["asahi"] = "https://www.asahi.com/special/podcasts/item/?itemid=" + catData[i].clipId.split('=').pop();
+                titleData.link["pca"] = "https://pca.st/episode/" + catData[i].pca.split('/').pop();
+                titleData.unixtime = unixtime;
+                titleData.title = catData[i].title;
+                titleData.titleForSearch = getTitleForSearch(catData[i].title);
+                titleData.speakers = combined;
+                titleData.duration = duration;
+                titleData.actualDuration = actualDuration;
+                titleData.minutes = Math.floor(titleData.duration / 60);
+                titleData.months = date.getFullYear() * 12 + date.getMonth();
+                titleData.cat = cat;
+                titles.push(titleData);
+            }
         }
+    } catch (e) {
+        console.error("エラーが発生しました:", e.message);
     }
 
     for (const speaker in data["reporters"]) {
