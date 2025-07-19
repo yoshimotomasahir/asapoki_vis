@@ -155,7 +155,7 @@ function readData(data) {
 
     for (const speaker in data["reporters"]) {
         reporters[speaker] = {};
-        reporters[speaker]["url"] = data["reporters"][speaker]["url"];
+        reporters[speaker]["url"] = "https://www.asahi.com/reporter-bio/" + data["reporters"][speaker]["url"].split('/').pop();
         reporters[speaker]["asapoki"] = speaker in data.speakers;
         reporters[speaker]["furiganaFloat"] = (data.speakers?.[speaker]?.furiganaFloat) ?? 0;
         reporters[speaker]["furigana"] = (data.speakers?.[speaker]?.furigana) ?? 0;
