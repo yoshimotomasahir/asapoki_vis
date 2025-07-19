@@ -79,7 +79,7 @@ function updateTitles(data) {
       const title = catData[i].title;
       let link = "";
       if (category === "YouTube") {
-        link = "https://www.youtube.com/watch?v=" + catData[i].link.split('#').pop();
+        link = "https://www.youtube.com/watch?v=" + catData[i].link.split('=').pop();
       }
       else {
         if (platform === "omnyfm") {
