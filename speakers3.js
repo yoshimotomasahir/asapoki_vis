@@ -7,7 +7,7 @@ let reporters_last_update = "";
 const localStorageKey = 'jsonData';
 
 let platform = "omnyfm";
-const platforms = ['omnyfm', 'spotify', 'asahi'];
+const platforms = ['omnyfm', 'spotify', 'asahi', 'pca'];
 const savedPlatform = localStorage.getItem('platform');
 if (platforms.includes(savedPlatform)) {
     platform = savedPlatform;
@@ -140,6 +140,7 @@ function readData(data) {
             titleData.link["omnyfm"] = "https://omny.fm/shows/asahi/" + catData[i].link.split('/').pop();
             titleData.link["spotify"] = "https://open.spotify.com/episode/" + catData[i].spotify.split('/').pop();
             titleData.link["asahi"] = "https://www.asahi.com/special/podcasts/item/?itemid=" + catData[i].clipId.split('=').pop();
+            titleData.link["pca"] = "https://pca.st/episode/" + catData[i].pca.split('/').pop();
             titleData.unixtime = unixtime;
             titleData.title = catData[i].title;
             titleData.titleForSearch = getTitleForSearch(catData[i].title);
