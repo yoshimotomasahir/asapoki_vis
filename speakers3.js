@@ -2,7 +2,6 @@ var titles = [];
 var speakers = {};
 var reporters = {};
 var asapoki_members = {};
-let reporters_last_update = "";
 
 const localStorageKey = 'jsonData';
 
@@ -169,7 +168,6 @@ function readData(data) {
 
     const sortedReportersArray = Object.entries(reporters).sort(([, a], [, b]) => a.furiganaFloat - b.furiganaFloat);
     reporters = Object.fromEntries(sortedReportersArray);
-    reporters_last_update = data["reportersLastUpdate"];
 }
 
 function fetchData() {
@@ -862,7 +860,6 @@ function displayReporters() {
     document.getElementById("reporter-asapoki-members").innerHTML = "";
     document.getElementById("reporter-asapoki").innerHTML = "";
     document.getElementById("reporter-others").innerHTML = "";
-    document.getElementById("reporters_last_update").innerHTML = reporters_last_update;
 
     let count_asapoki_members = 0;
     let count_asapoki = 0;
