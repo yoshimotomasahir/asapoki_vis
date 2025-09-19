@@ -270,7 +270,7 @@ function displayTitlesImpl(element, titleDatas) {
     over50Wrapper = document.createElement("span");
     over50Wrapper.id = "over50";
     over50Wrapper.style.display = showAll ? "inline" : "none";
-    fragment.appendChild(over50Wrapper);
+    let over50WrapperFlag = false;
 
     titleDatas.forEach((titleData, index) => {
         const outerSpan = document.createElement("span");
@@ -309,9 +309,16 @@ function displayTitlesImpl(element, titleDatas) {
         if (index < 50) {
             fragment.appendChild(outerSpan);
         } else {
+            if (over50WrapperFlag == false) {
+                fragment.appendChild(over50Wrapper);
+                over50WrapperFlag = true;
+            }
             over50Wrapper.appendChild(outerSpan);
         }
     });
+    if (over50WrapperFlag == false) {
+        fragment.appendChild(over50Wrapper);
+    }
 
     element.appendChild(fragment); // 最後に一括で要素に追加
 
