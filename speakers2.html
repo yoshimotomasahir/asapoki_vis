@@ -262,6 +262,11 @@
                 </select>
             </div>
             <div>
+                <h4>表示する番組数</h4>
+                <label><input type="radio" name="showAll" value="show-50" checked>50番組</label>
+                <label><input type="radio" name="showAll" value="show-all">全番組 (動作が遅くなります)</label>
+            </div>
+            <div>
                 <h4>配信順</h4>
                 <label><input type="radio" name="sort-title" value="title-newest" checked>新しい順</label>
                 <label><input type="radio" name="sort-title" value="title-oldest">古い順</label>
@@ -353,6 +358,7 @@
                 <div><span id="num_title">ロード中...</span> 番組&nbsp;&nbsp;<span id="duration"></span> <span
                         class="gray-text">(再配信除く <span id="start-month"></span>から<span id="end-month"></span>まで)</span>
                     <span id="all_title" style="display:block;clear:both;">ロード中...</span>
+                    <span id="showAllToggle" style="cursor:pointer;text-decoration:underline;"></span>
                 </div>
                 <p>以上</p>
             </div>

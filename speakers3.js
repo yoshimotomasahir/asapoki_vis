@@ -5,6 +5,33 @@ var asapoki_members = {};
 
 const localStorageKey = 'jsonData';
 
+let showAll = localStorage.getItem("showAll") === "true";
+const showAllToggle = document.getElementById("showAllToggle");
+const showAllRadios = document.querySelectorAll('input[name="showAll"]');
+function applyShowAllState() {
+    const over50 = document.getElementById("over50");
+    if (over50) {
+        over50.style.display = showAll ? "inline" : "none";
+    }
+    showAllRadios.forEach(r => {
+        r.checked = (r.value === (showAll ? "show-all" : "show-50"));
+    });
+    showAllToggle.textContent = showAll ? "▲50番組を表示" : "▼全番組表示";
+}
+applyShowAllState();
+showAllRadios.forEach(r => {
+    r.addEventListener("change", e => {
+        showAll = (e.target.value === "show-all");
+        localStorage.setItem("showAll", showAll);
+        applyShowAllState();
+    });
+});
+showAllToggle.addEventListener("click", () => {
+    showAll = !showAll;
+    localStorage.setItem("showAll", showAll);
+    applyShowAllState();
+});
+
 let platform = "omnyfm";
 const platforms = ['omnyfm', 'spotify', 'asahi', 'pca'];
 const savedPlatform = localStorage.getItem('platform');
@@ -240,7 +267,12 @@ window.addEventListener('DOMContentLoaded', () => {
 function displayTitlesImpl(element, titleDatas) {
     const fragment = document.createDocumentFragment(); // フラグメントを使用
 
-    titleDatas.forEach(titleData => {
+    over50Wrapper = document.createElement("span");
+    over50Wrapper.id = "over50";
+    over50Wrapper.style.display = showAll ? "inline" : "none";
+    fragment.appendChild(over50Wrapper);
+
+    titleDatas.forEach((titleData, index) => {
         const outerSpan = document.createElement("span");
         outerSpan.className = "title";
 
@@ -256,7 +288,7 @@ function displayTitlesImpl(element, titleDatas) {
 
         const titleSpan = document.createElement("span");
         titleSpan.textContent = titleData.title;
-        
+
         const dateSpan = document.createElement("span");
         dateSpan.className = "gray-text";
         const date = new Date(titleData.unixtime);
@@ -273,7 +305,12 @@ function displayTitlesImpl(element, titleDatas) {
         outerSpan.appendChild(titleElement);
         outerSpan.appendChild(dateSpan);
         outerSpan.appendChild(speakersSpan);
-        fragment.appendChild(outerSpan);
+
+        if (index < 50) {
+            fragment.appendChild(outerSpan);
+        } else {
+            over50Wrapper.appendChild(outerSpan);
+        }
     });
 
     element.appendChild(fragment); // 最後に一括で要素に追加
