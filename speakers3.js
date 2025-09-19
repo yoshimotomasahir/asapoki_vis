@@ -242,7 +242,7 @@ function displayTitlesImpl(element, titleDatas) {
 
     titleDatas.forEach(titleData => {
         const outerSpan = document.createElement("span");
-        outerSpan.className = "title"
+        outerSpan.className = "title";
 
         const titleElement = document.createElement("a");
         titleElement.href = titleData.link[platform];
@@ -256,7 +256,7 @@ function displayTitlesImpl(element, titleDatas) {
 
         const titleSpan = document.createElement("span");
         titleSpan.textContent = titleData.title;
-
+        
         const dateSpan = document.createElement("span");
         dateSpan.className = "gray-text";
         const date = new Date(titleData.unixtime);
