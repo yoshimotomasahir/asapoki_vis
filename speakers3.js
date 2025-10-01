@@ -9,10 +9,9 @@ let showAll = localStorage.getItem("showAll") === "true";
 const showAllToggle = document.getElementById("showAllToggle");
 const showAllRadios = document.querySelectorAll('input[name="showAll"]');
 function applyShowAllState() {
-    const over50 = document.getElementById("over50");
-    if (over50) {
-        over50.style.display = showAll ? "inline" : "none";
-    }
+    document.querySelectorAll('.over50').forEach(el => {
+        el.style.display = showAll ? "inline" : "none";
+    });
     showAllRadios.forEach(r => {
         r.checked = (r.value === (showAll ? "show-all" : "show-50"));
     });
@@ -267,13 +266,10 @@ window.addEventListener('DOMContentLoaded', () => {
 
 
 
-function displayTitlesImpl(element, titleDatas) {
+function displayTitlesImpl(element, titleDatas, useOver50) {
     const fragment = document.createDocumentFragment(); // フラグメントを使用
 
-    over50Wrapper = document.createElement("span");
-    over50Wrapper.id = "over50";
-    over50Wrapper.style.display = showAll ? "inline" : "none";
-    let over50WrapperFlag = false;
+    let over50Wrapper = null;
 
     titleDatas.forEach((titleData, index) => {
         const outerSpan = document.createElement("span");
@@ -309,20 +305,19 @@ function displayTitlesImpl(element, titleDatas) {
         outerSpan.appendChild(dateSpan);
         outerSpan.appendChild(speakersSpan);
 
-        if (index < 50) {
+        if (index < 50 || useOver50 === false) {
             fragment.appendChild(outerSpan);
         } else {
-            if (over50WrapperFlag == false) {
+            if (!over50Wrapper) {
+                over50Wrapper = document.createElement("span");
+                over50Wrapper.className = "over50";
+                over50Wrapper.style.display = showAll ? "inline" : "none";
                 fragment.appendChild(over50Wrapper);
-                over50WrapperFlag = true;
             }
             over50Wrapper.appendChild(outerSpan);
         }
     });
-    if (over50WrapperFlag == false) {
-        fragment.appendChild(over50Wrapper);
-    }
-
+    
     element.appendChild(fragment); // 最後に一括で要素に追加
 
     element.querySelectorAll(".name").forEach(span => {
@@ -401,7 +396,7 @@ function displayTitles() {
             drawChart(categoryMonths);
         }
     }
-    displayTitlesImpl(allTitleElement, titleDatas);
+    displayTitlesImpl(allTitleElement, titleDatas, true);
 
     document.getElementById("start-month").textContent = formatMonth(startMonth);
     document.getElementById("end-month").textContent = formatMonth(endMonth);
@@ -762,7 +757,7 @@ function showTitlesWithPagination(titleArray, section) {
         const titleDatas = titleArray.slice(start, end);
 
         searchedTitleElement.innerHTML = "";
-        displayTitlesImpl(searchedTitleElement, titleDatas);
+        displayTitlesImpl(searchedTitleElement, titleDatas, false);
 
         renderPagination();
     }
