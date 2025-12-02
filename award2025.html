@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="utf-8" />
+    <title>報談【HOU-DAN】をポッドキャストアワードへ！</title>
+    <meta name="robots" content="noindex,nofollow,noarchive" />
+    <link rel="icon" href="/asapoki_vis/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/asapoki_vis/favicon.ico" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        :root {
+            --bg: #ffffff;
+            --text-main: #1a1a1a;
+            --text-sub: #555555;
+            --accent: #ff6b3d;
+            --accent-soft: rgba(255, 107, 61, 0.15);
+            --radius-l: 1rem;
+            /* 16px */
+            --radius-m: 0.625rem;
+            /* 10px */
+            --shadow-soft: 0 0.25rem 0.875rem rgba(0, 0, 0, 0.08);
+            /* 4px 14px */
+            --shadow-medium: 0 0.375rem 1.25rem rgba(0, 0, 0, 0.12);
+            /* 6px 20px */
+            font-family: "Helvetica Neue", "Segoe UI", system-ui, sans-serif;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            font-size: 1rem;
+            /* 基準 */
+        }
+
+        .app {
+            display: flex;
+            justify-content: center;
+            padding: 2rem 1rem;
+            /* 32px 16px */
+        }
+
+        .inner {
+            width: 100%;
+            max-width: 48.75rem;
+            /* 780px */
+        }
+
+        /* --- Header --- */
+        header {
+            display: flex;
+            gap: 1.25rem;
+            /* 20px */
+            align-items: center;
+            margin-bottom: 1.0rem;
+            /* 16px */
+        }
+
+        .badge img {
+            border-radius: var(--radius-m);
+            box-shadow: var(--shadow-soft);
+            width: 3.75rem;
+            /* 60px */
+            height: 3.75rem;
+        }
+
+        .subtitle {
+            font-size: 0.875rem;
+            /* 14px */
+            color: var(--text-sub);
+            margin-bottom: 0.25rem;
+            /* 4px */
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            /* 24px */
+            line-height: 1.35;
+            margin: 0 0 0.5rem;
+        }
+
+        .podcast-name {
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .tagline {
+            font-size: 0.9375rem;
+            /* 15px */
+            color: var(--text-sub);
+        }
+
+        /* --- Steps --- */
+        .steps {
+            display: flex;
+            flex-direction: column;
+            gap: 1.75rem;
+            /* 28px */
+        }
+
+        .step {
+            padding: 1.0rem;
+            /* 16px */
+            border-radius: var(--radius-l);
+            background: #fafafa;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .step-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .step-label {
+            display: flex;
+            align-items: center;
+            gap: 0.625rem;
+            /* 10px */
+        }
+
+        .step-num {
+            width: 1.75rem;
+            /* 28px */
+            height: 1.75rem;
+            background: var(--accent);
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+            /* 14px */
+            font-weight: 700;
+        }
+
+        .step-title {
+            font-size: 1.125rem;
+            /* 18px */
+            font-weight: 600;
+        }
+
+        .step-body {
+            margin-top: 0.625rem;
+            /* 10px */
+            font-size: 0.9375rem;
+            /* 15px */
+            line-height: 1.6;
+            color: var(--text-sub);
+        }
+
+        /* --- Program box --- */
+        .program-box {
+            margin-top: 0.875rem;
+            /* 14px */
+            padding: 1rem;
+            /* 16px */
+            background: #fff;
+            border-radius: var(--radius-m);
+            box-shadow: var(--shadow-soft);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: nowrap;
+        }
+
+        .program-text {
+            font-weight: 700;
+            font-size: 1.125rem;
+            /* 18px */
+        }
+
+        .program-sub {
+            font-size: 0.8125rem;
+            /* 13px */
+            color: var(--text-sub);
+        }
+
+        /* --- Buttons --- */
+        .btn-secondary,
+        .btn-primary,
+        .btn-link {
+            cursor: pointer;
+            font-size: 0.9375rem;
+            /* 15px */
+            border: none;
+            padding: 0.625rem 1rem;
+            /* 10px 16px */
+            border-radius: var(--radius-m);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            /* 6px */
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .btn-secondary {
+            background: #f1f1f1;
+            color: var(--text-main);
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #fff;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .btn-primary:hover {
+            box-shadow: var(--shadow-medium);
+        }
+
+        .btn-full {
+            width: 100%;
+            justify-content: center;
+            margin-top: 0.3rem;
+        }
+
+        /* --- Note --- */
+        .note {
+            margin: 2rem 0;
+            padding: 1.125rem;
+            /* 18px */
+            background: #fff;
+            border-left: 0.3125rem solid var(--accent);
+            /* 5px */
+            border-radius: var(--radius-m);
+            box-shadow: var(--shadow-soft);
+            line-height: 1.6;
+            font-size: 0.875rem;
+        }
+
+        /* --- Footer --- */
+        footer .brand {
+            text-align: center;
+            color: var(--text-sub);
+            font-size: 0.8125rem;
+            /* 13px */
+            margin-top: 1.875rem;
+            /* 30px */
+        }
+
+        /* --- Toast --- */
+        .toast {
+            position: fixed;
+            bottom: 1.5rem;
+            /* 24px */
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: #fff;
+            padding: 0.75rem 1.125rem;
+            /* 12px 18px */
+            border-radius: var(--radius-m);
+            box-shadow: var(--shadow-medium);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease-out;
+            font-size: 0.875rem;
+            z-index: 9999;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+
+        .toast-inner {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            /* 8px */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app">
+        <div class="inner">
+            <header>
+                <div class="badge">
+                    <img src="https://www.omnycontent.com/d/clips/1e3bd144-9b57-451a-93cf-ac0e00e74446/50382bb4-3af3-4250-8ddc-ac0f0033ceb5/3514bd22-587a-453e-8d81-b37000bca19b/image.jpg?size=small"
+                        alt="報談バッジ" style="width: 60px; height: 60px; border-radius: 20px; display: block;">
+                </div>
+                <div class="title-group">
+                    <div class="subtitle">JAPAN PODCAST AWARDS 応援ページ</div>
+                    <h1>
+                        <span class="podcast-name">報談【HOU-DAN】</span> に<br>
+                        清き一票をお願いします🎧
+                    </h1>
+                    <div class="tagline">たった <strong>3ステップ</strong>・1分で完了します！</div>
+                </div>
+            </header>
+
+            <section class="steps" aria-label="投票ステップ">
+                <!-- STEP 1 -->
+                <article class="step">
+                    <div class="step-header">
+                        <div class="step-label">
+                            <div class="step-num">1</div>
+                            <div class="step-title">番組名をコピーする</div>
+                        </div>
+                    </div>
+                    <div class="step-body">
+                        まずは番組名をコピーします。ボタンを押すだけで OK！
+                    </div>
+                    <div class="program-box">
+                        <div>
+                            <div class="program-text" id="programName">報談 【HOU-DAN】</div>
+                            <div class="program-sub">※ 投票フォームの「番組名」欄に貼り付けます</div>
+                        </div>
+                        <button type="button" class="btn-secondary" id="copyBtn">
+                            <span class="btn-icon">📋</span>
+                            コピー
+                        </button>
+                    </div>
+                </article>
+
+                <!-- STEP 2 -->
+                <article class="step">
+                    <div class="step-header">
+                        <div class="step-label">
+                            <div class="step-num">2</div>
+                            <div class="step-title">投票フォームを開く</div>
+                        </div>
+                    </div>
+                    <div class="step-body">
+                        第7回 JAPAN PODCAST AWARDS の<br>
+                        「一次選考」リスナー投票フォームが別タブで開きます。
+                    </div>
+                    <a class="btn-link btn-primary btn-full"
+                        href="https://ssl.1242.com/aplform/form/aplform.php?fcode=jpa2025_general" target="_blank"
+                        rel="noopener">
+                        投票フォームを開く
+                    </a>
+                </article>
+
+                <!-- STEP 3 -->
+                <article class="step">
+                    <div class="step-header">
+                        <div class="step-label">
+                            <div class="step-num">3</div>
+                            <div class="step-title">番組名を貼り付けて送信</div>
+                        </div>
+                    </div>
+                    <div class="step-body">
+                        開いたフォームの「番組名①」欄をタップして、<br>
+                        <strong>長押し/右クリック → 貼り付け（ペースト）</strong> で<br>
+                        「報談 【HOU-DAN】」を入力してください。<br>
+                        他の必須項目も入力して、確認する → 登録する で投票完了です！
+                    </div>
+                </article>
+            </section>
+
+            <div class="note">
+                <strong>ご注意：</strong><br>
+                ・投票は <strong>ひとり一回</strong> までです。<br>
+                ・周りのリスナーさんにも、このページをぜひシェアしてください📲
+            </div>
+
+            <footer>
+                <div class="brand">#報談_HOUDAN_を推そう</div>
+            </footer>
+        </div>
+    </div>
+
+    <!-- コピー完了トースト -->
+    <div class="toast hide" id="toast" role="status" aria-live="polite">
+        <div class="toast-inner">
+            <span class="toast-icon">✅</span>
+            <span id="toastMessage">コピーしました！</span>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            const copyBtn = document.getElementById("copyBtn");
+            const programNameEl = document.getElementById("programName");
+            const toast = document.getElementById("toast");
+            const toastMessage = document.getElementById("toastMessage");
+
+            function showToast(message) {
+                toastMessage.textContent = message;
+                toast.classList.add("show");
+                setTimeout(() => {
+                    toast.classList.remove("show");
+                }, 1800);
+            }
+
+            async function copyProgramName() {
+                const text = programNameEl.textContent.trim();
+
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    try {
+                        await navigator.clipboard.writeText(text);
+                        showToast("番組名をコピーしました！");
+                        return;
+                    } catch (e) {
+                        // fall through to legacy method
+                    }
+                }
+
+                // フォールバック（古いブラウザ用）
+                const textarea = document.createElement("textarea");
+                textarea.value = text;
+                textarea.setAttribute("readonly", "");
+                textarea.style.position = "fixed";
+                textarea.style.opacity = "0";
+                document.body.appendChild(textarea);
+                textarea.select();
+                try {
+                    const ok = document.execCommand("copy");
+                    showToast(ok ? "番組名をコピーしました！" : "コピーできませんでした…");
+                } catch (e) {
+                    showToast("コピーできませんでした…");
+                } finally {
+                    document.body.removeChild(textarea);
+                }
+            }
+
+            copyBtn.addEventListener("click", copyProgramName);
+        })();
+    </script>
+</body>
+
+</html>
