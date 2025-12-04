@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>報談【HOU-DAN】をポッドキャストアワードへ！</title>
+    <title>報談【HOU-DAN】をポッドキャストアワードへ！ #報談を推そう</title>
     <meta name="robots" content="noindex,nofollow,noarchive" />
     <link rel="icon" href="/asapoki_vis/favicon.ico" type="image/x-icon">
     <link rel="shortcut icon" href="/asapoki_vis/favicon.ico" type="image/x-icon">
@@ -251,15 +251,24 @@
         }
 
         /* --- Footer --- */
+        footer {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.75rem;
+        }
         footer .brand {
             text-align: center;
             color: var(--text-sub);
             font-size: 0.8125rem;
             /* 13px */
-            margin-top: 1.875rem;
-            /* 30px */
         }
-
+        .share svg {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            fill: #5a5a53;
+        }
         /* --- Toast --- */
         .toast {
             position: fixed;
@@ -389,6 +398,14 @@
 
             <footer>
                 <div class="brand">#報談を推そう</div>
+                <div>
+                    <a target="_blank" rel="noopener noreferrer" class="share" 
+                    href="https://x.com/intent/tweet?url=https%3A%2F%2Fyoshimotomasahir.github.io%2Fasapoki_vis%2Faward2025.html&amp;text=%E5%A0%B1%E8%AB%87%E3%80%90HOU-DAN%E3%80%91%20%E3%81%AB%E6%8A%95%E7%A5%A8%E3%81%97%E3%81%BE%E3%81%97%E3%81%9F%EF%BC%81%20JAPAN%20PODCAST%20AWARDS%E3%81%B8%E3%81%AE%E6%8A%95%E7%A5%A8%E6%96%B9%E6%B3%95%E3%81%AF%E3%81%93%E3%81%A1%E3%82%89&amp;hashtags=%E5%A0%B1%E8%AB%87%E3%82%92%E6%8E%A8%E3%81%9D%E3%81%86"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13.7107 10.5907L20.4115 2.80292H18.824L13.007 9.56484L8.35986 2.80292H3L10.0265 13.0295L3 21.1971H4.58744L10.732 14.0554L15.6401 21.1971H21L13.7125 10.5925L13.7107 10.5907ZM11.5365 13.1195L10.8238 12.1008L5.15978 3.998H7.59854L12.1701 10.5367L12.8828 11.5554L18.8258 20.056H16.3871L11.5383 13.1195H11.5365Z"></path></svg></a>                    
+                </div>
+                <div>
+                    <a target="_blank" rel="noopener noreferrer" class="share" 
+                    href="https://www.facebook.com/dialog/feed?app_id=1770216207025954&amp;display=popup&amp;link=https%3A%2F%2Fyoshimotomasahir.github.io%2Fasapoki_vis%2Faward2025.html"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16.7661 13.371L17.3351 9.40001H13.7791V6.82301C13.7791 5.73701 14.2761 4.67801 15.8691 4.67801H17.4861V1.29901C17.4861 1.29901 16.0191 1.03101 14.6161 1.03101C11.6871 1.03101 9.77309 2.93301 9.77309 6.37501V9.40101H6.51709V13.372H9.77309V22.97H13.7801V13.371H16.7681H16.7661Z"></path></svg></a>
+                </div>
             </footer>
         </div>
     </div>
