@@ -15,7 +15,7 @@ function applyShowAllState() {
     showAllRadios.forEach(r => {
         r.checked = (r.value === (showAll ? "show-all" : "show-50"));
     });
-    showAllToggle.textContent = showAll ? "▲50番組を表示" : "▼全番組表示";
+    showAllToggle.textContent = showAll ? "▲50番組を表示" : "▼全番組表示(すべて表示する)";
 }
 applyShowAllState();
 showAllRadios.forEach(r => {
