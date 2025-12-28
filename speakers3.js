@@ -553,6 +553,7 @@ function displaySpeakers() {
     else { throw new Error("Invalid sort option"); }
 
     let currentSplitter = 0;
+    let currentCount = 0;
     for (let i = 0; i < speakerArray.length; i++) {
         const span = document.createElement("span");
         span.className = "nowrap";
@@ -565,6 +566,9 @@ function displaySpeakers() {
         else if (currentSplitter + 1 < splitterInt.length && speakerArray[i].value > splitterInt[currentSplitter + 1]) {
             if (allSpeakerElement.lastChild) {
                 allSpeakerElement.removeChild(allSpeakerElement.lastChild);
+                allSpeakerElement.appendChild(document.createTextNode(` (${currentCount}名)`));
+                totalCount += currentCount;
+                currentCount = 0;
             }
             allSpeakerElement.appendChild(document.createElement("br"));
             allSpeakerElement.appendChild(document.createElement("br"));
@@ -573,11 +577,14 @@ function displaySpeakers() {
             currentSplitter += 1;
         }
         allSpeakerElement.appendChild(addReporterURL(span));
+        currentCount += 1;
 
         allSpeakerElement.appendChild(document.createTextNode(", "));
     }
     if (allSpeakerElement.lastChild) {
         allSpeakerElement.removeChild(allSpeakerElement.lastChild);
+        allSpeakerElement.appendChild(document.createTextNode(` (${currentCount}名)`));
+        totalCount += currentCount;
     }
 
     document.getElementById("num_speaker").textContent = speakerArray.length;
