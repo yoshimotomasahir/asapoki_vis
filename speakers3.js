@@ -567,7 +567,6 @@ function displaySpeakers() {
             if (allSpeakerElement.lastChild) {
                 allSpeakerElement.removeChild(allSpeakerElement.lastChild);
                 allSpeakerElement.appendChild(document.createTextNode(` (${currentCount}名)`));
-                totalCount += currentCount;
                 currentCount = 0;
             }
             allSpeakerElement.appendChild(document.createElement("br"));
@@ -584,7 +583,6 @@ function displaySpeakers() {
     if (allSpeakerElement.lastChild) {
         allSpeakerElement.removeChild(allSpeakerElement.lastChild);
         allSpeakerElement.appendChild(document.createTextNode(` (${currentCount}名)`));
-        totalCount += currentCount;
     }
 
     document.getElementById("num_speaker").textContent = speakerArray.length;
