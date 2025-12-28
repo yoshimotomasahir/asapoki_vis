@@ -540,8 +540,11 @@ function displaySpeakers() {
         );
     }
     else if (sortOption === "speaker-duration") {
-        splitterInt = [-1 * 24 * 60 * 60, -12 * 60 * 60, -6 * 60 * 60, -3 * 60 * 60, -1 * 60 * 60];
-        splitterLabel = ["12時間以上", "6時間~12時間", "3時間~6時間", "1時間~3時間", "1時間未満"];
+        splitterInt = [];
+        for (const hours of [9999, 48, 24, 12, 6, 3, 1]) {
+            splitterInt.push(-hours * 60 * 60);
+        }
+        splitterLabel = ["48時間以上", "24時間~48時間", "12時間~24時間", "6時間~12時間", "3時間~6時間", "1時間~3時間", "1時間未満"];
     }
     else if (sortOption === "speaker-furigana") {
         splitterInt = [0, 600 - 1, 1100 - 1, 1600 - 1, 2100 - 1, 2600 - 1, 3100 - 1, 3600 - 1, 3900 - 1, 4400 - 1];
