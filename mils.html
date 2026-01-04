@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="ja">
+
+<head>
+    <meta charset="utf-8" />
+    <title>朝日新聞紙面 単位変換ツール（朝リス用）</title>
+    <meta name="robots" content="noindex,nofollow,noarchive" />
+    <link rel="icon" href="/asapoki_vis/favicon.ico" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0px;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            background-color: #f9f9f9;
+            font-family: "Noto Sans JP", Meiryo, メイリオ, Verdana, "Hiragino Kaku Gothic ProN", "ヒラギノ角ゴ ProN W3", sans-serif;
+            line-height: 1.8;
+            padding: 20px;
+        }
+
+        p {
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
+
+        h2 {
+            margin-top: 0.4em;
+            margin-bottom: 0.3em;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h2>朝日新聞紙面 単位変換ツール（朝リス用）</h2>
+        <p>
+            段・倍・ユニット・ミルス等の単位を相互に変換します。
+        </p>
+    </header>
+
+    <main>
+
+        <section aria-labelledby="converter-title">
+            <h3 id="converter-title">単位変換</h3>
+
+            <form id="convert-form">
+                <fieldset>
+                    <legend>入力</legend>
+
+                    <p>
+                        <label for="input-kind">入力単位：</label>
+                        <select id="input-kind" name="input-kind">
+                            <option value="dan">段</option>
+                            <option value="bai" selected>倍</option>
+                            <option value="unit">ユニット</option>
+                            <option value="mils">ミルス</option>
+                            <option value="gyo">行</option>
+                            <option value="mm">mm</option>
+                            <option value="cm">cm</option>
+                            <option value="full-width">紙面の幅</option>
+                            <option value="full-height">紙面の高さ</option>
+                        </select>
+                    </p>
+
+                    <p>
+                        <label for="input-value">入力値：</label>
+                        <input id="input-value" name="input-value" type="number" step="0.5" placeholder="例：2"
+                            value="4" />
+                    </p>
+
+                    <p>
+                        <label for="rounding">丸め：</label>
+                        <select id="rounding" name="rounding">
+                            <option value="none">しない</option>
+                            <option value="int">整数に丸め</option>
+                            <option value="0.1">小数第1位</option>
+                            <option value="0.01" selected>小数第2位</option>
+                            <option value="0.001">小数第3位</option>
+                        </select>
+                    </p>
+
+                    <p>
+                        <button type="button" id="btn-convert">変換する</button>
+                        <button type="button" id="btn-clear">クリア</button>
+                    </p>
+                </fieldset>
+
+                <fieldset>
+                    <legend>出力</legend>
+                    <p> <label> 段： <input id="out-dan" type="text" readonly /> </label> </p>
+                    <p> <label> 倍： <input id="out-bai" type="text" readonly /> </label> </p>
+                    <p> <label> ユニット： <input id="out-unit" type="text" readonly /> </label> </p>
+                    <p> <label> ミルス： <input id="out-mils" type="text" readonly /> </label> </p>
+                    <p> <label> 行： <input id="out-gyo" type="text" readonly /> </label> </p>
+                    <p> <label> mm： <input id="out-mm" type="text" readonly /> </label> </p>
+                    <p> <label> cm： <input id="out-cm" type="text" readonly /> </label> </p>
+                </fieldset>
+            </form>
+        </section>
+
+        <section>
+            <div id="paper-comment"></div>
+            <div id="paper">
+                <div id="sq"></div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <details>
+            <summary>単位の定義</summary>
+            <small>
+                <ul>
+                    <li>1段=20倍</li>
+                    <li>1倍=8ユニット</li>
+                    <li>1倍=84.8ミルス</li>
+                    <li>70行=紙面の幅 15154.28ミルス</li>
+                    <li>15段=紙面の高さ</li>
+                    <li>1000ミルス=1インチ=25.4mm</li>
+                </ul>
+            </small>
+        </details>
+        <p><small>編集マニアの単位回を朝リス おんさ が聞き取った範囲で作りました。正確性は保証しません。</small></p>
+    </footer>
+    <script src="./mils.js"></script>
+</body>
+
+</html>
