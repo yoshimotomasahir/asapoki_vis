@@ -2,10 +2,10 @@ const CONST = {
     dan_to_bai: 20,              // 1段 = 20倍
     bai_to_unit: 8,              // 1倍 = 8ユニット
     bai_to_mils: 84.8,           // 1倍 = 84.8ミルス
-    gyo_to_mils: 15154.28 / 70,  // 70行 = 15154.28ミルス
+    gyo_to_mils: 214.4,          // 1行 = 214.4ミルス
     mm_to_mils: 1 / 0.0254,      // 25.4mm = 1000ミルス = 1インチ
     paper_height_mils: 20352,    // 240倍
-    paper_width_mils: 15154.28
+    paper_width_mils: 15154.28   // 固定値 (約70.68行)
 };
 
 const applyRounding = (v, mode) => {
@@ -47,7 +47,7 @@ function convertUnit(kind, value) {
             mils = value * CONST.paper_width_mils;
             break;
         case "full-height":
-            mils = value * 12 * CONST.dan_to_bai * CONST.bai_to_mils;
+            mils = value * CONST.paper_height_mils;
             break;
         default:
             return;
@@ -127,12 +127,12 @@ function drawSquareFromConverted(kind, value) {
     const paperAspect = CONST.paper_height_mils / CONST.paper_width_mils;
     const paperInnerHpx = Math.round(paperInnerWpx * paperAspect);
 
+    // mils -> px の倍率（内側幅基準）
+    const milsToPx = paperInnerWpx / CONST.paper_width_mils;
+
     // 外枠(1px)を考慮した要素サイズ
     const paperWpx = paperInnerWpx + 2;
     const paperHpx = paperInnerHpx + 2;
-
-    // mils -> px の倍率（内側幅基準）
-    const milsToPx = paperInnerWpx / CONST.paper_width_mils;
 
     // 初回だけ：枠線・段罫線（横罫線）を描画
     if (!paperEl.dataset.inited) {
@@ -173,7 +173,7 @@ function drawSquareFromConverted(kind, value) {
     // 正方形のサイズ(px)
     const cellWpx = sizeMils * milsToPx;
 
-    // 縦方向セル高(px)：入力が行なら「1段高」を使う（現状仕様を維持）
+    // 縦方向セル高(px)：入力が行なら「1段高」を使う
     const oneDanMils = convertUnit("dan", 1).mils;
     const cellHpx = (kind === "gyo") ? (oneDanMils * milsToPx) : cellWpx;
     const paperCommentEl = document.getElementById("paper-comment");
@@ -187,8 +187,8 @@ function drawSquareFromConverted(kind, value) {
 
     // 右上基準（内側描画領域で計算、枠線内側に配置）
     const borderInset = 1;
-    const originX = paperInnerWpx - cellWpx; // 右上セルの左上x（内側基準）
-    const originY = 0;                       // 右上セルの左上y（内側基準）
+    const originX = paperInnerWpx - cellWpx - 3; // 右上セルの左上x（内側基準、両端の隙間を考慮）
+    const originY = 0;                           // 右上セルの左上y（内側基準）
 
     const createSq = (x, y) => {
         const d = document.createElement("div");
