@@ -950,6 +950,7 @@ function displayReporters() {
         document.getElementById("reporter-num-asapoki-members").innerHTML = count_asapoki_members;
         document.getElementById("reporter-num-asapoki").innerHTML = count_asapoki;
         document.getElementById("reporter-num-others").innerHTML = count_others;
+        document.getElementById("reporter-num-all").innerHTML = Object.keys(reporters).length;
     }
 }
 
