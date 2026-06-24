@@ -18,6 +18,8 @@ document.getElementById("app").innerHTML = `
         <select name="platform" id="platform" onchange="handleSelectPlatformChange(event)">
           <option value="omnyfm">Omny.fm</option>
           <option value="spotify">Spotify</option>
+          <option value="asahi">朝日新聞</option>
+          <option value="pca">Pocket Casts</option>
         </select>
       </section>
     </section>
@@ -38,7 +40,7 @@ document.getElementById("app").innerHTML = `
 var titles = {};
 
 let platform = "omnyfm";
-const platforms = ['omnyfm', 'spotify'];
+const platforms = ['omnyfm', 'spotify', 'asahi', 'pca'];
 const savedPlatform = localStorage.getItem('platform');
 if (platforms.includes(savedPlatform)) {
   platform = savedPlatform;
@@ -88,6 +90,12 @@ function updateTitles(data) {
         }
         else if (platform === "spotify") {
           link = "https://open.spotify.com/episode/" + catData[i].spotify.split('/').pop();
+        }
+        else if (platform === "asahi") {
+          link = "https://www.asahi.com/special/podcasts/item/?itemid=" + catData[i].clipId.split('=').pop();
+        }
+        else if (platform === "pca") {
+          link = "https://pca.st/episode/" + catData[i].pca.split('/').pop();
         }
       }
 
