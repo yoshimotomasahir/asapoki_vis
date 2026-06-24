@@ -52,6 +52,7 @@ document.getElementById("platform").value = platform;
 const localStorageKey = 'jsonData';
 
 function updateTitles(data) {
+  titles = {};
   for (let cat = 0; cat < 6; cat++) {
     let catData, category;
     if (cat === 0) {
@@ -99,16 +100,7 @@ function updateTitles(data) {
       if (!titles.hasOwnProperty(formattedDate)) {
         titles[formattedDate] = [];
       }
-      const index = titles[formattedDate].findIndex(
-        (entry) => entry[0] === title && entry[2] === category
-      );
-      if (index !== -1) {
-        if (titles[formattedDate][index][1] !== link) {
-          titles[formattedDate][index][1] = link;
-        }
-      } else {
-        titles[formattedDate].push([title, link, category]);
-      }
+      titles[formattedDate].push([title, link, category]);
     }
   }
   console.log("updateTitles");
