@@ -100,6 +100,7 @@ function updateTitles(data) {
       }
 
       const date = new Date(catData[i].pubDate);
+      if (cat === 2 && date >= new Date(2026, 5, 30)) continue;
       const year = date.getFullYear();
       const month = (date.getMonth() + 1).toString().padStart(2, '0');
       const day = date.getDate().toString().padStart(2, '0');

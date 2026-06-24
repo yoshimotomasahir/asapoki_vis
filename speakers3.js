@@ -132,6 +132,7 @@ function readData(data) {
                 const title = catData[i].title;
                 let actualDuration = duration;
                 const date = new Date(catData[i].pubDate);
+                if (cat === 2 && date >= new Date(2026, 5, 30)) continue;
                 const unixtime = date.getTime();
                 if (title.length >= 3 && title.substring(0, 3) === "（再）") {
                     actualDuration = 0;
