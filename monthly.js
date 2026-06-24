@@ -216,7 +216,7 @@ function appendDay(day, calendarDaysElement) {
       var category = titles[day["date"]][i][2];
       //   var minutes = titles[day["date"]][i][3];
       //   linkElement.textContent = "【"+category+"】"+title+" ("+minutes+"分)";
-      linkElement.innerHTML = "<b>【" + category + "】</b>" + title;
+      linkElement.innerHTML = "<span class=\"episode-category\">【" + category + "】</span><span class=\"episode-title\">" + title + "</span>";
       linkElement.href = link;
       podcastElement.appendChild(linkElement);
       const podcastElementClassList = podcastElement.classList;

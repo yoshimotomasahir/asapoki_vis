@@ -7,12 +7,13 @@ body {
   font-size: 16px;
   font-size: 1.6rem;
   font-family: "Noto Sans JP", Meiryo, メイリオ, Verdana, "Hiragino Kaku Gothic ProN", "ヒラギノ角ゴ ProN W3", sans-serif;
-  font-weight: 100;
+  font-weight: 400;
   --grey-050: #f1f4f7;
   --grey-100: #e4e9f0;
   --grey-200: #cfd7e3;
   --grey-300: #b5c0cd;
   --grey-800: #3e4e63;
+  --grey-900: #172335;
   --grid-gap: 1px;
   --day-label-size: 20px;
   text-size-adjust: 150%;
@@ -170,8 +171,15 @@ li {
   display: flex;
   font-size: 15px;
   font-size: 1.5rem;
-  /* font-weight: bold; */
   margin: 5px 0 5px 0;
+}
+
+.episode-category {
+  color: var(--grey-800);
+}
+
+.episode-title {
+  color: var(--grey-900);
 }
 
 .day-space {
@@ -190,9 +198,9 @@ li {
   opacity: 0.9;
 }
 
-.article-title {
+.floating-link-label {
   color: #2a2a2a;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .floating-element {
