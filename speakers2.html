@@ -310,6 +310,10 @@
                 <div><a href="https://discord.com/channels/1195561707775467580/1331237074946228266" rel="nofollow"
                         target="_blank">質問や要望はこちらへ (朝ポキDiscord)</a></div>
             </div>
+            <div>
+                <h4>デバッグ</h4>
+                <label><input type="checkbox" id="debugMode">出演者の詳細情報を表示</label>
+            </div>
         </div>
     </div>
 
@@ -352,6 +356,7 @@
                     <span class="nowrap"><label id="select-speaker-label"><input type="radio" name="select-speaker" value="selected"
                             disabled>出演者名をクリックしてください</label><span id="select-reporter-link"></span></span>
                 </div>
+                <div id="debug-info" class="gray-text" style="display: none;"></div>
                 <div style="overflow-x: auto; width: 100%; margin: 4px 0px 0px 0px;">
                     <svg id="chart" height="0"></svg>
                 </div>

@@ -5,6 +5,15 @@ var asapoki_members = {};
 
 const localStorageKey = 'jsonData';
 
+const debugModeCheckbox = document.getElementById("debugMode");
+let debugMode = localStorage.getItem("debugMode") === "true";
+debugModeCheckbox.checked = debugMode;
+debugModeCheckbox.addEventListener("change", e => {
+    debugMode = e.target.checked;
+    localStorage.setItem("debugMode", debugMode);
+    displayTitles();
+});
+
 let showAll = localStorage.getItem("showAll") === "true";
 const showAllToggle = document.getElementById("showAllToggle");
 const showAllRadios = document.querySelectorAll('input[name="showAll"]');
@@ -114,6 +123,10 @@ function formatMonth(monthInt) {
     const month = monthInt % 12 + 1;
     return `${year}年${month}月`;
 }
+function formatDate(unixtime) {
+    const date = new Date(unixtime);
+    return `${date.getFullYear()}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getDate().toString().padStart(2, '0')}`;
+}
 
 
 const categories = ["genba", "media", "sdgs", "houdan"];
@@ -147,9 +160,11 @@ function readData(data) {
                     actualDuration = 0;
                 }
                 combined.forEach(function (speaker) {
+                    const mcCount = catData[i].mc.includes(speaker) ? 1 : 0;
                     if (!(speaker in speakers)) {
                         const speakerData = {};
                         speakerData.duration = actualDuration;
+                        speakerData.mcCount = mcCount;
                         speakerData.categories = 1 << cat;
                         speakerData.oldest = unixtime;
                         speakerData.newest = unixtime;
@@ -158,6 +173,7 @@ function readData(data) {
                         speakers[speaker] = speakerData;
                     } else {
                         speakers[speaker].duration += actualDuration;
+                        speakers[speaker].mcCount += mcCount;
                         speakers[speaker].categories |= 1 << cat;
                         speakers[speaker].oldest = Math.min(speakers[speaker].oldest, unixtime);
                         speakers[speaker].newest = Math.max(speakers[speaker].newest, unixtime);
@@ -291,8 +307,7 @@ function displayTitlesImpl(element, titleDatas, useOver50) {
 
         const dateSpan = document.createElement("span");
         dateSpan.className = "gray-text";
-        const date = new Date(titleData.unixtime);
-        dateSpan.textContent = ` ${formatDuration(titleData.duration)}  ${date.getFullYear()}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getDate().toString().padStart(2, '0')} `;
+        dateSpan.textContent = ` ${formatDuration(titleData.duration)}  ${formatDate(titleData.unixtime)} `;
 
         const speakersSpan = document.createElement("span");
         speakersSpan.className = "article-speakers";
@@ -354,6 +369,7 @@ function displayTitles() {
     if (selectedSpeakerRadio && selectedSpeakerRadio.value === "selected") {
         selectedSpeaker = selectedSpeakerRadio.nextSibling.textContent;
     }
+    displayDebugInfo(selectedSpeaker);
 
     let sortedTitles = [...titles];
     sortedTitles.sort((a, b) => {
@@ -407,10 +423,25 @@ function displayTitles() {
     console.log("displayTitles", (endTime - startTime).toFixed(1), "ms");
 }
 
+function displayDebugInfo(selectedSpeaker) {
+    const debugInfoElement = document.getElementById("debug-info");
+    debugInfoElement.innerHTML = "";
+    if (!debugMode || selectedSpeaker === "" || !(selectedSpeaker in speakers)) {
+        debugInfoElement.style.display = "none";
+        return;
+    }
 
+    const speakerData = speakers[selectedSpeaker];
+    let text = "";
 
-
-
+    text += `ふりがな(ニックネーム含む): ${speakerData.furigana}<br>`;
+    text += `MCでの登場: ${speakerData.mcCount}番組<br>`;
+    text += `最古の登場: ${formatDate(speakerData.oldest)}<br>`;
+    text += `最新の登場: ${formatDate(speakerData.newest)}<br>`;
+    text += `<a href="https://www.google.com/search?q=${encodeURIComponent(selectedSpeaker)}+asahi.com" target="_blank" rel="nofollow">Google検索: ${selectedSpeaker} asahi.com</a>`;
+    debugInfoElement.innerHTML = text;
+    debugInfoElement.style.display = "block";
+}
 
 function drawChart(categoryMonths) {
     const svg = document.getElementById("chart");
