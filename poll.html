@@ -53,7 +53,7 @@
 <body>
     <h2>世論調査シミュレータ</h2>
     <p><label>真の支持率(%) <input id="p" type="number" value="50" min="1" max="99" step="1"></label></p>
-    <p><label>調査対象者数(人) <input id="n" type="number" value="3000" min="100" max="100000000" step="1"></label></p>
+    <p><label>調査対象者数(人) <input id="n" type="number" value="3000" min="100" max="1000000" step="1"></label></p>
     <p><label>支持者の回答率(%) <input id="ps" type="number" value="40" min="1" max="100" step="1"></label></p>
     <p><label>不支持者の回答率(%) <input id="pn" type="number" value="40" min="1" max="100" step="1"></label></p>
     <p><label>シミュレーション回数 <input id="k" type="number" value="10" min="1" max="100000"></label></p>
@@ -65,7 +65,7 @@
         const binom = (n, p) => { let x = 0; for (let i = 0; i < n; i++) x += Math.random() < p; return x; };
         const pct = x => `${(x * 100).toFixed(1)}%`;
         const clamp = (x, min, max) => Math.max(min, Math.min(max, x));
-        const bounds = { p: [1, 99], n: [100, 100000000], ps: [1, 100], pn: [1, 100], k: [1, 100000] };
+        const bounds = { p: [1, 99], n: [100, 1000000], ps: [1, 100], pn: [1, 100], k: [1, 100000] };
         const storageKey = "pollSimulatorSettings";
         function normalizeInputs() {
             for (const id in bounds) {
@@ -103,7 +103,7 @@
             const ps = +$("ps").value / 100;
             const pn = +$("pn").value / 100;
             const k = +$("k").value;
-            let rows = "", sum = 0, validCount = 0, maxRate = 0, minRate = 1;
+            let rows = "", sum = 0, totalAnswered = 0, validCount = 0, maxRate = 0, minRate = 1;
             for (let i = 1; i <= k; i++) {
                 const s = binom(n, p);
                 const a = n - s;
@@ -111,6 +111,7 @@
                 const rn = binom(a, pn);
                 const answered = rs + rn;
                 const rate = answered > 0 ? rs / answered : null;
+                totalAnswered += answered;
                 if (rate !== null) {
                     sum += rate;
                     validCount += 1;
@@ -119,9 +120,10 @@
                 }
                 if (i <= 100) rows += `<tr><td>${i}</td><td>${answered}</td><td>${rs}</td><td>${rate === null ? "定義不可" : pct(rate)}</td></tr>`;
             }
+            const averageAnswered = Math.round(totalAnswered / k);
             const summary = validCount > 0
-                ? `<p>平均結果 ${pct(sum / validCount)} / 最大 ${pct(maxRate)} / 最少 ${pct(minRate)}</p>`
-                : "<p>平均結果 定義不可 / 最大 定義不可 / 最少 定義不可</p>";
+                ? `<p>平均回答数 ${averageAnswered} / 平均結果 ${pct(sum / validCount)} (最大 ${pct(maxRate)} 最少 ${pct(minRate)})</p>`
+                : `<p>平均回答数 ${averageAnswered} / 平均結果 定義不可</p>`;
             const table = `<table><tr><th>回</th><th>回答数</th><th>支持回答</th><th>支持率</th></tr>${rows}</table>`;
             $("result").innerHTML = summary + table + (k > 100 ? "<p>表は100回目まで表示</p>" : "");
         }
