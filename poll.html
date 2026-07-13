@@ -27,6 +27,10 @@
             width: 7em;
         }
 
+        button + button {
+            margin-left: 8px;
+        }
+
         table {
             border-collapse: collapse;
             margin-top: 12px;
@@ -53,7 +57,7 @@
     <p><label>支持者の回答率(%) <input id="ps" type="number" value="40" min="1" max="100" step="1"></label></p>
     <p><label>不支持者の回答率(%) <input id="pn" type="number" value="40" min="1" max="100" step="1"></label></p>
     <p><label>シミュレーション回数 <input id="k" type="number" value="10" min="1" max="100000"></label></p>
-    <p><button id="run">実行</button></p>
+    <p><button id="run">実行</button> <button id="reset">リセット</button></p>
     <div id="result"></div>
 
     <script>
@@ -82,6 +86,15 @@
             const settings = {};
             for (const id in bounds) settings[id] = $(id).value;
             localStorage.setItem(storageKey, JSON.stringify(settings));
+        }
+        function resetSettings() {
+            localStorage.removeItem(storageKey);
+            $("p").value = 50;
+            $("n").value = 3000;
+            $("ps").value = 40;
+            $("pn").value = 40;
+            $("k").value = 10;
+            run();
         }
         function run() {
             saveSettings();
@@ -115,6 +128,7 @@
         loadSettings();
         Object.keys(bounds).forEach(id => $(id).addEventListener("change", saveSettings));
         $("run").addEventListener("click", run);
+        $("reset").addEventListener("click", resetSettings);
         run();
     </script>
 </body>
