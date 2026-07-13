@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="ja">
+
+<head>
+    <meta charset="utf-8" />
+    <title>世論調査シミュレータ</title>
+    <meta name="robots" content="noindex,nofollow,noarchive" />
+    <link rel="icon" href="/asapoki_vis/favicon.ico" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+        body {
+            background-color: #f9f9f9;
+            font-family: "Noto Sans JP", Meiryo, メイリオ, Verdana, sans-serif;
+            line-height: 1.8;
+            margin: 0;            
+            padding: 20px;
+        }
+
+        p {
+            margin: 5px 0;
+        }
+
+        input {
+            width: 7em;
+        }
+
+        table {
+            border-collapse: collapse;
+            margin-top: 12px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ccc;
+            padding: 4px 8px;
+            text-align: right;
+        }
+
+        h2 {
+            margin-top: 0.4em;
+            margin-bottom: 0.3em;
+        }        
+    </style>
+</head>
+
+<body>
+    <h2>世論調査シミュレータ</h2>
+    <p><label>真の支持率(%) <input id="p" type="number" value="50" min="1" max="99" step="1"></label></p>
+    <p><label>調査対象者数(人) <input id="n" type="number" value="3000" min="100" max="100000000"></label></p>
+    <p><label>支持者の回答率(%) <input id="ps" type="number" value="40" min="1" max="100" step="1"></label></p>
+    <p><label>不支持者の回答率(%) <input id="pn" type="number" value="40" min="1" max="100" step="1"></label></p>
+    <p><label>シミュレーション回数 <input id="k" type="number" value="10" min="1" max="100000"></label></p>
+    <p><button id="run">実行</button></p>
+    <div id="result"></div>
+
+    <script>
+        const $ = id => document.getElementById(id);
+        const binom = (n, p) => { let x = 0; for (let i = 0; i < n; i++) x += Math.random() < p; return x; };
+        const pct = x => `${(x * 100).toFixed(1)}%`;
+        const clamp = (x, min, max) => Math.max(min, Math.min(max, x));
+        const bounds = { p: [1, 99], n: [100, 100000000], ps: [1, 100], pn: [1, 100], k: [1, 100000] };
+        const storageKey = "pollSimulatorSettings";
+        function normalizeInputs() {
+            for (const id in bounds) {
+                const el = $(id), [min, max] = bounds[id];
+                el.value = clamp(+el.value || min, min, max);
+            }
+        }
+        function loadSettings() {
+            const settings = JSON.parse(localStorage.getItem(storageKey) || "{}");
+            for (const id in bounds) {
+                if (settings[id] !== undefined) $(id).value = settings[id];
+            }
+        }
+        function saveSettings() {
+            normalizeInputs();
+            const settings = {};
+            for (const id in bounds) settings[id] = $(id).value;
+            localStorage.setItem(storageKey, JSON.stringify(settings));
+        }
+        function run() {
+            saveSettings();
+            const p = +$("p").value / 100;
+            const n = +$("n").value;
+            const ps = +$("ps").value / 100;
+            const pn = +$("pn").value / 100;
+            const k = +$("k").value;
+            let rows = "", sum = 0, maxRate = 0, minRate = 1;
+            for (let i = 1; i <= k; i++) {
+                const s = binom(n, p);
+                const a = n - s;
+                const rs = binom(s, ps);
+                const rn = binom(a, pn);
+                const answered = rs + rn;
+                const rate = answered > 0 ? rs / answered : 0;
+                sum += rate;
+                maxRate = Math.max(maxRate, rate);
+                minRate = Math.min(minRate, rate);
+                if (i <= 100) rows += `<tr><td>${i}</td><td>${rs + rn}</td><td>${rs}</td><td>${pct(rate)}</td></tr>`;
+            }
+            const summary = `<p>平均結果 ${pct(sum / k)} / 最大 ${pct(maxRate)} / 最少 ${pct(minRate)}</p>`;
+            const table = `<table><tr><th>回</th><th>回答数</th><th>支持回答</th><th>支持率</th></tr>${rows}</table>`;
+            $("result").innerHTML = summary + table + (k > 100 ? "<p>表は100回目まで表示</p>" : "");
+        }
+        loadSettings();
+        Object.keys(bounds).forEach(id => $(id).addEventListener("change", saveSettings));
+        $("run").addEventListener("click", run);
+        run();
+    </script>
+</body>
+
+</html>
