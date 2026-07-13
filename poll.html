@@ -56,7 +56,7 @@
     <p><label>調査対象者数(人) <input id="n" type="number" value="3000" min="100" max="1000000" step="1"></label></p>
     <p><label>支持者の回答率(%) <input id="ps" type="number" value="40" min="1" max="100" step="1"></label></p>
     <p><label>不支持者の回答率(%) <input id="pn" type="number" value="40" min="1" max="100" step="1"></label></p>
-    <p><label>シミュレーション回数 <input id="k" type="number" value="10" min="1" max="100000"></label></p>
+    <p><label>シミュレーション回数 <input id="k" type="number" value="20" min="1" max="100000"></label></p>
     <p><button id="run">実行</button> <button id="reset">リセット</button></p>
     <div id="result"></div>
 
@@ -93,7 +93,7 @@
             $("n").value = 3000;
             $("ps").value = 40;
             $("pn").value = 40;
-            $("k").value = 10;
+            $("k").value = 20;
             run();
         }
         function run() {
