@@ -367,6 +367,6 @@ function handleSelectPlatformChange(event) {
   const storedData = localStorage.getItem(localStorageKey);
   const data = JSON.parse(storedData);
   updateTitles(data);
-  createCalendar();
+  createCalendar(selectedMonth.format("YYYY"), selectedMonth.format("M"));
 }
 window.handleSelectPlatformChange = handleSelectPlatformChange;
