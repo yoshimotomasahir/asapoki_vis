@@ -134,7 +134,7 @@ function fetchData() {
     } else {
       console.log('Error: ' + xhr.status);
     }
-    createCalendar();
+    createCalendar(selectedMonth.format("YYYY"), selectedMonth.format("M"));
   };
   xhr.send();
 }
