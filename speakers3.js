@@ -40,14 +40,14 @@ showAllToggle.addEventListener("click", () => {
     applyShowAllState();
 });
 
-let platform = "omnyfm";
-const platforms = ['omnyfm', 'spotify', 'asahi', 'pca'];
+let platform = "spotify";
+const platforms = ['spotify', 'asahi', 'pca'];
 const savedPlatform = localStorage.getItem('platform');
 if (platforms.includes(savedPlatform)) {
     platform = savedPlatform;
 }
 else {
-    platform = "omnyfm";
+    platform = "spotify";
     localStorage.setItem('platform', platform);
 }
 document.getElementById("platform").value = platform;
