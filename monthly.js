@@ -124,7 +124,7 @@ function loadFromLocalStorage() {
 
 function fetchData() {
   const xhr = new XMLHttpRequest();
-  xhr.open('GET', 'https://script.google.com/macros/s/AKfycbzQrE9Q5cQtcHHSb6VYg45aO95Fo6HicFklxA9-rxIqnLTG-B_zPmVvamBhyuFY0gA5/exec', true);
+  xhr.open('GET', 'https://asapoki.yoshimoto.workers.dev/', true);
   xhr.onload = function () {
     if (xhr.status === 200) {
       const data = JSON.parse(xhr.responseText);
