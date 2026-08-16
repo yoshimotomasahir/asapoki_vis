@@ -129,9 +129,9 @@ function formatDate(unixtime) {
 }
 
 
-const categories = ["genba", "media", "sdgs", "houdan"];
-const categoriesShort = ["現場", "メディア", "SDGs", "報談"]
-const num_cat = 4;
+const categories = ["genba", "media", "sdgs", "houdan", "donuts"];
+const categoriesShort = ["現場", "メディア", "SDGs", "報談", "ドーナツ"]
+const num_cat = 5;
 
 function readData(data) {
     titles = [];
@@ -387,7 +387,8 @@ function displayTitles() {
         0: [], // 現場
         1: [], // メディア
         2: [], // SDGs
-        3: []  // 報談
+        3: [], // 報談
+        4: []  // ドーナツ
     };
     sortedTitles.forEach(titleData => {
         if (selectedSpeaker === "" || titleData.speakers.includes(selectedSpeaker)) {
@@ -454,7 +455,8 @@ function drawChart(categoryMonths) {
         ["#ffffff", "#bfe3d7", "#7dc6ae", "#1b9e77"], // 現場
         ["#ffffff", "#f1c4a6", "#e68a52", "#d95f02"], // メディア
         ["#ffffff", "#d3d0e8", "#a59ecf", "#7570b3"], // SDGs
-        ["#ffffff", "#b5d3ea", "#75add6", "#1f78b4"]  // 報談
+        ["#ffffff", "#b5d3ea", "#75add6", "#1f78b4"], // 報談
+        ["#ffffff", "#ffd0ee", "#ed72c3", "#b0006d"]  // ドーナツ
     ];
 
     function getEventCount(cat, monthInt) {
