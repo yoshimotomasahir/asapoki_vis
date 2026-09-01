@@ -6,13 +6,20 @@ var asapoki_members = {};
 const localStorageKey = 'jsonData';
 
 const debugModeCheckbox = document.getElementById("debugMode");
+const chartContainer = document.getElementById("chart-container");
 let debugMode = localStorage.getItem("debugMode") === "true";
 debugModeCheckbox.checked = debugMode;
+updateDebugVisibility();
 debugModeCheckbox.addEventListener("change", e => {
     debugMode = e.target.checked;
     localStorage.setItem("debugMode", debugMode);
+    updateDebugVisibility();
     displayTitles();
 });
+
+function updateDebugVisibility() {
+    chartContainer.style.display = debugMode ? "block" : "none";
+}
 
 let showAll = localStorage.getItem("showAll") === "true";
 const showAllToggle = document.getElementById("showAllToggle");
