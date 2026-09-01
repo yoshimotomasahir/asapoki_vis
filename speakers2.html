@@ -173,6 +173,10 @@
             padding: 20px 20px 20px 20px;
         }
 
+        .playlist-options label {
+            display: block;
+        }
+
         .color-genba {
             color: #1b9e77;
         }
@@ -191,6 +195,10 @@
 
         .color-houdan {
             color: #1f78b4;
+        }
+
+        .color-sports {
+            color: #e6ab02;
         }
 
         .reporter-name {
@@ -274,7 +282,7 @@
                 <label><input type="radio" name="sort-title" value="title-newest" checked>新しい順</label>
                 <label><input type="radio" name="sort-title" value="title-oldest">古い順</label>
             </div>
-            <div>
+            <div class="playlist-options">
                 <h4>プレイリスト</h4>
                 <label><input type="checkbox" name="select-playlist" value="0" checked><span
                         class="color-genba">▶</span>ニュースの現場から</label>
@@ -286,6 +294,8 @@
                     class="color-houdan">▶</span>報談 【HOU-DAN】</label>
                 <label><input type="checkbox" name="select-playlist" value="4" checked><span
                     class="color-donuts">▶</span>ドーナツ ～このポッドキャストはSNSです</label>
+                <label><input type="checkbox" name="select-playlist" value="5" checked><span
+                    class="color-sports">▶</span>スポンジ　Sports Lounge/スポーツラウンジ</label>
             </div>
             <div>
                 <h4>配信年月</h4>

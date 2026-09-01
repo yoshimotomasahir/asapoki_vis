@@ -54,7 +54,7 @@ const localStorageKey = 'jsonData';
 
 function updateTitles(data) {
   titles = {};
-  for (let cat = 0; cat < 7; cat++) {
+  for (let cat = 0; cat < 8; cat++) {
     let catData, category;
     if (cat === 0) {
       catData = data.genba;
@@ -77,6 +77,9 @@ function updateTitles(data) {
     } else if (cat === 6) {
       catData = data.donuts;
       category = "ドーナツ";
+    } else if (cat === 7) {
+      catData = data.sports;
+      category = "スポンジ";
     }
     if (catData === undefined) continue;
 
