@@ -1,7 +1,7 @@
 ## 朝ポキツール システム図
 ```mermaid
 flowchart TD
-    O[配信・公開サービス<br>Omny / Megaphone / Spotify<br>Pocket Casts / YouTube / Asahi.com]
+    O[配信・公開サービス<br>Omny / Megaphone <br> Spotify / Pocket Casts <br> YouTube / Asahi.com]
     Z([運用担当<br>おんさ])
 
     A(データ自動取得<br>Google Apps Script・毎日)
