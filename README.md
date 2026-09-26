@@ -1,40 +1,35 @@
 ## 朝ポキツール システム図
 ```mermaid
-graph TD;
-    X(出演者追加<br>by 朝リスさん有志)
-    Y(セレクション編集<br>by 朝リスさん有志)
-    Z(データ確認<br>by おんさ)
-    A(自動データ取得<br>by GAS 毎日)
-    B(自動変換<br>by GAS 毎時)
-    G[Googleスプレッドシート]
-    J[Google Drive上の<br>JSONファイル]
-    O[omny<br>Spotify<br>YouTube]
-    S[Spotifyプレイリスト]
-    R(朝リスさん)
-    T[朝ポキ 検索ツール等<br>by HTML+JavaScript]
-    X --> |追加| G;
-    Z --> |修正| G;
-    A --> |書き込み| G;
-    A <--> |リクエスト・受信| O
-    G --> B;
-    B --> J;
-    J <--> |リクエスト・受信| T;
-    A <--> |リクエスト・受信| S;
-    R --> |閲覧| T;
-    Y --> |編集| S;
+flowchart TD
+    O[配信・公開サービス<br>Omny / Megaphone / Spotify<br>Pocket Casts / YouTube / Asahi.com]
+    Z([運用担当<br>おんさ])
 
-    style A fill:#FFDAB9,stroke:#FF8C00,stroke-width:1.5px;
-    style B fill:#FFDAB9,stroke:#FF8C00,stroke-width:1.5px;
+    A(データ自動取得<br>Google Apps Script・毎日)
+    X(出演者データ追加支援<br>Gemini<br>Google Apps Script・随時)
 
-    style G fill:#C1E1C1,stroke:#228B22,stroke-width:1.5px;
-    style J fill:#C1E1C1,stroke:#228B22,stroke-width:1.5px;
-    style O fill:#C1E1C1,stroke:#228B22,stroke-width:1.5px;
-    style S fill:#C1E1C1,stroke:#228B22,stroke-width:1.5px;
+    G[(Google スプレッドシート)]
+    B(JSON自動生成<br>Google Apps Script・毎時)
+    J[(JSONデータ<br>Cloudflare)]
 
-    style R fill:#B0E0E6,stroke:#4682B4,stroke-width:1.5px;
-    style T fill:#B0E0E6,stroke:#4682B4,stroke-width:1.5px;
+    T[朝ポキツール<br>HTML / JavaScript<br>GitHub Pages]
+    R([朝リスさん])
 
-    style X fill:#FADADD,stroke:#FF69B4,stroke-width:1.5px;
-    style Y fill:#FADADD,stroke:#FF69B4,stroke-width:1.5px; 
-    style Z fill:#FADADD,stroke:#FF69B4,stroke-width:1.5px; 
+    O -->|番組データ| A
+    A -->|配信情報を追加| G
+    X -->|出演者情報を追加| G
+    Z -->|確認・修正| G
+    G -->|元データ| B
+    B -->|JSONを生成・更新| J
+    J -->|JSONを配信| T
+    T -->|表示| R
+
+    classDef person fill:#E8F1FB,stroke:#3973AC,stroke-width:1.5px;
+    classDef process fill:#FFF1DB,stroke:#D98200,stroke-width:1.5px;
+    classDef datastore fill:#E4F3E7,stroke:#36874A,stroke-width:1.5px;
+    classDef service fill:#F2EAF8,stroke:#79589F,stroke-width:1.5px;
+
+    class R,Z person;
+    class A,X,B process;
+    class G,J datastore;
+    class O,T service;
 ```
