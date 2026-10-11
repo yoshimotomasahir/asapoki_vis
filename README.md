@@ -1,3 +1,10 @@
+## License
+Copyright (C) 2026 Masahiro Yoshimoto
+
+This project is licensed under the GNU Affero General Public License v3.0 (AGPL-3.0-only).
+
+See [LICENSE](LICENSE) for details.
+
 ## 朝ポキツール システム図
 ```mermaid
 flowchart TD
