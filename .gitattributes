@@ -1,0 +1,9 @@
+# Preserve vendored library bytes so SRI hashes survive staging and checkout.
+/dayjs.min.js -text
+/weekday.js -text
+/weekOfYear.js -text
+/flatpickr.min.js -text
+/flatpickr-ja.js -text
+/flatpickr-monthSelect.js -text
+/flatpickr.min.css -text
+/flatpickr-monthSelect.css -text

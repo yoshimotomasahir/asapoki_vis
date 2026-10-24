@@ -5,6 +5,25 @@ var asapoki_members = {};
 
 const localStorageKey = 'jsonData';
 
+function setSafeExternalLink(element, value) {
+    try {
+        const url = new URL(value);
+        if (url.protocol !== "https:" && url.protocol !== "http:") {
+            throw new Error("Unsupported URL protocol");
+        }
+        element.href = url.href;
+        element.target = "_blank";
+        element.rel = "noopener noreferrer nofollow";
+        return true;
+    } catch (error) {
+        console.warn("Unsafe or invalid external URL was ignored", value);
+        element.removeAttribute("href");
+        element.removeAttribute("target");
+        element.removeAttribute("rel");
+        return false;
+    }
+}
+
 const debugModeCheckbox = document.getElementById("debugMode");
 const chartContainer = document.getElementById("chart-container");
 let debugMode = localStorage.getItem("debugMode") === "true";
@@ -300,9 +319,7 @@ function displayTitlesImpl(element, titleDatas, useOver50) {
         outerSpan.className = "title";
 
         const titleElement = document.createElement("a");
-        titleElement.href = titleData.link[platform];
-        titleElement.rel = "nofollow";
-        titleElement.target = "_blank";
+        setSafeExternalLink(titleElement, titleData.link[platform]);
 
         const playlistIcon = document.createElement("span");
         playlistIcon.className = "color-" + categories[titleData.cat];
@@ -318,8 +335,15 @@ function displayTitlesImpl(element, titleDatas, useOver50) {
 
         const speakersSpan = document.createElement("span");
         speakersSpan.className = "article-speakers";
-        speakersSpan.innerHTML = titleData.speakers.map(speaker =>
-            `<span class="nowrap name">${speaker}</span>`).join(", ");
+        titleData.speakers.forEach((speaker, index) => {
+            if (index > 0) {
+                speakersSpan.appendChild(document.createTextNode(", "));
+            }
+            const speakerSpan = document.createElement("span");
+            speakerSpan.className = "nowrap name";
+            speakerSpan.textContent = speaker;
+            speakersSpan.appendChild(speakerSpan);
+        });
 
         // フラグメントにまとめて追加
         titleElement.appendChild(titleSpan);
@@ -434,21 +458,27 @@ function displayTitles() {
 
 function displayDebugInfo(selectedSpeaker) {
     const debugInfoElement = document.getElementById("debug-info");
-    debugInfoElement.innerHTML = "";
+    debugInfoElement.replaceChildren();
     if (!debugMode || selectedSpeaker === "" || !(selectedSpeaker in speakers)) {
         debugInfoElement.style.display = "none";
         return;
     }
 
     const speakerData = speakers[selectedSpeaker];
-    let text = "";
-
-    text += `ふりがな(ニックネーム含む): ${speakerData.furigana}<br>`;
-    text += `MCでの登場: ${speakerData.mcCount}番組<br>`;
-    text += `最古の登場: ${formatDate(speakerData.oldest)}<br>`;
-    text += `最新の登場: ${formatDate(speakerData.newest)}<br>`;
-    text += `<a href="https://www.google.com/search?q=${encodeURIComponent(selectedSpeaker)}+asahi.com" target="_blank" rel="nofollow">Google検索: ${selectedSpeaker} asahi.com</a>`;
-    debugInfoElement.innerHTML = text;
+    const lines = [
+        `ふりがな(ニックネーム含む): ${speakerData.furigana}`,
+        `MCでの登場: ${speakerData.mcCount}番組`,
+        `最古の登場: ${formatDate(speakerData.oldest)}`,
+        `最新の登場: ${formatDate(speakerData.newest)}`
+    ];
+    lines.forEach(line => {
+        debugInfoElement.appendChild(document.createTextNode(line));
+        debugInfoElement.appendChild(document.createElement("br"));
+    });
+    const searchLink = document.createElement("a");
+    searchLink.textContent = `Google検索: ${selectedSpeaker} asahi.com`;
+    setSafeExternalLink(searchLink, `https://www.google.com/search?q=${encodeURIComponent(selectedSpeaker)}+asahi.com`);
+    debugInfoElement.appendChild(searchLink);
     debugInfoElement.style.display = "block";
 }
 
@@ -656,10 +686,8 @@ function handleNameClick(event) {
     if (clickedName in reporters) {
         spanElement.innerHTML = '';
         const link = document.createElement('a');
-        link.href = reporters[clickedName].url;
         link.textContent = '(記者ページへ)';
-        link.rel = "nofollow";
-        link.target = '_blank';
+        setSafeExternalLink(link, reporters[clickedName].url);
         spanElement.appendChild(link);
         spanElement.style.display = 'inline';
         spanElement.style.fontWeight = "400";
@@ -962,9 +990,7 @@ function displayReporters() {
         const value = reporters[key];
         const element = document.createElement("a");
         element.textContent = key;
-        element.href = value["url"];
-        element.rel = "nofollow";
-        element.target = "_blank";
+        setSafeExternalLink(element, value["url"]);
         element.className = "reporter-name";
 
         if (asapoki_members.hasOwnProperty(key)) {

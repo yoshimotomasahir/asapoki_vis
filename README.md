@@ -5,6 +5,11 @@ This project is licensed under the GNU Affero General Public License v3.0 (AGPL-
 
 See [LICENSE](LICENSE) for details.
 
+## Third-party libraries
+
+- Day.js 1.11.6 — MIT License ([license](dayjs.LICENSE.txt))
+- flatpickr 4.6.13 — MIT License ([license](flatpickr.LICENSE.txt))
+
 ## 朝ポキツール システム図
 ```mermaid
 flowchart TD

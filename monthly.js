@@ -52,6 +52,25 @@ document.getElementById("platform").value = platform;
 
 const localStorageKey = 'jsonData';
 
+function setSafeExternalLink(element, value) {
+  try {
+    const url = new URL(value);
+    if (url.protocol !== "https:" && url.protocol !== "http:") {
+      throw new Error("Unsupported URL protocol");
+    }
+    element.href = url.href;
+    element.target = "_blank";
+    element.rel = "noopener noreferrer nofollow";
+    return true;
+  } catch (error) {
+    console.warn("Unsafe or invalid external URL was ignored", value);
+    element.removeAttribute("href");
+    element.removeAttribute("target");
+    element.removeAttribute("rel");
+    return false;
+  }
+}
+
 function updateTitles(data) {
   titles = {};
   for (let cat = 0; cat < 8; cat++) {
@@ -215,15 +234,19 @@ function appendDay(day, calendarDaysElement) {
     for (var i = 0; i < titles[day["date"]].length; i++) {
       const podcastElement = document.createElement("div");
       const linkElement = document.createElement("a");
-      linkElement.setAttribute("rel", "nofollow");
-      linkElement.setAttribute("target", "_blank");
       var title = titles[day["date"]][i][0];
       var link = titles[day["date"]][i][1];
       var category = titles[day["date"]][i][2];
       //   var minutes = titles[day["date"]][i][3];
       //   linkElement.textContent = "【"+category+"】"+title+" ("+minutes+"分)";
-      linkElement.innerHTML = "<span class=\"episode-category\">【" + category + "】</span><span class=\"episode-title\">" + title + "</span>";
-      linkElement.href = link;
+      const categorySpan = document.createElement("span");
+      categorySpan.className = "episode-category";
+      categorySpan.textContent = `【${category}】`;
+      const titleSpan = document.createElement("span");
+      titleSpan.className = "episode-title";
+      titleSpan.textContent = title;
+      linkElement.append(categorySpan, titleSpan);
+      setSafeExternalLink(linkElement, link);
       podcastElement.appendChild(linkElement);
       const podcastElementClassList = podcastElement.classList;
       podcastElementClassList.add("titles");
