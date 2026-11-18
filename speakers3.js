@@ -70,6 +70,7 @@ function closeSpeakerDetails() {
 window.closeSpeakerDetails = closeSpeakerDetails;
 
 let showAll = localStorage.getItem("showAll") === "true";
+let titleListCount = 0;
 const showAllToggle = document.getElementById("showAllToggle");
 const showAllRadios = document.querySelectorAll('input[name="showAll"]');
 function applyShowAllState() {
@@ -79,7 +80,7 @@ function applyShowAllState() {
     showAllRadios.forEach(r => {
         r.checked = (r.value === (showAll ? "show-all" : "show-50"));
     });
-    showAllToggle.textContent = showAll ? "▲50番組を表示" : "▼全番組表示(すべて表示する)";
+    showAllToggle.textContent = showAll ? "▲51番組目以降を非表示" : `▼全${titleListCount}番組を表示`;
 }
 applyShowAllState();
 showAllRadios.forEach(r => {
@@ -460,6 +461,9 @@ function displayTitles() {
         }
     });
     displayTitlesImpl(allTitleElement, titleDatas, true);
+    titleListCount = titleDatas.length;
+    showAllToggle.hidden = titleListCount <= 50;
+    applyShowAllState();
 
     document.getElementById("start-month").textContent = formatMonth(startMonth);
     document.getElementById("end-month").textContent = formatMonth(endMonth);
