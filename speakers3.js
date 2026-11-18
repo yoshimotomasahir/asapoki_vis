@@ -28,6 +28,20 @@ const chartContainer = document.getElementById("chart-container");
 const detailModal = document.getElementById("speakerDetailModal");
 const detailOverlay = document.getElementById("speakerDetailOverlay");
 const selectedSpeakers = [];
+let speakerSelectionLimit = localStorage.getItem("speakerSelectionLimit") === "1" ? 1 : 2;
+document.querySelectorAll('input[name="speaker-selection-limit"]').forEach(radio => {
+    radio.checked = Number(radio.value) === speakerSelectionLimit;
+    radio.addEventListener("change", () => {
+        if (!radio.checked) return;
+        speakerSelectionLimit = Number(radio.value);
+        localStorage.setItem("speakerSelectionLimit", String(speakerSelectionLimit));
+        if (selectedSpeakers.length > speakerSelectionLimit) {
+            selectedSpeakers.length = speakerSelectionLimit;
+            renderSelectedSpeakers();
+            displayTitles();
+        }
+    });
+});
 let detailOpener = null;
 
 function openModal(modal, overlay) {
@@ -687,8 +701,8 @@ function displaySpeakers() {
 function handleNameClick(event) {
     const clickedName = event.target.textContent;
     if (selectedSpeakers.includes(clickedName)) return;
-    if (selectedSpeakers.length < 2) selectedSpeakers.push(clickedName);
-    else selectedSpeakers[1] = clickedName;
+    if (selectedSpeakers.length < speakerSelectionLimit) selectedSpeakers.push(clickedName);
+    else selectedSpeakers[speakerSelectionLimit - 1] = clickedName;
     renderSelectedSpeakers();
 
     const savedScreen = localStorage.getItem('selectedScreen');
