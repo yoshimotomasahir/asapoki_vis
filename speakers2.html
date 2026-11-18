@@ -132,7 +132,11 @@
             display: none;
             position: fixed;
             top: 5%;
+            left: 50%;
+            width: min(80%, 500px);
             height: 90%;
+            transform: translateX(-50%);
+            z-index: 11;
             background: white;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
             border-radius: 8px;
@@ -152,6 +156,8 @@
             cursor: pointer;
             font-size: 20px;
             padding: 10px 20px 10px 10px;
+            border: 0;
+            background: transparent;
         }
 
         .settings-overlay {
@@ -161,6 +167,7 @@
             left: 0;
             width: 100%;
             height: 100%;
+            z-index: 10;
             background: rgba(0, 0, 0, 0.5);
         }
 
@@ -252,6 +259,48 @@
             border: 1px solid #787871;
             border-radius: 3px;
         }
+
+        .selected-speaker-box {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            background: #fff;
+        }
+
+        .selected-speaker-row {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .selected-speaker-row + .selected-speaker-row { margin-top: 8px; }
+
+        .selected-speaker-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 8px 2px 12px;
+            border-radius: 999px;
+            background: #dceef7;
+        }
+
+        .clear-selected-speaker {
+            border: 0;
+            padding: 0 2px;
+            background: transparent;
+            cursor: pointer;
+        }
+
+        .show-speaker-details {
+            font: inherit;
+            border: 0;
+            padding: 0;
+            background: transparent;
+            color: inherit;
+            text-decoration: underline;
+            cursor: pointer;
+        }
     </style>
 </head>
 
@@ -325,9 +374,17 @@
                 <div><a href="https://discord.com/channels/1195561707775467580/1552720834940899379" rel="noopener noreferrer nofollow"
                         target="_blank">質問や要望はこちらへ (朝ポキDiscord)</a></div>
             </div>
-            <div>
-                <h4>デバッグ</h4>
-                <label><input type="checkbox" id="debugMode">出演者の詳細情報を表示</label>
+        </div>
+    </div>
+
+    <div class="settings-overlay" id="speakerDetailOverlay" onclick="closeSpeakerDetails()"></div>
+    <div class="settings-modal" id="speakerDetailModal" role="dialog" aria-modal="true" aria-labelledby="speaker-detail-heading">
+        <button class="settings-close" type="button" aria-label="詳細を閉じる" onclick="closeSpeakerDetails()">✕</button>
+        <div class="settings-inner">
+            <h3 id="speaker-detail-heading">出演者の詳細</h3>
+            <div id="debug-info" class="gray-text" style="display: none;"></div>
+            <div id="chart-container" style="display: none; overflow-x: auto; width: 100%; margin: 4px 0px 0px 0px;">
+                <svg id="chart" height="0"></svg>
             </div>
         </div>
     </div>
@@ -366,14 +423,9 @@
                 <div id="searched-title" style="clear:both;"></div>
                 <div id="searched-pagination2"></div>
                 <h3>出演者で絞り込み</h3>
-                <div>
-                    <span class="nowrap"><label><input type="radio" name="select-speaker" value="unselected" checked>絞り込みなし</label></span>
-                    <span class="nowrap"><label id="select-speaker-label"><input type="radio" name="select-speaker" value="selected"
-                            disabled>出演者名をクリックしてください</label><span id="select-reporter-link"></span></span>
-                </div>
-                <div id="debug-info" class="gray-text" style="display: none;"></div>
-                <div id="chart-container" style="display: none; overflow-x: auto; width: 100%; margin: 4px 0px 0px 0px;">
-                    <svg id="chart" height="0"></svg>
+                <div class="selected-speaker-box">
+                    <span id="selected-speaker-placeholder">出演者名をクリックしてください</span>
+                    <div id="selected-speaker-list"></div>
                 </div>
                 <div><span id="num_title">ロード中...</span> 番組&nbsp;&nbsp;<span id="duration"></span> <span
                         class="gray-text">(再配信除く <span id="start-month"></span>から<span id="end-month"></span>まで)</span>
@@ -417,7 +469,7 @@
     <script src="./flatpickr.min.js" integrity="sha384-5JqMv4L/Xa0hfvtF06qboNdhvuYXUku9ZrhZh3bSk8VXF0A/RuSLHpLsSV9Zqhl6"></script>
     <script src="./flatpickr-ja.js" integrity="sha384-mKor8U8jwukUkfxaFPCsxKF9S62PXq4gG7zcZ5yQ2x3KL1msprJZeFlKFEDeeb5V"></script>
     <script src="./flatpickr-monthSelect.js" integrity="sha384-6p33UqcS/7ZxiJzlAi3gfOsrVSlBlFNr/6gfN12AC0ETbTmPgMGSfHuN+H0QcWoO"></script>
-    <script src="./speakers3.js"></script>
+    <script src="./speakers3.js?v=20261118-6"></script>
 
 </body>
 

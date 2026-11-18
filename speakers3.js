@@ -24,21 +24,50 @@ function setSafeExternalLink(element, value) {
     }
 }
 
-const debugModeCheckbox = document.getElementById("debugMode");
 const chartContainer = document.getElementById("chart-container");
-let debugMode = localStorage.getItem("debugMode") === "true";
-debugModeCheckbox.checked = debugMode;
-updateDebugVisibility();
-debugModeCheckbox.addEventListener("change", e => {
-    debugMode = e.target.checked;
-    localStorage.setItem("debugMode", debugMode);
-    updateDebugVisibility();
-    displayTitles();
-});
+const detailModal = document.getElementById("speakerDetailModal");
+const detailOverlay = document.getElementById("speakerDetailOverlay");
+const selectedSpeakers = [];
+let detailOpener = null;
 
-function updateDebugVisibility() {
-    chartContainer.style.display = debugMode ? "block" : "none";
+function openModal(modal, overlay) {
+    overlay.style.display = "block";
+    modal.style.display = "block";
 }
+
+function closeModal(modal, overlay) {
+    const wasOpen = modal.style.display === "block";
+    modal.style.display = "none";
+    overlay.style.display = "none";
+    return wasOpen;
+}
+
+function openSpeakerDetails(name, opener) {
+    detailOpener = opener;
+    document.getElementById("speaker-detail-heading").textContent = `${name}の詳細`;
+    displayDebugInfo(name);
+    const categoryMonths = { 0: [], 1: [], 2: [], 3: [], 4: [], 5: [] };
+    let count = 0;
+    for (const title of titles) {
+        if (title.speakers.includes(name) && title.actualDuration > 0) {
+            categoryMonths[title.cat].push(title.months);
+            count++;
+        }
+    }
+    chartContainer.style.display = count >= 5 ? "block" : "none";
+    if (count >= 5) {
+        document.getElementById("chart").style.display = "block";
+        drawChart(categoryMonths);
+    }
+    openModal(detailModal, detailOverlay);
+    detailModal.querySelector(".settings-close").focus();
+}
+
+function closeSpeakerDetails() {
+    const wasOpen = closeModal(detailModal, detailOverlay);
+    if (wasOpen && detailOpener?.isConnected) detailOpener.focus();
+}
+window.closeSpeakerDetails = closeSpeakerDetails;
 
 let showAll = localStorage.getItem("showAll") === "true";
 const showAllToggle = document.getElementById("showAllToggle");
@@ -395,13 +424,6 @@ function displayTitles() {
     const sortOption = document.querySelector('input[name="sort-title"]:checked').value;
     const durations = getCheckedDurations();
     const playlists = Array.from(document.querySelectorAll('input[name="select-playlist"]:checked')).map(checkbox => parseInt(checkbox.value));
-    const selectedSpeakerRadio = document.querySelector('input[name="select-speaker"]:checked');
-    let selectedSpeaker = "";
-    if (selectedSpeakerRadio && selectedSpeakerRadio.value === "selected") {
-        selectedSpeaker = selectedSpeakerRadio.nextSibling.textContent;
-    }
-    displayDebugInfo(selectedSpeaker);
-
     let sortedTitles = [...titles];
     sortedTitles.sort((a, b) => {
         if (sortOption === "title-oldest") {
@@ -414,19 +436,8 @@ function displayTitles() {
     let counts = 0;
     let totalDuration = 0;
     let titleDatas = [];
-    const categoryMonths = {
-        0: [], // 現場
-        1: [], // メディア
-        2: [], // SDGs
-        3: [], // 報談
-        4: [], // ドーナツ
-        5: []  // スポンジ
-    };
     sortedTitles.forEach(titleData => {
-        if (selectedSpeaker === "" || titleData.speakers.includes(selectedSpeaker)) {
-            if (titleData.actualDuration > 0) {
-                categoryMonths[titleData.cat].push(titleData.months);
-            }
+        if (selectedSpeakers.every(name => titleData.speakers.includes(name))) {
             if (playlists.includes(titleData.cat) && durations.includes(titleData.minutes)) {
                 if (startMonth <= titleData.months && titleData.months <= endMonth) {
                     titleDatas.push(titleData);
@@ -438,14 +449,6 @@ function displayTitles() {
             }
         }
     });
-    const svg = document.getElementById("chart");
-    if (svg) {
-        if (selectedSpeaker === "" || counts < 5) { svg.style.display = "none"; }
-        else {
-            svg.style.display = "block";
-            drawChart(categoryMonths);
-        }
-    }
     displayTitlesImpl(allTitleElement, titleDatas, true);
 
     document.getElementById("start-month").textContent = formatMonth(startMonth);
@@ -459,7 +462,7 @@ function displayTitles() {
 function displayDebugInfo(selectedSpeaker) {
     const debugInfoElement = document.getElementById("debug-info");
     debugInfoElement.replaceChildren();
-    if (!debugMode || selectedSpeaker === "" || !(selectedSpeaker in speakers)) {
+    if (selectedSpeaker === "" || !(selectedSpeaker in speakers)) {
         debugInfoElement.style.display = "none";
         return;
     }
@@ -669,41 +672,58 @@ function displaySpeakers() {
 
 function handleNameClick(event) {
     const clickedName = event.target.textContent;
-
-    const labelElement = document.getElementById("select-speaker-label");
-    labelElement.style.fontWeight = "600";
-    const inputElement = document.createElement("input");
-    inputElement.type = "radio";
-    inputElement.name = "select-speaker";
-    inputElement.value = "selected";
-    inputElement.checked = true;
-    inputElement.addEventListener("change", () => { displayTitles(); });
-    labelElement.innerHTML = "";
-    labelElement.appendChild(inputElement);
-    labelElement.appendChild(document.createTextNode(clickedName));
-
-    const spanElement = document.getElementById('select-reporter-link');
-    if (clickedName in reporters) {
-        spanElement.innerHTML = '';
-        const link = document.createElement('a');
-        link.textContent = '(記者ページへ)';
-        setSafeExternalLink(link, reporters[clickedName].url);
-        spanElement.appendChild(link);
-        spanElement.style.display = 'inline';
-        spanElement.style.fontWeight = "400";
-        labelElement.style.paddingRight = '15px';
-    }
-    else {
-        spanElement.innerHTML = '';
-        spanElement.style.display = 'none';
-        labelElement.style.paddingRight = '0px';
-    }
+    if (selectedSpeakers.includes(clickedName)) return;
+    if (selectedSpeakers.length < 2) selectedSpeakers.push(clickedName);
+    else selectedSpeakers[1] = clickedName;
+    renderSelectedSpeakers();
 
     const savedScreen = localStorage.getItem('selectedScreen');
     if (Number(savedScreen) == 1) {
         showScreen(2);
     }
     displayTitles();
+}
+
+function renderSelectedSpeakers() {
+    const list = document.getElementById("selected-speaker-list");
+    list.replaceChildren();
+    document.getElementById("selected-speaker-placeholder").hidden = selectedSpeakers.length > 0;
+    for (const name of selectedSpeakers) {
+        const row = document.createElement("div");
+        row.className = "selected-speaker-row";
+
+        const chip = document.createElement("span");
+        chip.className = "selected-speaker-chip";
+        const label = document.createElement("span");
+        label.textContent = name;
+        const remove = document.createElement("button");
+        remove.type = "button";
+        remove.className = "clear-selected-speaker";
+        remove.textContent = "✕";
+        remove.setAttribute("aria-label", `${name}の選択を外す`);
+        remove.addEventListener("click", () => {
+            selectedSpeakers.splice(selectedSpeakers.indexOf(name), 1);
+            renderSelectedSpeakers();
+            displayTitles();
+        });
+        chip.append(label, remove);
+        row.appendChild(chip);
+
+        if (name in reporters) {
+            const link = document.createElement("a");
+            link.textContent = "(記者ページへ)";
+            setSafeExternalLink(link, reporters[name].url);
+            row.appendChild(link);
+        }
+        const details = document.createElement("button");
+        details.type = "button";
+        details.className = "show-speaker-details";
+        details.textContent = "詳細";
+        details.setAttribute("aria-label", `${name}の詳細`);
+        details.addEventListener("click", () => openSpeakerDetails(name, details));
+        row.appendChild(details);
+        list.appendChild(row);
+    }
 }
 
 
@@ -731,10 +751,6 @@ document.querySelectorAll('input[name="sort-title"]').forEach(radio => {
 document.querySelectorAll('input[name="select-duration[]"]').forEach(el => {
     el.addEventListener('change', displayTitles);
     el.addEventListener('change', searchTitle);
-});
-
-document.querySelectorAll('input[name="select-speaker"]').forEach(radio => {
-    radio.addEventListener('change', displayTitles);
 });
 
 document.querySelectorAll('input[name="select-playlist"]').forEach(checkbox => {
@@ -1067,30 +1083,18 @@ function showScreen(screenNum) {
 
 
 function openSetting() {
-    const modal = document.getElementById("settingModal");
-    const overlay = document.getElementById("settingOverlay");
-    const setWidth = 500;
-    if (window.innerWidth < setWidth / 0.8 || screen.width < setWidth / 0.8) {
-        modal.style.width = `80%`;
-        modal.style.left = `10%`;
-    }
-    else {
-        modal.style.width = `${setWidth / window.innerWidth * 100}%`;
-        modal.style.left = `${50 - setWidth / window.innerWidth * 50}%`;
-    }
-    modal.style.display = "block";
-    overlay.style.display = "block";
+    openModal(document.getElementById("settingModal"), document.getElementById("settingOverlay"));
 }
 window.openSetting = openSetting;
 
 function closeSetting() {
-    document.getElementById("settingModal").style.display = "none";
-    document.getElementById("settingOverlay").style.display = "none";
+    closeModal(document.getElementById("settingModal"), document.getElementById("settingOverlay"));
 }
 window.closeSetting = closeSetting;
 
 document.addEventListener("keydown", function (event) {
     if (event.key === "Escape") {
         closeSetting();
+        closeSpeakerDetails();
     }
 });
