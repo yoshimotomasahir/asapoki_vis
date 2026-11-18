@@ -182,6 +182,11 @@ li {
   color: var(--grey-900);
 }
 
+.letter-link {
+  margin-left: 8px;
+  font-size: 1em;
+}
+
 .day-space {
   margin: 10px 0 10px 0;
 }

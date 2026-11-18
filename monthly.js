@@ -247,7 +247,15 @@ function appendDay(day, calendarDaysElement) {
       titleSpan.textContent = title;
       linkElement.append(categorySpan, titleSpan);
       setSafeExternalLink(linkElement, link);
-      podcastElement.appendChild(linkElement);
+      const letterLink = document.createElement("a");
+      setSafeExternalLink(letterLink, `https://docs.google.com/forms/d/e/1FAIpQLSff1cc9SvJFtzbk3btowdGocatM2zEZgj-Drn1e8OKFd7Vezw/viewform?entry.280047644=${encodeURIComponent(title)}`);
+      letterLink.className = "letter-link";
+      letterLink.textContent = "📮";
+      letterLink.setAttribute("aria-label", `${title}についてお便りフォームを開く`);
+      letterLink.title = "番組タイトルを入力してお便りフォームを開く";
+      const titleAndLetter = document.createElement("span");
+      titleAndLetter.append(linkElement, letterLink);
+      podcastElement.appendChild(titleAndLetter);
       const podcastElementClassList = podcastElement.classList;
       podcastElementClassList.add("titles");
       dayElement.appendChild(podcastElement);

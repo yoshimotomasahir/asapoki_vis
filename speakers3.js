@@ -374,12 +374,22 @@ function displayTitlesImpl(element, titleDatas, useOver50) {
             speakersSpan.appendChild(speakerSpan);
         });
 
+        const letterLink = document.createElement("a");
+        letterLink.className = "letter-link";
+        letterLink.href = `https://docs.google.com/forms/d/e/1FAIpQLSff1cc9SvJFtzbk3btowdGocatM2zEZgj-Drn1e8OKFd7Vezw/viewform?entry.280047644=${encodeURIComponent(titleData.title)}`;
+        letterLink.target = "_blank";
+        letterLink.rel = "noopener noreferrer";
+        letterLink.textContent = "📮";
+        letterLink.setAttribute("aria-label", `${titleData.title}についてお便りフォームを開く`);
+        letterLink.title = "番組タイトルを入力してお便りフォームを開く";
+
         // フラグメントにまとめて追加
         titleElement.appendChild(titleSpan);
         outerSpan.appendChild(playlistIcon);
         outerSpan.appendChild(titleElement);
         outerSpan.appendChild(dateSpan);
         outerSpan.appendChild(speakersSpan);
+        outerSpan.appendChild(letterLink);
 
         if (index < 50 || useOver50 === false) {
             fragment.appendChild(outerSpan);
